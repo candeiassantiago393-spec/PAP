@@ -1,22 +1,26 @@
-﻿# Legacy â€” LÃ³gicas Extras
+﻿# Legacy — Lógicas Extras
 
-VersÃµes antigas ou experimentais dos mÃ³dulos do prÃ©dio inteligente.
+Versões antigas ou experimentais dos módulos do prédio inteligente.
 
 ## Uso
 
-Quando um mÃ³dulo evoluir (ex.: `porta_predio/v2/`), a versÃ£o anterior move-se para aqui:
+Quando um módulo evoluir (ex.: `porta_predio/v2/`), a versão anterior move-se para aqui:
 
 ```text
 legacy/
-â”œâ”€â”€ porta_predio_v1/
-â”œâ”€â”€ rfid_prototipo/
-â””â”€â”€ ...
+├── porta_predio_v1/
+├── rfid_prototipo/
+└── ...
 ```
 
 ## Estado
 
-Vazio â€” sem cÃ³digo legado migrado ainda.
+Vazio — sem código legado migrado ainda.
 
-## Etapa
+## Navegação
 
-[E12 â€” LÃ³gicas extras](../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+| | |
+|--|--|
+| Lógicas extras | [../README.md](../README.md) |
+| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
+| Etapa | [E12](../../docs/ETAPAS/relatorios/E12_logicas_extras.md) |

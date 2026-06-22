@@ -1,27 +1,38 @@
-﻿# RFID â€” PrÃ©dio Inteligente
+﻿# RFID — Prédio Inteligente
 
-Acesso por cartÃ£o RFID â€” porta do prÃ©dio e apartamentos por andar.
+Acesso por cartão RFID — porta do prédio e apartamentos por andar.
 
 ## Hardware comprado
 
-| Componente | CÃ³digo Mauser | Fatura |
+| Componente | Código Mauser | Fatura |
 |------------|---------------|--------|
 | Leitor RFID RC522 13,56 MHz | 096-8517 | [2026EC1403323](../../docs/compras/faturas_mauser/2026EC1403323.md) |
 | NodeMCU ESP32 USB-C (plataforma) | 095-4900 | [2026EC1403323](../../docs/compras/faturas_mauser/2026EC1403323.md) |
 
 ## Estrutura
 
-| Pasta | ConteÃºdo |
+| Pasta | Conteúdo |
 |-------|----------|
-| [simulacao/](simulacao/) | SimulaÃ§Ã£o / mock de cartÃµes |
+| [simulacao/](simulacao/) | Simulação / mock de cartões |
 | [real/](real/) | Firmware RC522 + ESP32 |
-| [testes/](testes/) | Leitura UID, autorizaÃ§Ã£o |
-| [documentacao/](documentacao/) | Mapa de cartÃµes / utilizadores |
+| [testes/](testes/) | Leitura UID, autorização |
+| [documentacao/](documentacao/) | Mapa de cartões / utilizadores |
+
+## Relacionado
+
+| Módulo | Ligação |
+|--------|---------|
+| Porta do prédio | [porta_predio/](../porta_predio/) |
+| Painel ecra | [paineis_controlo/](../paineis_controlo/) |
 
 ## Estado
 
-**Inicial** â€” leitor comprado; lÃ³gica de autorizaÃ§Ã£o por definir.
+**Inicial** — leitor comprado; lógica de autorização por definir.
 
-## Etapa
+## Navegação
 
-[E12 â€” LÃ³gicas extras](../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+| | |
+|--|--|
+| Lógicas extras | [../README.md](../README.md) |
+| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
+| Etapa | [E12](../../docs/ETAPAS/relatorios/E12_logicas_extras.md) |

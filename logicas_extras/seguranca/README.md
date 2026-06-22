@@ -1,36 +1,40 @@
-﻿# SeguranÃ§a â€” PrÃ©dio Inteligente
+﻿# Segurança — Prédio Inteligente
 
-Sistema de vigilÃ¢ncia e proteÃ§Ã£o do prÃ©dio.
+Alarmes e deteção de intrusão no prédio.
 
-## Objetivo
+## Protótipo funcional
 
-DeteÃ§Ã£o de presenÃ§a e captura visual na entrada/zona comum â€” alarme ou registo.
+Implementado no painel ESP32:
 
-## Hardware comprado
+- Ecrã **MOVIMENTO** — sensor PIR, buzzer, cooldown 30 s
+- Alertas **Telegram** opcionais (intruso)
 
-| Componente | CÃ³digo Mauser | Fatura |
-|------------|---------------|--------|
-| LILYGO T-Camera S3 (ESP32 + cÃ¢mara 5 MP + PIR) | 095-5977 | [2026EC1409725](../../docs/compras/faturas_mauser/2026EC1409725.md) |
-| Caixa T-Camera S3 | 095-5979 | [2026EC1409725](../../docs/compras/faturas_mauser/2026EC1409725.md) |
-| Cabo PH2.0 â†’ DuPont | 095-5980 | [2026EC1409725](../../docs/compras/faturas_mauser/2026EC1409725.md) |
+Ver [paineis_controlo/documentacao/funcionamento.md](../paineis_controlo/documentacao/funcionamento.md).
+
+## Hardware planeado
+
+| Componente | Estado |
+|------------|--------|
+| PIR | Simulação Wokwi (painel ecra) |
+| T-Camera S3 | [2026EC1409725](../../docs/compras/faturas_mauser/2026EC1409725.md) — futuro snapshot |
 
 ## Estrutura
 
-| Pasta | ConteÃºdo |
+| Pasta | Conteúdo |
 |-------|----------|
-| [simulacao/](simulacao/) | ProtÃ³tipo virtual (futuro) |
-| [real/](real/) | Firmware ESP32 / T-Camera |
-| [testes/](testes/) | Testes isolados PIR e cÃ¢mara |
-| [documentacao/](documentacao/) | Notas tÃ©cnicas do mÃ³dulo |
-
-## Estado
-
-**Inicial** â€” hardware adquirido; firmware por desenvolver.
-
-## JustificaÃ§Ã£o
-
-[docs/compras/justificacao/logicas_extras.md](../../docs/compras/justificacao/logicas_extras.md)
+| [simulacao/](simulacao/) | _(futuro)_ |
+| [real/](real/) | Montagem física |
+| [documentacao/](documentacao/) | Estados de alarme |
+| [testes/](testes/) | Testes PIR / sirene |
 
 ## Etapa
 
-[E12 â€” LÃ³gicas extras](../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+[E12 — Lógicas extras](../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+
+## Navegação
+
+| | |
+|--|--|
+| Painel ecra | [../paineis_controlo/](../paineis_controlo/) |
+| Lógicas extras | [../README.md](../README.md) |
+| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |

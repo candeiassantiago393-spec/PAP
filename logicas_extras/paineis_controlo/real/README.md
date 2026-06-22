@@ -1,11 +1,7 @@
-﻿# Real — paineis_controlo
+﻿# Implementação real — Painéis de controlo
 
-Firmware e implementação física na maquete do prédio.
+| Pasta | Conteúdo |
+|-------|----------|
+| [caixa_ecra/](caixa_ecra/) | ESP32 + OLED — caixa física / demo feira |
 
-## Estado
-
-Pendente — ver [README do módulo](../README.md).
-
-## Etapa
-
-[E12 — Lógicas extras](../../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+Hardware de referência: ESP32 NodeMCU ([fatura Mauser](../../../docs/compras/faturas_mauser/2026EC1403323.md)), OLED 0,96".

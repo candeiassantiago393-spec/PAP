@@ -53,7 +53,7 @@ FASE 12 ─ Lógicas extras do prédio (paralelo/futuro)
 | E09 | [Firmware real L298N](relatorios/E09_firmware_real.md) | Iniciada | rascunho |
 | E10 | [Comissionamento final](relatorios/E10_comissionamento.md) | Pendente | — |
 | E11 | [Relatório e apresentação](relatorios/E11_apresentacao.md) | Pendente | — |
-| E12 | [Lógicas extras prédio](relatorios/E12_logicas_extras.md) | Em curso | [cofre/wokwi](../../logicas_extras/cofre/simulacao/wokwi/) |
+| E12 | [Lógicas extras prédio](relatorios/E12_logicas_extras.md) | Em curso | [cofre/wokwi](../../logicas_extras/cofre/simulacao/wokwi/) · [painel ecra](../../logicas_extras/paineis_controlo/simulacao/wokwi/) |
 
 **Estados:** `Pendente` · `Em curso` · `Concluída` · `A documentar`
 
@@ -96,3 +96,14 @@ FASE 12 ─ Lógicas extras do prédio (paralelo/futuro)
 | E08 | `elevador/maquete/` |
 | E09 | `elevador/real/` |
 | E12 | `logicas_extras/` |
+
+---
+
+## Navegação
+
+| | |
+|--|--|
+| Índice repo | [INDICE_REPOSITORIO.md](../INDICE_REPOSITORIO.md) |
+| Documentação | [../README.md](../README.md) |
+| Contexto | [../CONTEXTO_PROJETO.md](../CONTEXTO_PROJETO.md) |
+| Raiz PAP | [../../README.md](../../README.md) |

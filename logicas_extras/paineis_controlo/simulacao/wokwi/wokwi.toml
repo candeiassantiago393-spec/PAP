@@ -1,0 +1,9 @@
+[wokwi]
+version = 1
+firmware = "../../real/caixa_ecra/.pio/build/esp32dev/firmware.bin"
+elf = "../../real/caixa_ecra/.pio/build/esp32dev/firmware.elf"
+
+# Compilar antes de simular:
+#   cd logicas_extras/paineis_controlo/real/caixa_ecra
+#   pio run
+# Depois Stop + Start na simulação.

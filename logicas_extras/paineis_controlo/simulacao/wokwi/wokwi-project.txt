@@ -1,0 +1,2 @@
+Downloaded from Wokwi. See logicas_extras/paineis_controlo/ — Caixa ESP32 OLED (candeias.dev)
+Origem: projeto local ecra (junho 2026)

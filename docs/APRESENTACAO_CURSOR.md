@@ -81,6 +81,13 @@ elevador/simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/
 
 **Simple Browser** com URL: https://wokwi.com/projects/464344193596402689
 
+### Lógicas extras (Wokwi)
+
+| Módulo | Pasta | Compilar antes (ESP32) |
+|--------|-------|------------------------|
+| Cofre PIN | `logicas_extras/cofre/simulacao/wokwi/` | — (sketch directo) |
+| Painel ecra ESP32 | `logicas_extras/paineis_controlo/simulacao/wokwi/` | `pio run` em `.../real/caixa_ecra/` |
+
 ---
 
 ## 5. Compilação e erros (PlatformIO)
@@ -138,7 +145,7 @@ Plano: experiência estilo Prezi para explorar componentes da maquete.
 
 - [ ] Workspace `PAP` abre sem erros
 - [ ] PDF do relatório em `docs/relatorios/`
-- [x] Links Wokwi e exports em `legacy/wokwi/v03–v06/`
+- [x] Wokwi lógicas extras: cofre + painel ecra em `logicas_extras/`
 - [ ] PlatformIO compila firmware v06 ou real
 - [ ] Interface local arranca com um comando
 - [ ] Vídeo/fotos da maquete na pasta `maquete/imagens/`
@@ -151,7 +158,7 @@ Plano: experiência estilo Prezi para explorar componentes da maquete.
 1. **30 s** — README raiz: visão prédio inteligente
 2. **1 min** — Explorer: topologia `elevador/` vs `logicas_extras/`
 3. **2 min** — Percorrer legacy v01→v06 (código + README)
-4. **2 min** — Wokwi v06 a correr (extensão ou browser)
+4. **2 min** — Wokwi v06 elevador + cofre + painel ecra (extensão)
 5. **1 min** — `DIFICULDADES.md` — problemas reais resolvidos
 6. **1 min** — Vídeo maquete + `ESTADO_ATUAL.md`
 7. **1 min** — Interface organização no Simple Browser

@@ -77,3 +77,12 @@ Relacionado com a lógica da [porta do prédio](../porta_predio/) (mesmo conceit
 - [ ] Adaptar para ESP32 / teclado físico Mauser
 - [ ] Integrar na maquete (cofre ou porta de apartamento)
 - [ ] Alterar código secreto via configuração (não hardcoded)
+
+## Navegação
+
+| | |
+|--|--|
+| Lógicas extras | [../README.md](../README.md) |
+| Porta prédio | [../porta_predio/](../porta_predio/) |
+| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
+| Etapa E12 | [../../docs/ETAPAS/relatorios/E12_logicas_extras.md](../../docs/ETAPAS/relatorios/E12_logicas_extras.md) |

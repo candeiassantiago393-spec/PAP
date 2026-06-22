@@ -1,11 +1,10 @@
-﻿# Documentacao — paineis_controlo
+﻿# Documentação — Painéis de controlo
 
-Notas técnicas, pinagem e decisões específicas do módulo.
+| Ficheiro | Conteúdo |
+|----------|----------|
+| [funcionamento.md](funcionamento.md) | Ecrãs, navegação, modo feira, Telegram |
+| [pinagem.md](pinagem.md) | GPIO ESP32 |
 
-## Estado
+## Esquema Wokwi
 
-Pendente — ver [README do módulo](../README.md).
-
-## Etapa
-
-[E12 — Lógicas extras](../../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+[simulacao/wokwi/diagram.json](../simulacao/wokwi/diagram.json)

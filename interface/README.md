@@ -12,6 +12,10 @@ App desenvolvida pelo autor (Santiago Candeias) para gestão pessoal de projetos
 - Registar BOM, notas técnicas e decisões de hardware
 - Hub de trabalho durante desenvolvimento e apresentação
 
+## Sync com este repo
+
+Tasks exportadas da app ficam em [docs/TASKS_PAP_SYNC.md](../docs/TASKS_PAP_SYNC.md).
+
 ## Uso no Cursor
 
 ### Opção A — Pasta irmã no workspace
@@ -32,3 +36,11 @@ Referir como ferramenta de organização desenvolvida pelo autor — não faz pa
 
 - GitHub Pages: `https://candeiassantiago393-spec.github.io/geral-controll-app/`
 - Render: `https://candeias-app.onrender.com/` (se configurado)
+
+## Navegação
+
+| | |
+|--|--|
+| Índice repo | [../docs/INDICE_REPOSITORIO.md](../docs/INDICE_REPOSITORIO.md) |
+| Tasks sync | [../docs/TASKS_PAP_SYNC.md](../docs/TASKS_PAP_SYNC.md) |
+| Raiz PAP | [../README.md](../README.md) |

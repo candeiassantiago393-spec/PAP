@@ -1,11 +1,7 @@
-﻿# Simulacao — paineis_controlo
+﻿# Simulação — Painéis de controlo
 
-Protótipos e simulações deste módulo (Wokwi, mocks, testes offline).
+| Pasta | Conteúdo |
+|-------|----------|
+| [wokwi/](wokwi/) | ESP32 + OLED SSD1306 — caixa inteligente multi-subsistema |
 
-## Estado
-
-Pendente — ver [README do módulo](../README.md).
-
-## Etapa
-
-[E12 — Lógicas extras](../../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+Firmware espelhado em [real/caixa_ecra/](../real/caixa_ecra/).

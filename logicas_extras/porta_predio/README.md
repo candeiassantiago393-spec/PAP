@@ -38,3 +38,11 @@ Entrada ao prédio por código numérico no teclado matricial.
 ## Etapa
 
 [E12 — Lógicas extras](../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+
+## Navegação
+
+| | |
+|--|--|
+| Cofre (protótipo PIN) | [../cofre/](../cofre/) |
+| Lógicas extras | [../README.md](../README.md) |
+| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |

@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "author": "Anonymous maker",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 38.4,
+      "left": -33.56,
+      "attrs": { "builder": "arduino" }
+    },
+    { "type": "wokwi-pir-motion-sensor", "id": "pir1", "top": -44, "left": 175.02, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton-6mm",
+      "id": "btn1",
+      "top": -21.4,
+      "left": 86.4,
+      "attrs": { "color": "black", "xray": "1" }
+    },
+    {
+      "type": "wokwi-pushbutton-6mm",
+      "id": "btn2",
+      "top": 7.4,
+      "left": 86.4,
+      "attrs": { "color": "grey", "xray": "1" }
+    },
+    {
+      "type": "board-ssd1306",
+      "id": "oled1",
+      "top": -35.26,
+      "left": -28.57,
+      "attrs": { "i2cAddress": "0x3c" }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": -26.4,
+      "left": 280.2,
+      "attrs": { "volume": "0.1" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text1",
+      "top": -76.8,
+      "left": 211.2,
+      "attrs": { "text": "SEGURANÇA" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text2",
+      "top": -86.4,
+      "left": -86.4,
+      "attrs": { "text": "INTERFACE HOMEM MAQUINA" }
+    },
+    { "type": "wokwi-dht22", "id": "dht1", "top": 105.9, "left": 109.8, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text3",
+      "top": 76.8,
+      "left": 86.4,
+      "attrs": { "text": "TEMPERATURA" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text4",
+      "top": 9.6,
+      "left": 124.8,
+      "attrs": { "text": "OK\n" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text5",
+      "top": -28.8,
+      "left": 124.8,
+      "attrs": { "text": "next\n" }
+    },
+    { "type": "wokwi-potentiometer", "id": "potSolo", "top": 134.4, "left": -86.4, "attrs": {} },
+    { "type": "wokwi-led", "id": "ledVerm", "top": 134.4, "left": 220.8, "attrs": { "color": "red" } },
+    { "type": "wokwi-led", "id": "ledVerde", "top": 163.2, "left": 220.8, "attrs": { "color": "limegreen" } },
+    { "type": "wokwi-led", "id": "ledAmar", "top": 192, "left": 220.8, "attrs": { "color": "yellow" } },
+    { "type": "wokwi-led", "id": "ledBomba", "top": 220.8, "left": 220.8, "attrs": { "color": "magenta" } },
+    { "type": "wokwi-resistor", "id": "rVerm", "top": 153.6, "left": 182.4, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rVerde", "top": 182.4, "left": 182.4, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rAmar", "top": 211.2, "left": 182.4, "attrs": { "value": "220" } },
+    { "type": "wokwi-resistor", "id": "rBomba", "top": 240, "left": 182.4, "attrs": { "value": "220" } },
+    {
+      "type": "wokwi-text",
+      "id": "text6",
+      "top": 124.8,
+      "left": -124.8,
+      "attrs": { "text": "SOLO (pot)" }
+    },
+    {
+      "type": "wokwi-text",
+      "id": "text7",
+      "top": 249.6,
+      "left": 249.6,
+      "attrs": { "text": "BOMBA" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:21", "oled1:SDA", "gold", [ "h9.6", "v-57.6", "v-86.4" ] ],
+    [ "esp:22", "oled1:SCL", "blue", [ "h9.6", "v-124.8", "h-48.3" ] ],
+    [ "oled1:GND", "esp:GND.2", "black", [ "v0", "h-38.4", "v76.8", "h86.4" ] ],
+    [ "oled1:VCC", "esp:3V3", "red", [ "v-9.6", "h-57.45", "v105.6" ] ],
+    [ "esp:32", "btn1:1.l", "cyan", [ "h76.95", "v-67.2", "h28.8", "v-76.8" ] ],
+    [ "btn1:2.r", "btn2:2.r", "black", [ "h10.4", "v0.4" ] ],
+    [ "btn2:2.r", "esp:GND.2", "black", [ "h0.8", "v29.2" ] ],
+    [ "esp:33", "btn2:1.l", "violet", [ "h76.95", "v-76.8", "h28.8", "v-48" ] ],
+    [ "esp:27", "pir1:OUT", "gray", [ "h67.35", "v-96", "h9.6" ] ],
+    [ "pir1:GND", "esp:GND.2", "black", [ "v0" ] ],
+    [ "esp:5V", "pir1:VCC", "red", [ "h0.15", "v9.6", "h105.6", "v-182.4", "h134.4" ] ],
+    [ "bz1:1", "esp:GND.2", "black", [ "v0" ] ],
+    [ "esp:25", "bz1:2", "orange", [ "v0", "h76.95", "v-76.8", "h268.8" ] ],
+    [ "dht1:VCC", "esp:3V3", "red", [ "v28.8", "h-172.8", "v-182.4" ] ],
+    [ "dht1:GND", "esp:GND.2", "black", [ "v28.8", "h-76.8", "v-182.4" ] ],
+    [ "esp:26", "dht1:SDA", "green", [ "h105.75", "v96", "h57.6" ] ],
+
+    [ "potSolo:SIG", "esp:34", "blue", [ "v0" ] ],
+    [ "potSolo:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "potSolo:GND", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "esp:16", "rVerm:1", "red", [ "v0" ] ],
+    [ "rVerm:2", "ledVerm:A", "red", [ "v0" ] ],
+    [ "ledVerm:C", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "esp:18", "rVerde:1", "green", [ "v0" ] ],
+    [ "rVerde:2", "ledVerde:A", "green", [ "v0" ] ],
+    [ "ledVerde:C", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "esp:17", "rAmar:1", "gold", [ "v0" ] ],
+    [ "rAmar:2", "ledAmar:A", "gold", [ "v0" ] ],
+    [ "ledAmar:C", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "esp:19", "rBomba:1", "magenta", [ "v0" ] ],
+    [ "rBomba:2", "ledBomba:A", "magenta", [ "v0" ] ],
+    [ "ledBomba:C", "esp:GND.2", "black", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}

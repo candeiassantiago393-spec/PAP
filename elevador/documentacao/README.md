@@ -16,3 +16,11 @@ Notas técnicas específicas do subsistema elevador (fora dos relatórios de eta
 - Firmware simulação v06: [simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/](../simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/)
 - Firmware real: [real/l298n_sh1106_hall/](../real/l298n_sh1106_hall/)
 - BOM: [hardware/bom/componentes.md](../hardware/bom/componentes.md)
+
+## Navegação
+
+| | |
+|--|--|
+| Elevador | [../README.md](../README.md) |
+| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
+| Etapas | [../../docs/ETAPAS/README.md](../../docs/ETAPAS/README.md) |

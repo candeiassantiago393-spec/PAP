@@ -40,9 +40,9 @@ Subsistemas planeados ou em versão inicial — **foco secundário nesta fase**:
 
 | Módulo | Descrição | Estado |
 |--------|-----------|--------|
-| Segurança | Sistemas de alarme/proteção do prédio | Inicial |
-| Painéis de controlo | Interfaces de supervisão | Inicial |
-| Meteorologia | Sensores ambientais gerais | Inicial |
+| Segurança | Sistemas de alarme/proteção do prédio | PIR no painel ecra |
+| Painéis de controlo | Interfaces de supervisão | [Wokwi ESP32](../../logicas_extras/paineis_controlo/simulacao/wokwi/) |
+| Meteorologia | Sensores ambientais gerais | No painel ecra (DHT22) |
 | Porta do prédio | Código de acesso à entrada | Inicial |
 | Cofre / código secreto | Acesso por PIN (teclado + servo) | [Simulação Wokwi](../../logicas_extras/cofre/) |
 | RFID | Cartões por andar (porta prédio + apartamento) | Inicial |

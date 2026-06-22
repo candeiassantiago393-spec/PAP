@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Estado** | Futuro (versões iniciais existem) |
+| **Estado** | Em curso (cofre + painel ecra) |
 | **Código** | `logicas_extras/` |
 
 ## Objetivo
@@ -15,7 +15,7 @@ Subsistemas do prédio além do elevador: segurança, RFID, meteorologia, porta,
 |--------|--------|
 | **Cofre código secreto** | Simulação Wokwi — [logicas_extras/cofre/](../../logicas_extras/cofre/) |
 | Segurança | Inicial |
-| Painéis controlo | Inicial |
+| Painéis controlo | **Simulação Wokwi** — [paineis_controlo/caixa_ecra](../../logicas_extras/paineis_controlo/simulacao/wokwi/) |
 | Meteorologia | Inicial |
 | Porta prédio + código | Inicial (relacionado com cofre) |
 | RFID por andar | Inicial |
@@ -35,6 +35,16 @@ Após conclusão do elevador (E10).
 - Link: https://wokwi.com/projects/462220624733136897
 
 Relacionado com a porta do prédio (mesma lógica de acesso por código).
+
+### Painel ESP32 — caixa ecra (Wokwi)
+
+- ESP32 + OLED SSD1306 — 6 ecrãs: HOME, ambiente (DHT22), movimento (PIR), plantas/estufa, gráfico temp, QR Instagram
+- Modo feira (rotação auto), alertas Telegram opcionais
+- Export: `logicas_extras/paineis_controlo/simulacao/wokwi/`
+- PlatformIO: `logicas_extras/paineis_controlo/real/caixa_ecra/`
+- Origem: projeto local **ecra** (candeias.dev)
+
+Cobre parcialmente [meteorologia](../../logicas_extras/meteorologia/) e [segurança](../../logicas_extras/seguranca/) na demonstração.
 
 _(Outros módulos a documentar à medida que evoluem.)_
 

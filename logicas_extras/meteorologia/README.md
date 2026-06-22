@@ -1,31 +1,40 @@
-﻿# Meteorologia â€” PrÃ©dio Inteligente
+﻿# Meteorologia — Prédio Inteligente
 
-Sensores ambientais do prÃ©dio (temperatura, humidade, etc.).
+Sensores ambientais do prédio (temperatura, humidade).
 
-## Objetivo
+## Protótipo funcional
 
-Recolher dados ambientais para exibiÃ§Ã£o em painel ou integraÃ§Ã£o futura com a app de organizaÃ§Ã£o.
+Implementado no painel ESP32 multi-ecrã:
+
+- Ecrã **AMBIENTE** — DHT22
+- Ecrã **GRÁFICO** — sparkline de temperatura
+
+Ver [paineis_controlo/simulacao/wokwi/](../paineis_controlo/simulacao/wokwi/).
 
 ## Hardware
 
 | Componente | Estado |
 |------------|--------|
-| Sensores temp/humidade | Por adquirir |
-| ESP32 (partilhado) | [NodeMCU 095-4900](../../docs/compras/faturas_mauser/2026EC1403323.md) disponÃ­vel |
+| DHT22 | Na simulação Wokwi (painel ecra) |
+| ESP32 | [NodeMCU 095-4900](../../docs/compras/faturas_mauser/2026EC1403323.md) |
 
 ## Estrutura
 
-| Pasta | ConteÃºdo |
+| Pasta | Conteúdo |
 |-------|----------|
-| [simulacao/](simulacao/) | Dados simulados |
-| [real/](real/) | Firmware sensores |
-| [testes/](testes/) | CalibraÃ§Ã£o e leitura |
-| [documentacao/](documentacao/) | EspecificaÃ§Ã£o sensores |
-
-## Estado
-
-**Planeado** â€” mÃ³dulo conceptual; hardware especÃ­fico pendente.
+| [simulacao/](simulacao/) | _(futuro: módulo dedicado)_ |
+| [real/](real/) | Integração física pendente |
+| [documentacao/](documentacao/) | Especificação |
+| [testes/](testes/) | Calibração |
 
 ## Etapa
 
-[E12 â€” LÃ³gicas extras](../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+[E12 — Lógicas extras](../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+
+## Navegação
+
+| | |
+|--|--|
+| Painel ecra | [../paineis_controlo/](../paineis_controlo/) |
+| Lógicas extras | [../README.md](../README.md) |
+| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |

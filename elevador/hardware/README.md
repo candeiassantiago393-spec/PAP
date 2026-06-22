@@ -20,3 +20,12 @@ Documentação física do protótipo: componentes, esquemas e mecânica.
 ## Compras
 
 Faturas e justificação: [docs/compras/](../../docs/compras/)
+
+## Navegação
+
+| | |
+|--|--|
+| Elevador | [../README.md](../README.md) |
+| Maquete | [../maquete/ESTADO_ATUAL.md](../maquete/ESTADO_ATUAL.md) |
+| Pinagem | [../documentacao/pinagem.md](../documentacao/pinagem.md) |
+| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
