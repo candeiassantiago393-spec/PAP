@@ -9,14 +9,23 @@
 |--------|------|-----------|----------------|---------------|
 | Botão exterior P1–P4 | D2–D5 | Botão | Botão | LOW |
 | Reset / rearme | D7 | Botão | Botão | LOW |
-| Sensor piso 1 | D8 | Interruptor | Hall | LOW |
-| Sensor piso 2 | D11 | Interruptor | Hall | LOW |
-| Sensor piso 3 | D12 | Interruptor | Hall | LOW |
-| Sensor piso 4 | D13 | Interruptor | Hall | LOW |
-| Permissiva porta | D22 | Interruptor | Hall | **Sim: HIGH fechada** · **Real: LOW fechada** |
+| Sensor piso 1 | D8 | Interruptor | Hall **A3144** | LOW |
+| Sensor piso 2 | D11 | Interruptor | Hall **A3144** | LOW |
+| Sensor piso 3 | D12 | Interruptor | Hall **A3144** | LOW |
+| Sensor piso 4 | D13 | Interruptor | Hall **A3144** | LOW |
+| Permissiva porta | D22 | Interruptor | Hall **A3144** | **Sim: HIGH fechada** · **Real: LOW fechada** · _montagem por decidir_ |
 | Botão interior P1–P4 | D23–D26 | Botão | Botão | LOW |
 
 Todas as entradas: `INPUT_PULLUP` (real) ou `INPUT` com pull-up externo/simulado (v06 porta).
+
+### Sensor Hall A3144 (real)
+
+| Campo | Valor |
+|-------|-------|
+| Tipo | Digital, TO-92 |
+| Lógica | **LOW** = íman presente (cabine no piso) |
+| Alimentação | 5 V + GND; saída → GPIO com pull-up interno |
+| Íman | Na **cabine** — montagem pendente |
 
 ## Saídas digitais
 

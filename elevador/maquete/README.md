@@ -8,22 +8,28 @@ Registo visual e estado da montagem do protótipo real.
 |-------|-----|
 | [imagens/fotos/](imagens/fotos/) | Fotografias da maquete |
 | [imagens/videos/](imagens/videos/) | Vídeos de progresso |
+| [ESTADO_ATUAL.md](ESTADO_ATUAL.md) | Estado detalhado e próximos passos |
 
-## Vídeos
+## Vídeos (2026-06-22)
 
-| Ficheiro | Descrição | Data |
-|----------|-----------|------|
-| [2026-06-22_maquete_botoes_leds_displays.mp4](imagens/videos/2026-06-22_maquete_botoes_leds_displays.mp4) | Botões exteriores, LEDs e displays OLED montados | 2026-06-22 |
+| Ficheiro | Descrição |
+|----------|-----------|
+| [2026-06-22_maquete_oled_displays_teste.mp4](imagens/videos/2026-06-22_maquete_oled_displays_teste.mp4) | 4 displays OLED testados na estrutura |
+| [2026-06-22_maquete_botoes_leds_exteriores.mp4](imagens/videos/2026-06-22_maquete_botoes_leds_exteriores.mp4) | Botões + LEDs exteriores — **piso 3 com falha** |
+| [2026-06-22_maquete_botoes_leds_displays.mp4](imagens/videos/2026-06-22_maquete_botoes_leds_displays.mp4) | Integração geral (WhatsApp) |
 
-> Nota: vídeo gravado via WhatsApp durante montagem na fase de integração de I/O exterior.
+## Fotos
+
+| Ficheiro | Descrição |
+|----------|-----------|
+| [2026-06-22_guias_cabos_argolas.png](imagens/fotos/2026-06-22_guias_cabos_argolas.png) | Argolas brancas + braçadeiras como guias de cabo |
 
 ## Próximas capturas
 
-- Sensores Hall instalados
-- Motor + L298N acoplado ao tambor
-- Estrutura madeira + cabine (recipiente) — fotos em [hardware/mecanica/imagens/](../hardware/mecanica/imagens/)
-- Tambor e cabo de aço
-- Vista geral do shaft completo
+- Sensores Hall A3144 instalados
+- Motor + tambor integrados no shaft
+- Vista geral do poço completo
+- Correção botão/LED 3.º andar (evidência depois)
 
 ## Estado detalhado
 
@@ -34,7 +40,6 @@ Registo visual e estado da montagem do protótipo real.
 | | |
 |--|--|
 | Elevador | [../README.md](../README.md) |
-| Hardware / mecânica | [../hardware/mecanica/](../hardware/mecanica/) |
-| Firmware real | [../real/](../real/) |
-| Etapa E08 | [../../docs/ETAPAS/relatorios/E08_maquete.md](../../docs/ETAPAS/relatorios/E08_maquete.md) |
-| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
+| Mecânica / motor | [../hardware/mecanica/](../hardware/mecanica/) |
+| Apresentação | [../../docs/APRESENTACAO_CURSOR.md](../../docs/APRESENTACAO_CURSOR.md) |
+| Etapa E08 | [../../docs/ETAPAS/relatorios/E08_montagem_maquete.md](../../docs/ETAPAS/relatorios/E08_montagem_maquete.md) |

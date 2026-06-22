@@ -13,7 +13,7 @@ Validação de hardware real antes da maquete. Ver [E07 — Testes de bancada](.
 |-------|----------|
 | [pedidos_exteriores/](pedidos_exteriores/) | Test_01, Test_02 |
 | [oled/](oled/) | `oledbecnch.ino` |
-| [sensores_hall/](sensores_hall/) | `sensorhall.ino` |
+| [sensores_hall/](sensores_hall/) | `sensorhall.ino` + **`plot_hall.py`** (gráfico 4 cores) |
 | [imagens/](imagens/) | Fotos da bancada |
 
 ## Imagens

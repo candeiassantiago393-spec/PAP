@@ -16,7 +16,7 @@ Subsistemas do prédio além do elevador: segurança, RFID, meteorologia, porta,
 | **Cofre código secreto** | Simulação Wokwi — [logicas_extras/cofre/](../../logicas_extras/cofre/) |
 | Segurança | Inicial |
 | Painéis controlo | **Simulação Wokwi** — [paineis_controlo/caixa_ecra](../../logicas_extras/paineis_controlo/simulacao/wokwi/) |
-| Meteorologia | Inicial |
+| Meteorologia | **Funcional no painel ecra** — [meteorologia](../../logicas_extras/meteorologia/) (DHT22, ecrãs AMBIENTE/GRÁFICO) |
 | Porta prédio + código | Inicial (relacionado com cofre) |
 | RFID por andar | Inicial |
 | Toldo automático (chuva) | Inicial |
@@ -44,7 +44,9 @@ Relacionado com a porta do prédio (mesma lógica de acesso por código).
 - PlatformIO: `logicas_extras/paineis_controlo/real/caixa_ecra/`
 - Origem: projeto local **ecra** (candeias.dev)
 
-Cobre parcialmente [meteorologia](../../logicas_extras/meteorologia/) e [segurança](../../logicas_extras/seguranca/) na demonstração.
+Cobre [meteorologia](../../logicas_extras/meteorologia/) (ecrãs AMBIENTE + GRÁFICO) e [segurança](../../logicas_extras/seguranca/) (ecrã MOVIMENTO) na demonstração.
+
+Documentação meteorologia: [funcionamento.md](../../logicas_extras/meteorologia/documentacao/funcionamento.md).
 
 _(Outros módulos a documentar à medida que evoluem.)_
 

@@ -140,6 +140,17 @@
 
 ---
 
+### [2026-06-22] Botão / LED do 3.º andar exterior não responde
+- **Área:** elevador
+- **Fase:** maquete
+- **Problema:** Nos testes dos 4 botões + LEDs exteriores, o **piso 3** não funciona correctamente; os restantes andares OK.
+- **Causa:** Suspeita de **mau contacto** ou ligação — a confirmar com testes de continuidade.
+- **Solução:** Em aberto — rever soldadura, ponteiras e cabo até D4/A2 (botão/LED piso 3).
+- **Lição:** Testar cada par botão+LED isoladamente antes de fechar cablagem no shaft.
+- **Evidência:** [vídeo 2026-06-22](../elevador/maquete/imagens/videos/2026-06-22_maquete_botoes_leds_exteriores.mp4)
+
+---
+
 ## Template para novas entradas
 
 ```markdown

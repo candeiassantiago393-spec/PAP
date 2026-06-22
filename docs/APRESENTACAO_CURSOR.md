@@ -124,10 +124,32 @@ Abrir no **Simple Browser:** `http://localhost:8080`
 
 | Recurso | Caminho |
 |---------|---------|
-| Vídeo montagem (jun 2026) | `elevador/maquete/imagens/videos/2026-06-22_maquete_botoes_leds_displays.mp4` |
-| Fotos futuras | `elevador/maquete/imagens/fotos/` |
+| OLEDs — teste 4 displays | `elevador/maquete/imagens/videos/2026-06-22_maquete_oled_displays_teste.mp4` |
+| Botões + LEDs exteriores | `elevador/maquete/imagens/videos/2026-06-22_maquete_botoes_leds_exteriores.mp4` |
+| Guias cabos (argolas) | `elevador/maquete/imagens/fotos/2026-06-22_guias_cabos_argolas.png` |
+| Motor + tambor | `elevador/hardware/mecanica/imagens/2026-06-22_motor_nema17_tambor_correia.png` |
+| Estado escrito | `elevador/maquete/ESTADO_ATUAL.md` |
 
-Reproduzir vídeo no leitor do sistema ou embutir na apresentação 3D (fase posterior).
+Reproduzir vídeo no leitor do sistema ou embutir na apresentação 3D.
+
+---
+
+## Plano de apresentação (definido jun 2026)
+
+Duração flexível (até ~3 h se necessário). Blocos previstos:
+
+| # | Bloco | Onde no Cursor / repo |
+|---|-------|------------------------|
+| 1 | **Apresentação 3D** (estilo Prezi) | A desenvolver no workspace |
+| 2 | **Especificação e relatório** | `docs/relatorios/` |
+| 3 | **Interface de organização** | [geral-controll-app](https://github.com/candeiassantiago393-spec/geral-controll-app) — Simple Browser |
+| 4 | **Simulador virtual v06** + resumo v01–v05 | Wokwi `v06_.../wokwi/` |
+| 5 | **Funções físicas da maquete** | Vídeos + demo ao vivo (I/O montado; motor/Hall quando prontos) |
+| 6 | **Lógicas extras** | Após elevador na maquete; até lá Wokwi (cofre, ecra) se houver tempo |
+
+**Nota:** Porta e botões interiores podem ficar **só na simulação** se não estiverem montados a tempo.
+
+**Prioridade até 17 jul:** fechar elevador (Hall + motor) → depois extras (toldo no topo, RFID, etc.).
 
 ---
 
@@ -148,7 +170,7 @@ Plano: experiência estilo Prezi para explorar componentes da maquete.
 - [x] Wokwi lógicas extras: cofre + painel ecra em `logicas_extras/`
 - [ ] PlatformIO compila firmware v06 ou real
 - [ ] Interface local arranca com um comando
-- [ ] Vídeo/fotos da maquete na pasta `maquete/imagens/`
+- [x] Vídeo/fotos da maquete na pasta `maquete/imagens/`
 - [ ] Apresentação 3D (quando pronta)
 
 ---

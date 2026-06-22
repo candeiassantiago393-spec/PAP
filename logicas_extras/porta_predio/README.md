@@ -2,6 +2,18 @@
 
 Entrada ao prédio por código numérico no teclado matricial.
 
+## Estado na maquete
+
+| Aspeto | Decisão (jun 2026) |
+|--------|---------------------|
+| Montagem física | **Por decidir** — provável apresentação **só virtual** (Wokwi) |
+| Código PIN demo | **`1904`** (igual ao cofre) |
+| Localização lógica | **Rés-do-chão** = 1.º andar na maquete |
+
+## Protótipo funcional (virtual)
+
+Lógica já demonstrada no [cofre](../cofre/simulacao/wokwi/) — teclado 3×4, validação PIN, servo, LEDs, buzzer.
+
 ## Hardware comprado
 
 | Componente | Código Mauser | Fatura |
@@ -12,28 +24,22 @@ Entrada ao prédio por código numérico no teclado matricial.
 
 ## Relação com outros módulos
 
-- **[Cofre código secreto](../cofre/)** — protótipo Wokwi **já funcional** com a mesma lógica de PIN; base para evoluir esta porta
-- Teclado matricial 3×4 comprado (Mauser) partilhado entre cofre e porta
+- **[Cofre](../cofre/)** — mesmo PIN `1904`, firmware Wokwi funcional
+- Teclado matricial partilhado entre cofre e porta (quando montado)
 
 ## Funcionalidade prevista
 
-- Utilizador introduz código no teclado
-- Sistema valida combinação
-- Aciona fechadura / sinal de porta aberta
-- Feedback no OLED (mensagens de erro/sucesso)
+- Código no teclado → validação → fechadura / feedback OLED
+- Na apresentação: cofre Wokwi + narrativa da porta no rés-do-chão
 
 ## Estrutura
 
 | Pasta | Conteúdo |
 |-------|----------|
-| [simulacao/](simulacao/) | Teste de lógica de código |
-| [real/](real/) | Firmware teclado + ESP32 |
-| [testes/](testes/) | Debounce teclas, validação PIN |
-| [documentacao/](documentacao/) | Códigos de teste, pinagem |
-
-## Estado
-
-**Inicial** — componentes comprados; firmware por desenvolver. Ver protótipo em [cofre/simulacao/wokwi/](../cofre/simulacao/wokwi/).
+| [simulacao/](simulacao/) | Lógica PIN (herdar do cofre) |
+| [real/](real/) | Firmware físico — pendente |
+| [testes/](testes/) | Debounce, validação PIN |
+| [documentacao/](documentacao/) | Códigos, pinagem |
 
 ## Etapa
 

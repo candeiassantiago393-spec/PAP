@@ -21,23 +21,28 @@ Programar → Simulação → Bancada → Maquete
 
 | Componente | Estado |
 |------------|--------|
-| Botões pedido exterior (×4) | Montado |
-| LEDs pedido exterior (×4) | Montado |
-| Displays OLED (×4) | Montado |
+| Botões pedido exterior (×4) | Montado — **piso 3 com falha** |
+| LEDs pedido exterior (×4) | Montado — piso 3 a corrigir |
+| Displays OLED (×4) | Montado + testados |
 | TCA9548A | Montado |
-| Sensores Hall (×4) | Pendente |
-| Motor NEMA 17 + L298N | Pendente |
-| Botões/LEDs interiores | Pendente |
-| Permissiva porta | Pendente |
+| Guias cabos (argolas + braçadeiras) | Montado |
+| Estrutura madeira + cabine (recipiente) | Montado |
+| Motor NEMA 17 + tambor/correia | Conjunto mecânico pronto; **bancada OK**; shaft pendente |
+| Driver L298N | Testado na bancada (tutor Manuel Queiroz) |
+| Sensores Hall A3144 (×4) | Por montar/testar |
+| Botões/LEDs interiores | Por decidir (possível só virtual) |
+| Permissiva porta | Por decidir |
 | Buzzer + reset | Pendente |
-| Estrutura madeira + cabine (recipiente) | Montado — fotos pendentes |
-| Tambor + cabo de aço | Pendente |
+| Ventoinha L298N | Não comprada |
+| Tambor + cabo de aço no shaft | Pendente integração |
 
 ## Decisões técnicas
 
 - Montar I/O visível primeiro (botões, LEDs, displays)
-- Motor e sensores a seguir (maior impacto mecânico)
-- **Estrutura mecânica:** construção manual em **madeira** + **recipiente adaptado** como cabine (em vez de impressão 3D prevista no plano inicial)
+- Motor e Hall a seguir (maior impacto mecânico)
+- **Estrutura mecânica:** madeira + recipiente como cabine
+- **Rés-do-chão** = 1.º andar na nomenclatura da maquete
+- **Lógicas extras** na apresentação física: foco no elevador; extras depois ou em Wokwi
 
 ## Dificuldades
 
@@ -45,24 +50,26 @@ Programar → Simulação → Bancada → Maquete
 
 Na montagem física surgiram **falhas intermitentes por mau contacto** e **cabos demasiado curtos** para a estrutura da maquete.
 
-**Solução:** aquisição de **rolos de jumpers** e **ponteiras (ferrules)** para ligações mais fiáveis e cablagem com comprimento adequado.
+**Solução:** jumpers, ponteiras e **argolas guia** para cablagem organizada.
 
-> Compras: [fios e termorretrátil](../../compras/faturas_mauser/2026-06-15_recibo_corroios.md) — recibo Mauser Corroios, 7,88 €.
+### Botão/LED 3.º andar
 
-### Registo contínuo
-
-- Documentar cada problema de contacto resolvido à medida que a montagem avança
-- Fotos antes/depois quando relevante
+Ver [DIFICULDADES.md](../../DIFICULDADES.md) — em investigação.
 
 ## Resultado / validação
 
-- Vídeo 2026-06-22: primeira integração I/O exterior + OLEDs
+- Vídeos 2026-06-22: OLEDs + botões/LEDs exteriores
+- Foto: guias de cabos e motor/tambor
 
 ## Evidências
 
-- [Vídeo maquete](../../elevador/maquete/imagens/videos/2026-06-22_maquete_botoes_leds_displays.mp4)
-- `elevador/hardware/mecanica/imagens/` _(estrutura madeira + cabine — a preencher)_
+| Ficheiro | Conteúdo |
+|----------|----------|
+| [oled_displays_teste.mp4](../../elevador/maquete/imagens/videos/2026-06-22_maquete_oled_displays_teste.mp4) | Teste 4 OLED |
+| [botoes_leds_exteriores.mp4](../../elevador/maquete/imagens/videos/2026-06-22_maquete_botoes_leds_exteriores.mp4) | Botões/LEDs (piso 3 falha) |
+| [guias_cabos_argolas.png](../../elevador/maquete/imagens/fotos/2026-06-22_guias_cabos_argolas.png) | Organização cabos |
+| [motor_nema17_tambor_correia.png](../../elevador/hardware/mecanica/imagens/2026-06-22_motor_nema17_tambor_correia.png) | Transmissão |
 
 ## Próximo passo
 
-→ **Sensores Hall** (4 unidades, um por piso), depois motor + L298N
+→ **Testar Hall A3144** (casa) → montar nos pisos → integrar motor no shaft

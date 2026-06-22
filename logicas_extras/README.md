@@ -10,7 +10,7 @@ Subsistemas do prédio inteligente **além do elevador**. Versões iniciais — 
 | [paineis_controlo/](paineis_controlo/) | Caixa ESP32 OLED multi-ecrã (meteorologia, PIR) | **Simulação Wokwi + real** |
 | [porta_predio/](porta_predio/) | Código de acesso à entrada | Inicial |
 | [seguranca/](seguranca/) | Alarmes e proteção (PIR no painel ecra) | Inicial |
-| [meteorologia/](meteorologia/) | Sensores ambientais (no painel ecra) | Inicial |
+| [meteorologia/](meteorologia/) | Sensores ambientais — **ecrãs AMBIENTE/GRÁFICO no painel ecra** | **Funcional (demo)** |
 | [rfid/](rfid/) | Cartões por andar (prédio + apartamento) | Inicial |
 | [toldo_automatico/](toldo_automatico/) | Estendal por sensor de chuva | Planeado |
 | [legacy/](legacy/) | Versões antigas de cada módulo | — |

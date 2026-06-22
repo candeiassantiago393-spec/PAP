@@ -1,26 +1,20 @@
-# Imagens — Estrutura mecânica
+# Imagens — Mecânica
 
-Fotografias da construção manual da maquete (madeira + recipiente adaptado).
+| Ficheiro | Descrição | Data |
+|----------|-----------|------|
+| [2026-06-22_motor_nema17_tambor_correia.png](2026-06-22_motor_nema17_tambor_correia.png) | NEMA 17 bipolar, correia dentada, tambor como polia (suporte metálico) | 2026-06-22 |
 
-## A adicionar
+Motor cedido pelo professor (reutilizável). Testado na bancada com L298N — integração no shaft da maquete pendente.
 
-> **Nota:** Imagens serão colocadas aqui quando disponíveis.
+## Por adicionar
 
-| Ficheiro sugerido | Conteúdo |
-|-------------------|----------|
-| `AAAA-MM-DD_vista_geral_shaft.jpg` | Vista geral da estrutura em madeira |
-| `AAAA-MM-DD_cabine_recipiente.jpg` | Cabine (recipiente adaptado) |
-| `AAAA-MM-DD_detalhe_pisos.jpg` | Detalhe dos 4 pisos / fixações |
-| `AAAA-MM-DD_tambor_cabo.jpg` | Tambor e cabo de aço (quando montado) |
-| `AAAA-MM-DD_suportes_hall.jpg` | Fixação sensores Hall (quando montado) |
+- Motor montado no topo do poço
+- Cabo de aço na cabine
+- Fixação Hall por piso
 
-## Convenção de nomes
+## Navegação
 
-```text
-AAAA-MM-DD_descricao_curta.jpg
-```
-
-## Ligação
-
-- [Mecânica — documentação](../README.md)
-- [Fotos gerais da maquete](../../../maquete/imagens/fotos/)
+| | |
+|--|--|
+| Mecânica | [../README.md](../README.md) |
+| Maquete | [../../../maquete/ESTADO_ATUAL.md](../../../maquete/ESTADO_ATUAL.md) |

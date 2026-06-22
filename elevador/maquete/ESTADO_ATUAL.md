@@ -1,45 +1,76 @@
 # Estado Atual da Maquete
 
-> Última atualização: 2026-06-22
+> Última atualização: 2026-06-22 (registo utilizador + evidências)
 
 ## Fase do projeto
 
-**Integração física na maquete** — componentes já validados em simulação (Wokwi v06) e em testes de bancada.
+**Integração física na maquete** — I/O exterior e displays montados; motor testado em **bancada** (ainda não integrado na estrutura).
 
 ```text
 [✓] Programar / projetar
 [✓] Simulação virtual (v01–v06)
-[✓] Testes de bancada (botões, LEDs, OLED, Hall)
-[→] Montagem na maquete          ← ESTAMOS AQUI
-[ ] Integração motor + movimento
+[✓] Testes de bancada (botões, LEDs, OLED, motor+L298N, Hall pendente teste casa)
+[→] Montagem na maquete (I/O + cablagem)     ← ESTAMOS AQUI
+[ ] Sensores Hall + íman na cabine
+[ ] Motor + tambor na maquete
 [ ] Testes sistema completo
-[ ] Acabamentos mecânicos (tambor, cabo) — estrutura madeira + cabine já feitas
+[ ] Acabamentos (ventoinha L298N, porta/interiores se aplicável)
 ```
 
 ---
 
-## Componentes montados
+## Componentes montados na maquete
 
-| Componente | Qtd | Estado | Validado em |
-|------------|-----|--------|-------------|
-| Botões pedido exterior | 4 | Montado | Bancada + sim v06 |
-| LEDs pedido exterior | 4 | Montado | Bancada |
-| Displays OLED | 4 | Montado | Bancada (`oledbecnch`) |
-| Multiplexador TCA9548A | 1 | Montado | Sim v05/v06 |
+| Componente | Qtd | Estado | Notas |
+|------------|-----|--------|-------|
+| Botões pedido exterior | 4 | Montado | **Piso 3 com falha** — ver [DIFICULDADES](../../docs/DIFICULDADES.md) |
+| LEDs pedido exterior | 4 | Montado | Piso 3 a investigar (mau contacto?) |
+| Displays OLED SH1106 | 4 | Montado | Testados em vídeo |
+| Multiplexador TCA9548A | 1 | Montado | — |
+| Guias de cabos (argolas) | várias | Montado | Braçadeiras + argolas brancas na estrutura |
+| Estrutura madeira + cabine | 1 | Montado | Recipiente adaptado |
 
-**Evidência:** [vídeo 2026-06-22](imagens/videos/2026-06-22_maquete_botoes_leds_displays.mp4)
+### Ainda fora da maquete (mas disponíveis)
+
+| Componente | Estado |
+|------------|--------|
+| Motor NEMA 17 + tambor/polia + correia | Montagem mecânica feita; **testado na bancada** com 12 V; por integrar no shaft |
+| Driver L298N | Testado na bancada (cedido tutor Manuel Queiroz) |
+| Sensores Hall **A3144** ×4 | Por soldar/testar — íman na cabine **ainda não** |
+| Ventoinha 40 mm L298N | **Não comprada** |
+| Botões/LEDs interiores | **Por decidir** — possível só apresentação virtual |
+| Permissiva porta (D22) | **Por decidir** — possível só virtual |
 
 ---
 
-## Próximos passos (ordem planeada)
+## Próximos passos (ordem)
 
-1. **Sensores Hall** — 4 unidades, um por piso
-2. **Motor de passo NEMA 17** + driver **L298N**
-3. Botões interiores da cabine (4)
-4. LEDs interiores (4)
-5. Permissiva de porta (interruptor)
-6. Buzzer + botão reset
-7. Tambor + cabo de aço _(estrutura madeira e cabine/recipiente já montadas — fotos em `hardware/mecanica/imagens/`)_
+1. **Testar Hall A3144** em casa (`testes/bancada/sensores_hall/` + gráfico Python)
+2. Soldar/montar Hall nos 4 pisos + fixar **ímã na cabine**
+3. Integrar **motor + tambor** no topo/shaft da maquete
+4. Corrigir **botão/LED 3.º andar** (testes de continuidade)
+5. Ventoinha no L298N (quando comprada)
+6. Decidir se porta e botões interiores ficam físicos ou só na simulação Wokwi
+
+---
+
+## Convenção de pisos
+
+| Nome na maquete | Piso lógico firmware |
+|-----------------|----------------------|
+| **Rés-do-chão / 1.º andar** | Piso 1 (D8 Hall, botão D2, etc.) |
+| 2.º–4.º andar | Pisos 2–4 |
+
+---
+
+## Evidências (fotos e vídeos)
+
+| Ficheiro | Descrição |
+|----------|-----------|
+| [oled_displays_teste.mp4](imagens/videos/2026-06-22_maquete_oled_displays_teste.mp4) | 4 displays OLED a serem testados |
+| [botoes_leds_exteriores.mp4](imagens/videos/2026-06-22_maquete_botoes_leds_exteriores.mp4) | Botões + LEDs exteriores — **piso 3 com problema** |
+| [guias_cabos_argolas.png](imagens/fotos/2026-06-22_guias_cabos_argolas.png) | Argolas brancas + braçadeiras como guias de cabo |
+| [motor_tambor_correia.png](../hardware/mecanica/imagens/2026-06-22_motor_nema17_tambor_correia.png) | NEMA 17, correia dentada, tambor como polia |
 
 ---
 
@@ -47,16 +78,19 @@
 
 | Aspeto | Wokwi v06 | Maquete |
 |--------|-----------|---------|
-| Driver | A4988 | L298N |
-| OLED | SSD1306 | SH1106 |
-| Sensor piso | Interruptor | Hall |
-| Motor | Stepper sim | NEMA 17 real |
+| Driver | A4988 | L298N (D9, D33, D31, D32) |
+| OLED | SSD1306 | SH1106 + TCA9548A |
+| Sensor piso | Interruptor | Hall **A3144** (LOW = íman) |
+| Motor | Stepper sim | NEMA 17 bipolar (4 fios) |
+| Porta / interiores | Simulados | Possivelmente **só virtuais** na apresentação |
+
+Pinagem completa: [documentacao/pinagem.md](../documentacao/pinagem.md)
 
 ---
 
 ## Notas de montagem
 
-_(Adicionar aqui observações à medida que se monta — cablagem, fixações, problemas mecânicos.)_
-
-- 2026-06-22: Primeira integração de I/O exterior e displays na estrutura física.
-- Estrutura mecânica construída **à mão em madeira**; cabine = **recipiente adaptado** (não impressão 3D). Fotos a adicionar em [hardware/mecanica/imagens/](../hardware/mecanica/imagens/).
+- 2026-06-22: I/O exterior + OLEDs integrados na estrutura madeira.
+- Cablagem organizada com **braçadeiras** e **argolas** (tipo berço) parafusadas à maquete.
+- Motor + tambor: conjunto mecânico pronto; alimentação 12 V validada **na bancada**, não no shaft.
+- Lógicas extras (cofre, ecra, toldo, RFID): **após elevador funcional** na maquete.

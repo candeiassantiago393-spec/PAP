@@ -7,10 +7,10 @@ Painel multi-ecrã que agrega várias **lógicas extras** do prédio numa única
 | # | Nome | Subsistema PAP | Descrição |
 |---|------|----------------|-----------|
 | 1 | HOME | Painel | Marca candeias.dev / studio |
-| 2 | AMBIENTE | [Meteorologia](../../meteorologia/) | DHT22 — temperatura e humidade |
+| 2 | AMBIENTE | [Meteorologia](../../meteorologia/) — [funcionamento](../../meteorologia/documentacao/funcionamento.md) | DHT22 — temperatura e humidade |
 | 3 | MOVIMENTO | [Segurança](../../seguranca/) | PIR — alerta intruso, buzzer |
 | 4 | PLANTAS | Estufa / rega | Humidade solo, LEDs, bomba temporizada |
-| 5 | GRÁFICO | Meteorologia | Sparkline temperatura |
+| 5 | GRÁFICO | [Meteorologia](../../meteorologia/) — sparkline | Histórico temperatura (48 amostras) |
 | 6 | Instagram | Portfolio | QR code @candeias.dev |
 
 ## Navegação

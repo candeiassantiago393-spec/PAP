@@ -1,5 +1,7 @@
 # Dependências e artefactos locais
 .pio/
+__pycache__/
+*.pyc
 .vscode/.browse.c_cpp.db*
 .vscode/ipch
 
