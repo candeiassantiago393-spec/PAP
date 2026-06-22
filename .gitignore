@@ -1,0 +1,27 @@
+# Dependências e artefactos locais
+.pio/
+.vscode/.browse.c_cpp.db*
+.vscode/ipch
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Temporários
+*.tmp
+*.lnk
+*~
+
+# Secrets — nunca versionar
+.env
+*.pem
+credentials.json
+
+# Binários Arduino (gerados)
+*.hex
+*.elf
+*.bin
+
+# Vídeos grandes — avaliar Git LFS se o repo crescer muito
+# Por agora o vídeo da maquete (~2 MB) fica versionado
