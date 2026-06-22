@@ -19,4 +19,4 @@ Firmware e documentação da maquete física.
 
 ## Migração
 
-Código legado em: `Elevador-Projeto-Final-Curso-PAP-/circuito_real/`
+Conteúdo integrado no repo `PAP` — ver `elevador/real/l298n_sh1106_hall/`.

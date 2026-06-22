@@ -1,8 +1,7 @@
 {
   "recommendations": [
-    "platformio.platformio-ide",
+    "wokwi.wokwi-vscode",
     "davidgomes.platformio-ide-cursor",
-    "ms-vscode.cpptools",
-    "wokwi.wokwi-vscode"
+    "llvm-vs-code-extensions.vscode-clangd"
   ]
 }

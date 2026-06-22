@@ -1,0 +1,13 @@
+[wokwi]
+version = 1
+firmware = "sketch.ino"
+elf = ""
+
+[[libraries]]
+name = "hd44780"
+
+[[libraries]]
+name = "Adafruit GFX Library"
+
+[[libraries]]
+name = "Adafruit SSD1306"

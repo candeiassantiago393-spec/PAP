@@ -83,9 +83,9 @@
 ### [2026-06] Sem exports Wokwi no repositório
 - **Área:** ferramentas
 - **Fase:** simulação
-- **Problema:** Projetos Wokwi existem só na conta online; repo sem `diagram.json` / `wokwi.toml`.
+- **Problema:** Projetos Wokwi existiam só na conta online; repo sem `diagram.json` / `wokwi.toml`.
 - **Causa:** Desenvolvimento feito no browser, sem integração local.
-- **Solução:** Pendente — exportar projetos e colocar em `elevador/simulacao/wokwi/exports/`.
+- **Solução:** Exports v03–v06 integrados em `elevador/simulacao/legacy/wokwi/*/wokwi/`.
 - **Lição:** Versionar exports Wokwi junto com cada `.ino`.
 
 ---
@@ -97,6 +97,46 @@
 - **Causa:** Conta pessoal Wokwi só em casa.
 - **Solução:** Adiar para sessão em casa; estrutura de pastas já preparada.
 - **Lição:** Manter links Wokwi no README de cada versão legacy.
+
+---
+
+### [2025-11] Indefinição sobre plataforma de simulação do Arduino Mega
+- **Área:** elevador
+- **Fase:** simulação
+- **Problema:** Após a v02, era necessário migrar para o Mega, mas ainda não estava escolhida uma ferramenta de simulação adequada.
+- **Causa:** Limitações do Tinkercad para o Arduino Mega; ausência de alternativa definida no momento.
+- **Solução:** O orientador Rui Barros identificou o Wokwi e comunicou a opção ao autor (novembro 2025). A migração foi estável.
+- **Lição:** Reportar bloqueios técnicos aos orientadores atempadamente; o Wokwi tornou-se a plataforma central do projeto.
+
+---
+
+### [2026-02] Atraso na entrega da fonte de alimentação
+- **Área:** elevador
+- **Fase:** bancada
+- **Problema:** Fonte industrial 12 V demorou a chegar; projecto encravou temporariamente nos testes integrados com motor.
+- **Causa:** Prazo de entrega do fornecedor (Mauser).
+- **Solução:** Testes retomados após recepção (fevereiro–março 2026).
+- **Lição:** Encomendar componentes críticos de potência com antecedência; documentar em `docs/compras/`.
+
+---
+
+### [2026-06] I2C dos OLEDs a causar gaguejar do motor (bancada)
+- **Área:** elevador
+- **Fase:** bancada
+- **Problema:** 4 OLEDs no mesmo SDA/SCL; motor de passo gaguejava durante testes.
+- **Causa provável:** interferência no barramento I2C e/ou picos de consumo durante refresh dos displays.
+- **Solução:** Refactor do código (sugestão externa); versão actual no firmware real validada em bancada.
+- **Lição:** Separar timing de refresh I2C do controlo do motor; validar sempre com carga real ligada.
+
+---
+
+### [2026-06] Maus contactos e cabos curtos na maquete
+- **Área:** elevador
+- **Fase:** maquete
+- **Problema:** Falhas intermitentes por mau contacto; cabos demasiado curtos para a estrutura.
+- **Causa:** Cablagem inicial inadequada em comprimento e terminações.
+- **Solução:** Compra de rolos de jumpers e ponteiras (ferrules) para ligações mais fiáveis.
+- **Lição:** Prever cablagem e terminações desde o início da montagem física; documentar em `docs/compras/`.
 
 ---
 

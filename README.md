@@ -45,9 +45,26 @@ PAP/
 | Ficheiro | Conteúdo |
 |----------|----------|
 | [docs/CONTEXTO_PROJETO.md](docs/CONTEXTO_PROJETO.md) | Histórico, versões, pinagem, estados do sistema |
+| [docs/ETAPAS/README.md](docs/ETAPAS/README.md) | **Etapas do projeto** — relatórios por fase |
 | [docs/DIFICULDADES.md](docs/DIFICULDADES.md) | Registo de problemas e soluções |
+| [docs/compras/](docs/compras/) | Faturas Mauser e justificação de compras |
 | [docs/APRESENTACAO_CURSOR.md](docs/APRESENTACAO_CURSOR.md) | Como demonstrar tudo a partir do Cursor |
+| [docs/relatorios/](docs/relatorios/) | PDFs e DOCX de especificação e relatórios |
 | [elevador/maquete/ESTADO_ATUAL.md](elevador/maquete/ESTADO_ATUAL.md) | Progresso da montagem física |
+
+---
+
+## Desenvolvimento no Cursor
+
+| Tarefa | Pasta | Comando / ação |
+|--------|-------|----------------|
+| Simular elevador (referência) | `elevador/simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/` | `F1` → *Wokwi: Start Simulator* |
+| Compilar firmware real | `elevador/real/l298n_sh1106_hall/` | `pio run` |
+| Upload para Mega | idem | `pio run -t upload` |
+
+**PlatformIO validado** (22/06/2026): compilação OK — RAM 13,5%, Flash 8,4%.
+
+Extensões recomendadas: Wokwi, PlatformIO IDE (Cursor).
 
 ---
 
@@ -55,7 +72,7 @@ PAP/
 
 | Repo | Função |
 |------|--------|
-| [Elevador-Projeto-Final-Curso-PAP-](https://github.com/candeiassantiago393-spec/Elevador-Projeto-Final-Curso-PAP-) | Código legado (a migrar para aqui) |
+| [Elevador-Projeto-Final-Curso-PAP-](https://github.com/candeiassantiago393-spec/Elevador-Projeto-Final-Curso-PAP-) | Código legado — **migrado para este repo** |
 | [geral-controll-app](https://github.com/candeiassantiago393-spec/geral-controll-app) | Interface de organização de trabalho (desenvolvida pelo autor) |
 
 ---

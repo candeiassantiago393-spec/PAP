@@ -178,20 +178,24 @@ App desenvolvida pelo autor para gestão de tarefas, projetos e documentação d
 | Commit | Conteúdo | Estado |
 |--------|----------|--------|
 | 1 | `docs: contexto inicial e topologia` | **Este commit** |
-| 2 | `docs: migrar relatórios PDF/DOCX` | Pendente |
-| 3 | `feat(elevador): legacy tinkercad v01-v02` | Pendente |
-| 4 | `feat(elevador): legacy wokwi v03-v06` | Pendente |
-| 5 | `feat(elevador): implementação real L298N` | Pendente |
-| 6 | `test(elevador): bancada hardware` | Pendente |
-| 7 | `chore: PlatformIO + Wokwi exports` | Pendente (links em casa) |
+| 2 | `docs: migrar relatórios PDF/DOCX` | Concluído |
+| 3 | `feat(elevador): legacy tinkercad v01-v02` | Concluído |
+| 4 | `feat(elevador): legacy wokwi v03-v06` | Concluído |
+| 5 | `feat(elevador): implementação real L298N` | Concluído |
+| 6 | `test(elevador): bancada hardware` | Concluído |
+| 7 | `chore(elevador): integrar exports Wokwi v03–v06` | Concluído |
+| 8 | `chore: PlatformIO firmware real` | Concluído |
+| 9 | `docs: etapas, compras e justificações` | Pendente commit |
 | 8+ | `feat(logicas_extras): módulos` | Futuro |
 
 ---
 
 ## 11. Pendências
 
-- [ ] Links Wokwi v03–v06 (enviar de casa)
-- [ ] Exportar `diagram.json` de cada projeto Wokwi
+- [x] Exportar `diagram.json` de cada projeto Wokwi
+- [x] Migrar relatórios PDF/DOCX → `docs/relatorios/`
+- [x] Migrar firmware real L298N → `elevador/real/l298n_sh1106_hall/`
+- [x] Configurar PlatformIO para compilação no Cursor
 - [ ] Migrar fotos adicionais da maquete
 - [ ] Esquemas KiCad/Fritzing (se existirem)
 - [ ] Ficheiros STL da cabine 3D

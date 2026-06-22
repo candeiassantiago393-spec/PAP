@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "wokwi.wokwi-vscode",
+    "davidgomes.platformio-ide-cursor"
+  ],
+  "settings": {
+    "platformio-ide.autoOpenPlatformIOIniFile": false
+  }
+}
