@@ -16,6 +16,8 @@ App desenvolvida pelo autor (Santiago Candeias) para gestão pessoal de projetos
 
 Tasks exportadas da app ficam em [docs/TASKS_PAP_SYNC.md](../docs/TASKS_PAP_SYNC.md).
 
+> **Este código não vive no repo PAP.** O firmware do painel ESP32 (antigo projeto `ecra`) está em [logicas_extras/paineis_controlo/](../logicas_extras/paineis_controlo/).
+
 ## Uso no Cursor
 
 ### Opção A — Pasta irmã no workspace

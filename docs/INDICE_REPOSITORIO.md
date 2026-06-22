@@ -106,9 +106,13 @@ cd logicas_extras/paineis_controlo/real/caixa_ecra && pio run
 
 | Ficheiro | Conteúdo |
 |----------|----------|
-| [README.md](../interface/README.md) | geral-controll-app — tarefas e organização |
+| [README.md](../interface/README.md) | Ligação ao **geral-controll-app** (repo externo) |
 
-Workspace recomendado: `PAP` + pasta local `me` (Candeias Control App).
+**Não incluído neste repo:** código da app `me` / Candeias Control App — apenas [TASKS_PAP_SYNC.md](TASKS_PAP_SYNC.md) como snapshot.
+
+**Incluído (ecra):** projeto ecra → [paineis_controlo/](../logicas_extras/paineis_controlo/)
+
+Workspace opcional no Cursor: clone PAP + clone [geral-controll-app](https://github.com/candeiassantiago393-spec/geral-controll-app) como pasta irmã.
 
 ---
 
