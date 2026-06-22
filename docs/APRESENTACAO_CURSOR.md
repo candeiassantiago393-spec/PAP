@@ -62,15 +62,24 @@ elevador/real/l298n_sh1106_hall/
 
 ## 4. Simulação Wokwi no Cursor
 
-### Estado atual
-Links Wokwi pendentes (export de casa). Quando disponíveis:
+### Onde estão os ficheiros
 
-1. Colocar `diagram.json` + `wokwi.toml` em cada pasta legacy
-2. Instalar extensão **Wokwi Simulator** no Cursor
-3. Abrir pasta da versão → `F1` → "Wokwi: Start Simulator"
+```text
+elevador/simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/
+```
+
+> `simulacao/wokwi/exports/` está vazia por intenção — exports activos em `legacy/wokwi/v03–v06/wokwi/`.
+
+### Passos
+
+1. Instalar extensão **Wokwi Simulator** no Cursor
+2. Abrir pasta `.../v06_.../wokwi/` (expandir `legacy` no Explorer)
+3. Abrir `sketch.ino`
+4. `F1` → **Wokwi: Start Simulator**
 
 ### Alternativa durante apresentação
-- **Simple Browser** (`Ctrl+Shift+P` → "Simple Browser: Show") com URL do projeto Wokwi v06
+
+**Simple Browser** com URL: https://wokwi.com/projects/464344193596402689
 
 ---
 
@@ -129,7 +138,7 @@ Plano: experiência estilo Prezi para explorar componentes da maquete.
 
 - [ ] Workspace `PAP` abre sem erros
 - [ ] PDF do relatório em `docs/relatorios/`
-- [ ] Links Wokwi em cada README legacy
+- [x] Links Wokwi e exports em `legacy/wokwi/v03–v06/`
 - [ ] PlatformIO compila firmware v06 ou real
 - [ ] Interface local arranca com um comando
 - [ ] Vídeo/fotos da maquete na pasta `maquete/imagens/`

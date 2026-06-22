@@ -1,0 +1,10 @@
+[wokwi]
+version = 1
+firmware = "sketch.ino"
+elf = ""
+
+[[libraries]]
+name = "Servo"
+
+[[libraries]]
+name = "Keypad"

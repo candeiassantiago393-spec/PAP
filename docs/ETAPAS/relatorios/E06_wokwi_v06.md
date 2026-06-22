@@ -44,6 +44,8 @@ Completar a lógica do elevador real na simulação: pedidos interiores, permiss
 |----------|-----------|
 | [wokwi/](../../../elevador/simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/) | Export completo |
 | [imagem_circuito.png](../../../elevador/simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/imagem_circuito.png) | Vista do circuito |
+| [elevador_v06_forca_comando.svg](../../../elevador/hardware/esquemas/elevador_v06_forca_comando.svg) | Esquema elétrico força + comando |
+| [elevador_v06_esquema.md](../../../elevador/hardware/esquemas/elevador_v06_esquema.md) | Legenda e ligações |
 
 ## Próximo passo
 

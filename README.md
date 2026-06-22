@@ -77,7 +77,8 @@ Extensões recomendadas: Wokwi, PlatformIO IDE (Cursor).
 
 ---
 
-## Migração em curso
+## Estrutura completa
 
-O conteúdo do repositório antigo está a ser reorganizado para esta estrutura.  
-Commits planeados por etapas — ver [docs/CONTEXTO_PROJETO.md](docs/CONTEXTO_PROJETO.md#plano-de-migração).
+Todas as pastas do repositório têm README e ligações — ver [elevador/README.md](elevador/README.md) e [logicas_extras/README.md](logicas_extras/README.md).
+
+Histórico de migração: [docs/CONTEXTO_PROJETO.md](docs/CONTEXTO_PROJETO.md#plano-de-migração)

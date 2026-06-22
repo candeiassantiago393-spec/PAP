@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="990" viewBox="0 0 1400 990">
+  <defs>
+    <style type="text/css"><![CDATA[
+      .bg       { fill:#f8f9fb; }
+      .panel    { fill:#ffffff; stroke:#c5cdd8; stroke-width:1; }
+      .hdr      { fill:#1a365d; }
+      .hdrTxt   { font-family:'Segoe UI',Arial,sans-serif; font-size:15px; font-weight:600; fill:#ffffff; }
+      .hdrSub   { font-family:'Segoe UI',Arial,sans-serif; font-size:11px; fill:#cbd5e1; }
+      .secTitle { font-family:'Segoe UI',Arial,sans-serif; font-size:13px; font-weight:700; fill:#1a365d; letter-spacing:0.5px; }
+      .lbl      { font-family:'Segoe UI',Arial,sans-serif; font-size:12px; fill:#1e293b; }
+      .lblSm    { font-family:'Segoe UI',Arial,sans-serif; font-size:10px; fill:#475569; }
+      .lblPin   { font-family:Consolas,'Courier New',monospace; font-size:10px; fill:#0f766e; font-weight:600; }
+      .pwr      { stroke:#dc2626; stroke-width:2.5; fill:none; }
+      .gnd      { stroke:#1e293b; stroke-width:2; fill:none; }
+      .log5v    { stroke:#2563eb; stroke-width:2; fill:none; }
+      .sig      { stroke:#334155; stroke-width:1.5; fill:none; }
+      .sigDash  { stroke:#64748b; stroke-width:1.2; fill:none; stroke-dasharray:5 4; }
+      .box      { fill:#ffffff; stroke:#334155; stroke-width:1.5; }
+      .boxFill  { fill:#f1f5f9; stroke:#334155; stroke-width:1.5; }
+      .motor    { fill:none; stroke:#334155; stroke-width:2; }
+      .fuse     { fill:#fff; stroke:#334155; stroke-width:1.5; }
+      .note     { fill:#fffbeb; stroke:#d97706; stroke-width:1; }
+      .noteTxt  { font-family:'Segoe UI',Arial,sans-serif; font-size:10px; fill:#92400e; }
+      .tblHdr   { fill:#e2e8f0; }
+      .tblTxt   { font-family:'Segoe UI',Arial,sans-serif; font-size:10px; fill:#334155; }
+      .titleBlk { fill:#ffffff; stroke:#94a3b8; stroke-width:1; }
+      .tbLbl    { font-family:'Segoe UI',Arial,sans-serif; font-size:9px; fill:#64748b; }
+      .tbVal    { font-family:'Segoe UI',Arial,sans-serif; font-size:10px; fill:#0f172a; font-weight:600; }
+      .divider  { stroke:#cbd5e1; stroke-width:1; stroke-dasharray:8 6; }
+    ]]></style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="990" class="bg"/>
+
+  <!-- Cabeçalho -->
+  <rect x="0" y="0" width="1400" height="72" class="hdr"/>
+  <text x="32" y="32" class="hdrTxt">ESQUEMA ELÉCTRICO — ELEVADOR 4 PISOS</text>
+  <text x="32" y="52" class="hdrSub">Variante simulação Wokwi v06 · Arduino Mega 2560 · Driver A4988 · Motor NEMA 17 bipolar</text>
+  <text x="32" y="66" class="hdrSub">PAP Prédio Inteligente · Escola Secundária Emídio Navarro · 12.º PEAC · 2025/2026</text>
+
+  <!-- Separador vertical -->
+  <line x1="700" y1="88" x2="700" y2="900" class="divider"/>
+
+  <!-- ═══════════════ CIRCUITO DE FORÇA ═══════════════ -->
+  <rect x="24" y="88" width="660" height="812" rx="4" class="panel"/>
+  <text x="44" y="114" class="secTitle">CIRCUITO DE FORÇA (POTÊNCIA)</text>
+
+  <!-- Barramento alimentação -->
+  <text x="56" y="158" class="lbl" fill="#dc2626" font-weight="700">+12 V</text>
+  <text x="56" y="198" class="lbl">GND</text>
+  <text x="56" y="238" class="lbl" fill="#2563eb" font-weight="700">+5 V</text>
+  <line x1="110" y1="153" x2="110" y2="243" class="pwr"/>
+  <line x1="110" y1="153" x2="620" y2="153" class="pwr"/>
+  <line x1="110" y1="193" x2="620" y2="193" class="gnd"/>
+  <line x1="110" y1="233" x2="620" y2="233" class="log5v"/>
+
+  <!-- Fonte -->
+  <rect x="130" y="130" width="90" height="50" class="boxFill"/>
+  <text x="148" y="152" class="lbl" font-weight="600">PSU</text>
+  <text x="140" y="168" class="lblSm">12 V / 5 V</text>
+  <text x="142" y="172" class="lblSm">(sim: USB)</text>
+  <line x1="220" y1="153" x2="250" y2="153" class="pwr"/>
+
+  <!-- Fusível F1 -->
+  <rect x="250" y="140" width="36" height="26" class="fuse"/>
+  <line x1="258" y1="153" x2="278" y2="153" class="sig"/>
+  <text x="256" y="136" class="lblSm">F1</text>
+  <text x="248" y="178" class="lblSm">2 A gG</text>
+  <line x1="286" y1="153" x2="320" y2="153" class="pwr"/>
+
+  <!-- A4988 -->
+  <rect x="320" y="118" width="130" height="100" class="box"/>
+  <text x="358" y="142" class="lbl" font-weight="700">A4988</text>
+  <text x="332" y="162" class="lblSm">VMOT ← +12 V</text>
+  <text x="332" y="178" class="lblSm">VDD  ← +5 V</text>
+  <text x="332" y="194" class="lblSm">GND  → barramento</text>
+  <text x="332" y="210" class="lblSm">STEP ← D9 · DIR ← D10</text>
+  <line x1="450" y1="148" x2="490" y2="148" class="sig"/>
+  <line x1="450" y1="158" x2="490" y2="158" class="sig"/>
+  <line x1="450" y1="168" x2="490" y2="168" class="sig"/>
+  <line x1="450" y1="178" x2="490" y2="178" class="sig"/>
+  <text x="456" y="198" class="lblSm">1A 1B 2A 2B</text>
+
+  <!-- Motor -->
+  <circle cx="540" cy="163" r="46" class="motor"/>
+  <text x="528" y="158" class="lbl" font-weight="700">M1</text>
+  <text x="508" y="176" class="lblSm">NEMA 17</text>
+  <text x="502" y="190" class="lblSm">bipolar 4 fios</text>
+
+  <!-- GND motor -->
+  <line x1="320" y1="193" x2="380" y2="193" class="gnd"/>
+  <line x1="380" y1="193" x2="380" y2="210" class="gnd"/>
+  <line x1="380" y1="210" x2="450" y2="210" class="gnd"/>
+
+  <!-- Arduino Mega força -->
+  <rect x="130" y="280" width="160" height="72" class="boxFill"/>
+  <text x="158" y="306" class="lbl" font-weight="700">U1 — Arduino Mega</text>
+  <text x="142" y="324" class="lblSm">VIN / USB · 5 V reg.</text>
+  <text x="142" y="340" class="lblSm">GND comum com driver</text>
+  <line x1="110" y1="233" x2="130" y2="233" class="log5v"/>
+  <line x1="130" y1="233" x2="130" y2="316" class="log5v"/>
+  <line x1="110" y1="193" x2="130" y2="193" class="gnd"/>
+  <line x1="130" y1="193" x2="130" y2="340" class="gnd"/>
+
+  <!-- I2C / OLEDs -->
+  <rect x="340" y="280" width="200" height="72" class="box"/>
+  <text x="368" y="306" class="lbl" font-weight="700">4 × OLED SSD1306</text>
+  <text x="352" y="324" class="lblSm">I2C · addr 0x3C (cada)</text>
+  <text x="352" y="340" class="lblSm">SDA → D20 · SCL → D21</text>
+  <line x1="290" y1="316" x2="340" y2="316" class="sigDash"/>
+  <line x1="110" y1="233" x2="290" y2="233" class="log5v"/>
+  <line x1="290" y1="233" x2="290" y2="316" class="sigDash"/>
+
+  <!-- Ligação comando → força -->
+  <rect x="130" y="400" width="500" height="36" class="note"/>
+  <text x="148" y="422" class="noteTxt">Ligação lógica D9/D10 → A4988 (representada no circuito de comando, lado direito)</text>
+
+  <!-- Tabela ligações motor -->
+  <rect x="44" y="460" width="620" height="120" class="box"/>
+  <rect x="44" y="460" width="620" height="24" class="tblHdr"/>
+  <text x="56" y="476" class="tblTxt" font-weight="700">Ligações bobinas — conforme diagram.json v06</text>
+  <text x="56" y="502" class="tblTxt">Motor A+ → A4988 2A</text>
+  <text x="56" y="520" class="tblTxt">Motor A− → A4988 2B</text>
+  <text x="56" y="538" class="tblTxt">Motor B+ → A4988 1A</text>
+  <text x="56" y="556" class="tblTxt">Motor B− → A4988 1B</text>
+  <text x="340" y="502" class="tblTxt">Microstep: 1/16 (MS1–MS3)</text>
+  <text x="340" y="520" class="tblTxt">Corrente: potenciómetro onboard</text>
+  <text x="340" y="538" class="tblTxt">Alimentação motor: 12 V DC</text>
+  <text x="340" y="556" class="tblTxt">Lógica driver: 5 V (VDD)</text>
+
+  <!-- Legenda força -->
+  <rect x="44" y="600" width="620" height="80" class="boxFill"/>
+  <text x="56" y="622" class="lblSm" font-weight="700">Legenda condutores</text>
+  <line x1="56" y1="636" x2="100" y2="636" class="pwr"/><text x="108" y="640" class="lblSm">+12 V motor</text>
+  <line x1="200" y1="636" x2="244" y2="636" class="log5v"/><text x="252" y="640" class="lblSm">+5 V lógica</text>
+  <line x1="360" y1="636" x2="404" y2="636" class="gnd"/><text x="412" y="640" class="lblSm">GND comum</text>
+  <line x1="500" y1="636" x2="544" y2="636" class="sigDash"/><text x="552" y="640" class="lblSm">Sinal / I2C</text>
+  <text x="56" y="664" class="lblSm">F1 protege o ramo de potência do motor. GND único entre fonte, Mega, A4988 e periféricos.</text>
+
+  <!-- ═══════════════ CIRCUITO DE COMANDO ═══════════════ -->
+  <rect x="716" y="88" width="660" height="812" rx="4" class="panel"/>
+  <text x="736" y="114" class="secTitle">CIRCUITO DE COMANDO (LÓGICA)</text>
+  <text x="736" y="132" class="lblSm">Entradas: INPUT_PULLUP, activas a LOW · Saídas: digitalWrite</text>
+
+  <!-- Controlador central -->
+  <rect x="900" y="280" width="220" height="130" class="boxFill"/>
+  <text x="948" y="310" class="lbl" font-weight="700">U1 — CONTROLADOR</text>
+  <text x="938" y="332" class="lbl">Arduino Mega 2560</text>
+  <text x="928" y="352" class="lblSm">Firmware v06 (Wokwi)</text>
+  <text x="928" y="370" class="lblSm">Fila · Sentido · Estados</text>
+  <text x="928" y="388" class="lblSm">NORMAL · PORTA · ERRO_*</text>
+
+  <!-- Bloco entradas -->
+  <rect x="736" y="160" width="280" height="100" class="box"/>
+  <text x="752" y="182" class="lbl" font-weight="700">Entradas digitais</text>
+  <text x="752" y="202" class="lblSm">Pedidos ext. P1–P4</text><text x="900" y="202" class="lblPin">D2–D5</text>
+  <text x="752" y="220" class="lblSm">Pedidos int. P1–P4</text><text x="900" y="220" class="lblPin">D23–D26</text>
+  <text x="752" y="238" class="lblSm">Sensores piso (interruptor)</text><text x="900" y="238" class="lblPin">D8, D11–D13</text>
+  <line x1="1016" y1="210" x2="900" y2="320" class="sig"/>
+
+  <!-- Segurança funcional -->
+  <rect x="1040" y="160" width="300" height="100" class="box"/>
+  <text x="1056" y="182" class="lbl" font-weight="700">Interlocks (software)</text>
+  <text x="1056" y="202" class="lblSm">SP — Permissiva porta</text><text x="1200" y="202" class="lblPin">D22</text>
+  <text x="1056" y="220" class="lblSm">S0 — Reset / rearme</text><text x="1200" y="220" class="lblPin">D7</text>
+  <text x="1056" y="244" class="noteTxt">Representação funcional — não série eléctrica</text>
+  <text x="1056" y="256" class="lblSm">Porta fechada = HIGH · aberta = LOW</text>
+  <line x1="1040" y1="210" x2="1000" y2="300" class="sigDash"/>
+
+  <!-- Saídas motor -->
+  <rect x="736" y="440" width="280" height="80" class="box"/>
+  <text x="752" y="462" class="lbl" font-weight="700">Acionamento motor</text>
+  <text x="752" y="482" class="lblSm">STEP → A4988</text><text x="900" y="482" class="lblPin">D9</text>
+  <text x="752" y="500" class="lblSm">DIR  → A4988</text><text x="900" y="500" class="lblPin">D10</text>
+  <line x1="900" y1="490" x2="900" y2="410" class="sigDash"/>
+  <line x1="900" y1="410" x2="450" y2="410" class="sigDash" marker-end="url(#arrow)"/>
+  <text x="580" y="404" class="lblSm">→ circuito de força</text>
+
+  <!-- Saídas indicadores -->
+  <rect x="1040" y="440" width="300" height="100" class="box"/>
+  <text x="1056" y="462" class="lbl" font-weight="700">Indicação e alarme</text>
+  <text x="1056" y="482" class="lblSm">LED ext. P1–P4 + R 1 kΩ</text><text x="1240" y="482" class="lblPin">A0–A3</text>
+  <text x="1056" y="500" class="lblSm">LED int. P1–P4 + R 1 kΩ</text><text x="1240" y="500" class="lblPin">D27–D30</text>
+  <text x="1056" y="518" class="lblSm">Buzzer activo</text><text x="1240" y="518" class="lblPin">D6</text>
+  <line x1="1040" y1="490" x2="1000" y2="380" class="sig"/>
+
+  <!-- Tabela I/O completa -->
+  <rect x="736" y="560" width="604" height="200" class="box"/>
+  <rect x="736" y="560" width="604" height="22" class="tblHdr"/>
+  <text x="748" y="575" class="tblTxt" font-weight="700">Mapa de pinos — Arduino Mega (v06)</text>
+  <text x="748" y="598" class="tblTxt">D2–D5</text><text x="800" y="598" class="tblTxt">Botões pedido exterior</text>
+  <text x="748" y="616" class="tblTxt">D6</text><text x="800" y="616" class="tblTxt">Buzzer</text>
+  <text x="748" y="634" class="tblTxt">D7</text><text x="800" y="634" class="tblTxt">Reset / rearme</text>
+  <text x="748" y="652" class="tblTxt">D8, D11–D13</text><text x="800" y="652" class="tblTxt">Sensores de piso (interruptor, LOW = activo)</text>
+  <text x="748" y="670" class="tblTxt">D9, D10</text><text x="800" y="670" class="tblTxt">STEP / DIR → A4988</text>
+  <text x="748" y="688" class="tblTxt">D20, D21</text><text x="800" y="688" class="tblTxt">I2C SDA / SCL → OLEDs</text>
+  <text x="748" y="706" class="tblTxt">D22</text><text x="800" y="706" class="tblTxt">Permissiva porta (HIGH = fechada)</text>
+  <text x="748" y="724" class="tblTxt">D23–D26</text><text x="800" y="724" class="tblTxt">Botões pedido interior</text>
+  <text x="748" y="742" class="tblTxt">D27–D30</text><text x="800" y="742" class="tblTxt">LEDs interiores</text>
+  <text x="748" y="760" class="tblTxt">A0–A3</text><text x="800" y="760" class="tblTxt">LEDs exteriores</text>
+  <text x="1050" y="598" class="tblTxt">Estados:</text>
+  <text x="1050" y="616" class="tblTxt">NORMAL · PORTA · PARAGEM</text>
+  <text x="1050" y="634" class="tblTxt">ESTAB · ERRO_MOV · ERRO_PAR</text>
+  <text x="1050" y="652" class="tblTxt">REARME</text>
+  <text x="1050" y="680" class="tblTxt" font-style="italic">Maquete real: ver</text>
+  <text x="1050" y="698" class="tblTxt" font-style="italic">elevador_real_forca_comando.svg</text>
+
+  <!-- Nota -->
+  <rect x="736" y="780" width="604" height="44" class="note"/>
+  <text x="752" y="800" class="noteTxt">Este desenho reflecte a simulação Wokwi v06. A variante física (L298N, Hall, SH1106, TCA9548A) tem esquema dedicado.</text>
+  <text x="752" y="814" class="noteTxt">Firmware: elevador/simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/sketch.ino</text>
+
+  <!-- Carimbo / title block -->
+  <rect x="1050" y="912" width="326" height="66" class="titleBlk"/>
+  <line x1="1050" y1="934" x2="1376" y2="934" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="1050" y1="956" x2="1376" y2="956" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="1180" y1="912" x2="1180" y2="978" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="1280" y1="912" x2="1280" y2="978" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="1060" y="926" class="tbLbl">Desenho</text>
+  <text x="1060" y="948" class="tbLbl">Título</text>
+  <text x="1060" y="970" class="tbLbl">Escala</text>
+  <text x="1190" y="926" class="tbVal">ELV-SCH-001</text>
+  <text x="1190" y="948" class="tbVal">Força + Comando v06</text>
+  <text x="1190" y="970" class="tbVal">NTS</text>
+  <text x="1290" y="926" class="tbLbl">Rev.</text>
+  <text x="1290" y="948" class="tbLbl">Data</text>
+  <text x="1290" y="970" class="tbLbl">Folha</text>
+  <text x="1330" y="926" class="tbVal">A</text>
+  <text x="1330" y="948" class="tbVal">2026-06-22</text>
+  <text x="1330" y="970" class="tbVal">1 / 1</text>
+
+  <text x="32" y="972" class="lblSm">elevador_v06_forca_comando.svg · ELV-SCH-001 · Simulação Wokwi v06</text>
+</svg>

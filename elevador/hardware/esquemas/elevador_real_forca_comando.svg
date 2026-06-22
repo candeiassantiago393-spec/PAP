@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1050" viewBox="0 0 1400 1050">
+  <defs>
+    <style type="text/css"><![CDATA[
+      .bg       { fill:#f8f9fb; }
+      .panel    { fill:#ffffff; stroke:#c5cdd8; stroke-width:1; }
+      .hdr      { fill:#14532d; }
+      .hdrTxt   { font-family:'Segoe UI',Arial,sans-serif; font-size:15px; font-weight:600; fill:#ffffff; }
+      .hdrSub   { font-family:'Segoe UI',Arial,sans-serif; font-size:11px; fill:#bbf7d0; }
+      .secTitle { font-family:'Segoe UI',Arial,sans-serif; font-size:13px; font-weight:700; fill:#14532d; letter-spacing:0.5px; }
+      .lbl      { font-family:'Segoe UI',Arial,sans-serif; font-size:12px; fill:#1e293b; }
+      .lblSm    { font-family:'Segoe UI',Arial,sans-serif; font-size:10px; fill:#475569; }
+      .lblPin   { font-family:Consolas,'Courier New',monospace; font-size:10px; fill:#0f766e; font-weight:600; }
+      .pwr      { stroke:#dc2626; stroke-width:2.5; fill:none; }
+      .gnd      { stroke:#1e293b; stroke-width:2; fill:none; }
+      .log5v    { stroke:#2563eb; stroke-width:2; fill:none; }
+      .sig      { stroke:#334155; stroke-width:1.5; fill:none; }
+      .sigDash  { stroke:#64748b; stroke-width:1.2; fill:none; stroke-dasharray:5 4; }
+      .box      { fill:#ffffff; stroke:#334155; stroke-width:1.5; }
+      .boxFill  { fill:#f0fdf4; stroke:#334155; stroke-width:1.5; }
+      .motor    { fill:none; stroke:#334155; stroke-width:2; }
+      .fuse     { fill:#fff; stroke:#334155; stroke-width:1.5; }
+      .note     { fill:#fffbeb; stroke:#d97706; stroke-width:1; }
+      .noteTxt  { font-family:'Segoe UI',Arial,sans-serif; font-size:10px; fill:#92400e; }
+      .tblHdr   { fill:#dcfce7; }
+      .tblTxt   { font-family:'Segoe UI',Arial,sans-serif; font-size:10px; fill:#334155; }
+      .titleBlk { fill:#ffffff; stroke:#94a3b8; stroke-width:1; }
+      .tbLbl    { font-family:'Segoe UI',Arial,sans-serif; font-size:9px; fill:#64748b; }
+      .tbVal    { font-family:'Segoe UI',Arial,sans-serif; font-size:10px; fill:#0f172a; font-weight:600; }
+      .divider  { stroke:#cbd5e1; stroke-width:1; stroke-dasharray:8 6; }
+      .hall     { fill:#ecfdf5; stroke:#059669; stroke-width:1.5; }
+    ]]></style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="1050" class="bg"/>
+
+  <!-- CabeÁalho -->
+  <rect x="0" y="0" width="1400" height="72" class="hdr"/>
+  <text x="32" y="32" class="hdrTxt">ESQUEMA EL…CTRICO  ELEVADOR 4 PISOS (MAQUETE FÕSICA)</text>
+  <text x="32" y="52" class="hdrSub">Variante real E08/E09 ∑ Arduino Mega 2560 ∑ Driver L298N ∑ Hall ∑ SH1106 ∑ TCA9548A</text>
+  <text x="32" y="66" class="hdrSub">PAP PrÈdio Inteligente ∑ Fonte Orno 12 V 5 A ∑ Motor NEMA 17 bipolar</text>
+
+  <line x1="700" y1="88" x2="700" y2="960" class="divider"/>
+
+  <!-- PPPPPPPPPPPPPPP FOR«A PPPPPPPPPPPPPPP -->
+  <rect x="24" y="88" width="660" height="872" rx="4" class="panel"/>
+  <text x="44" y="114" class="secTitle">CIRCUITO DE FOR«A (POT NCIA)</text>
+
+  <!-- Barramentos -->
+  <text x="56" y="158" class="lbl" fill="#dc2626" font-weight="700">+12 V</text>
+  <text x="56" y="198" class="lbl">GND</text>
+  <text x="56" y="238" class="lbl" fill="#2563eb" font-weight="700">+5 V</text>
+  <line x1="110" y1="153" x2="110" y2="243" class="pwr"/>
+  <line x1="110" y1="153" x2="620" y2="153" class="pwr"/>
+  <line x1="110" y1="193" x2="620" y2="193" class="gnd"/>
+  <line x1="110" y1="233" x2="620" y2="233" class="log5v"/>
+
+  <!-- Fonte industrial -->
+  <rect x="130" y="128" width="110" height="56" class="boxFill"/>
+  <text x="148" y="150" class="lbl" font-weight="600">PSU Orno</text>
+  <text x="140" y="166" class="lblSm">12 VDC / 5 A 60 W</text>
+  <text x="140" y="180" class="lblSm">035-0873</text>
+  <line x1="240" y1="153" x2="270" y2="153" class="pwr"/>
+
+  <!-- F1 -->
+  <rect x="270" y="140" width="36" height="26" class="fuse"/>
+  <line x1="278" y1="153" x2="298" y2="153" class="sig"/>
+  <text x="276" y="136" class="lblSm">F1</text>
+  <text x="262" y="178" class="lblSm">2 A gG</text>
+  <line x1="306" y1="153" x2="340" y2="153" class="pwr"/>
+
+  <!-- L298N -->
+  <rect x="340" y="108" width="150" height="130" class="box"/>
+  <text x="388" y="132" class="lbl" font-weight="700">L298N</text>
+  <text x="352" y="152" class="lblSm">+12 V í VS (motor)</text>
+  <text x="352" y="168" class="lblSm">+5 V  í lÛgica (jumper)</text>
+  <text x="352" y="184" class="lblSm">GND comum ∑ ENA = HIGH</text>
+  <text x="352" y="200" class="lblSm">OUT1OUT4 í bobinas M1</text>
+  <text x="352" y="216" class="lblSm">IN1IN4 ê Mega D9,33,31,32</text>
+  <text x="352" y="232" class="lblSm">Ventoinha 40 mm recomendada</text>
+  <line x1="490" y1="148" x2="530" y2="148" class="sig"/>
+  <line x1="490" y1="158" x2="530" y2="158" class="sig"/>
+  <line x1="490" y1="168" x2="530" y2="168" class="sig"/>
+  <line x1="490" y1="178" x2="530" y2="178" class="sig"/>
+
+  <!-- Motor -->
+  <circle cx="580" cy="163" r="46" class="motor"/>
+  <text x="568" y="158" class="lbl" font-weight="700">M1</text>
+  <text x="548" y="176" class="lblSm">NEMA 17</text>
+  <text x="542" y="190" class="lblSm">bipolar</text>
+  <line x1="340" y1="193" x2="400" y2="193" class="gnd"/>
+
+  <!-- Mega alimentaÁ„o -->
+  <rect x="130" y="280" width="170" height="80" class="boxFill"/>
+  <text x="152" y="306" class="lbl" font-weight="700">U1  Arduino Mega</text>
+  <text x="142" y="324" class="lblSm">USB (programaÁ„o) ou VIN</text>
+  <text x="142" y="340" class="lblSm">Regulador onboard 5 V</text>
+  <text x="142" y="356" class="lblSm">GND comum obrigatÛrio</text>
+  <line x1="110" y1="233" x2="130" y2="233" class="log5v"/>
+  <line x1="130" y1="233" x2="130" y2="320" class="log5v"/>
+  <line x1="110" y1="193" x2="130" y2="193" class="gnd"/>
+
+  <!-- TCA9548A + OLEDs -->
+  <rect x="340" y="268" width="110" height="64" class="box"/>
+  <text x="358" y="290" class="lbl" font-weight="700">TCA9548A</text>
+  <text x="350" y="308" class="lblSm">I2C 0x70</text>
+  <text x="350" y="322" class="lblSm">SDA D20 ∑ SCL D21</text>
+  <line x1="300" y1="300" x2="340" y2="300" class="sigDash"/>
+  <line x1="110" y1="233" x2="300" y2="233" class="log5v"/>
+  <line x1="300" y1="233" x2="300" y2="300" class="sigDash"/>
+
+  <rect x="470" y="258" width="180" height="84" class="box"/>
+  <text x="492" y="282" class="lbl" font-weight="700">4 ◊ OLED SH1106</text>
+  <text x="482" y="300" class="lblSm">1,3" I2C ∑ addr 0x3C</text>
+  <text x="482" y="316" class="lblSm">Canal TCA 03 (1/piso)</text>
+  <text x="482" y="332" class="lblSm">VCC 3,35 V ∑ GND comum</text>
+  <line x1="450" y1="300" x2="470" y2="300" class="sig"/>
+
+  <!-- Sensores Hall alimentaÁ„o -->
+  <rect x="130" y="400" width="520" height="70" class="hall"/>
+  <text x="148" y="422" class="lbl" font-weight="700">Sensores Hall (◊5)</text>
+  <text x="148" y="440" class="lblSm">4 ◊ posiÁ„o de piso (D8, D11D13) + 1 ◊ permissiva porta (D22)</text>
+  <text x="148" y="456" class="lblSm">VCC í +5 V ∑ GND í barramento ∑ OUT í GPIO (INPUT_PULLUP)</text>
+  <text x="148" y="462" class="lblSm"> </text>
+  <text x="400" y="456" class="lblSm">LOW = Ìman detetado = piso/porta activo</text>
+  <line x1="110" y1="233" x2="130" y2="233" class="log5v"/>
+  <line x1="130" y1="233" x2="130" y2="435" class="sigDash"/>
+
+  <!-- Tabela L298N -->
+  <rect x="44" y="500" width="620" height="150" class="box"/>
+  <rect x="44" y="500" width="620" height="24" class="tblHdr"/>
+  <text x="56" y="516" class="tblTxt" font-weight="700">LigaÁıes L298N î Arduino Mega î Motor</text>
+  <text x="56" y="540" class="tblTxt">IN1 í D9</text><text x="200" y="540" class="tblTxt">OUT1 í Bobina A+</text>
+  <text x="56" y="558" class="tblTxt">IN2 í D33</text><text x="200" y="558" class="tblTxt">OUT2 í Bobina A</text>
+  <text x="56" y="576" class="tblTxt">IN3 í D31</text><text x="200" y="576" class="tblTxt">OUT3 í Bobina B+</text>
+  <text x="56" y="594" class="tblTxt">IN4 í D32</text><text x="200" y="594" class="tblTxt">OUT4 í Bobina B</text>
+  <text x="56" y="618" class="tblTxt">ENA í +5 V (sempre activo)</text>
+  <text x="360" y="540" class="tblTxt">SequÍncia half/full-step no firmware</text>
+  <text x="360" y="558" class="tblTxt">velocidadeSobe/Desce = 80 (ajust·vel)</text>
+  <text x="360" y="576" class="tblTxt">GND fonte = GND L298N = GND Mega</text>
+  <text x="360" y="594" class="tblTxt">Nunca alimentar motor sÛ por USB</text>
+  <text x="360" y="612" class="tblTxt">FusÌvel F1 no +12 V antes do L298N</text>
+
+  <!-- Legenda -->
+  <rect x="44" y="670" width="620" height="76" class="boxFill"/>
+  <text x="56" y="692" class="lblSm" font-weight="700">Legenda</text>
+  <line x1="56" y1="706" x2="100" y2="706" class="pwr"/><text x="108" y="710" class="lblSm">+12 V motor</text>
+  <line x1="200" y1="706" x2="244" y2="706" class="log5v"/><text x="252" y="710" class="lblSm">+5 V lÛgica</text>
+  <line x1="360" y1="706" x2="404" y2="706" class="gnd"/><text x="412" y="710" class="lblSm">GND</text>
+  <line x1="480" y1="706" x2="524" y2="706" class="sigDash"/><text x="532" y="710" class="lblSm">Sinal / I2C</text>
+  <text x="56" y="732" class="lblSm">AlimentaÁ„o dual: 12 V para motor via L298N; 5 V para MCU, Hall, OLED e lÛgica L298N.</text>
+
+  <!-- PPPPPPPPPPPPPPP COMANDO PPPPPPPPPPPPPPP -->
+  <rect x="716" y="88" width="660" height="872" rx="4" class="panel"/>
+  <text x="736" y="114" class="secTitle">CIRCUITO DE COMANDO (L”GICA)</text>
+  <text x="736" y="132" class="lblSm">Firmware: elevador/real/l298n_sh1106_hall/src/main.ino ∑ PlatformIO</text>
+
+  <!-- Controlador -->
+  <rect x="900" y="300" width="220" height="120" class="boxFill"/>
+  <text x="948" y="328" class="lbl" font-weight="700">U1  CONTROLADOR</text>
+  <text x="938" y="350" class="lbl">Arduino Mega 2560</text>
+  <text x="928" y="368" class="lblSm">Firmware real E09</text>
+  <text x="928" y="386" class="lblSm">L298N ∑ Hall ∑ SH1106</text>
+  <text x="928" y="404" class="lblSm">Estados v06 preservados</text>
+
+  <!-- Entradas pedidos -->
+  <rect x="736" y="160" width="300" height="110" class="box"/>
+  <text x="752" y="182" class="lbl" font-weight="700">Entradas  pedidos</text>
+  <text x="752" y="202" class="lblSm">Botıes ext. P1P4</text><text x="920" y="202" class="lblPin">D2D5</text>
+  <text x="752" y="220" class="lblSm">Botıes int. P1P4</text><text x="920" y="220" class="lblPin">D23D26</text>
+  <text x="752" y="238" class="lblSm">INPUT_PULLUP ∑ LOW = premido</text>
+  <text x="752" y="256" class="lblSm">Debounce no firmware</text>
+  <line x1="1036" y1="215" x2="900" y2="330" class="sig"/>
+
+  <!-- Hall -->
+  <rect x="1060" y="160" width="296" height="110" class="hall"/>
+  <text x="1076" y="182" class="lbl" font-weight="700">Entradas  posiÁ„o (Hall)</text>
+  <text x="1076" y="202" class="lblSm">Sensor piso P1</text><text x="1240" y="202" class="lblPin">D8</text>
+  <text x="1076" y="220" class="lblSm">Sensor piso P2P4</text><text x="1240" y="220" class="lblPin">D11D13</text>
+  <text x="1076" y="238" class="lblSm">Permissiva porta</text><text x="1240" y="238" class="lblPin">D22</text>
+  <text x="1076" y="256" class="lblSm">LOW = Ìman ∑ porta fechada v·lida</text>
+  <line x1="1060" y1="215" x2="1020" y2="340" class="sig"/>
+
+  <!-- Interlocks -->
+  <rect x="736" y="290" width="150" height="70" class="box"/>
+  <text x="752" y="312" class="lbl" font-weight="700">SeguranÁa</text>
+  <text x="752" y="330" class="lblSm">Reset S0</text><text x="840" y="330" class="lblPin">D7</text>
+  <text x="752" y="348" class="lblSm">Interlock porta: software</text>
+
+  <!-- Motor saÌdas -->
+  <rect x="736" y="460" width="300" height="100" class="box"/>
+  <text x="752" y="482" class="lbl" font-weight="700">SaÌdas  motor L298N</text>
+  <text x="752" y="502" class="lblSm">IN1</text><text x="800" y="502" class="lblPin">D9</text>
+  <text x="752" y="520" class="lblSm">IN2</text><text x="800" y="520" class="lblPin">D33</text>
+  <text x="752" y="538" class="lblSm">IN3</text><text x="800" y="538" class="lblPin">D31</text>
+  <text x="752" y="556" class="lblSm">IN4</text><text x="800" y="556" class="lblPin">D32</text>
+  <line x1="900" y1="510" x2="900" y2="420" class="sigDash"/>
+  <line x1="900" y1="420" x2="465" y2="420" class="sigDash" marker-end="url(#arrow)"/>
+
+  <!-- Indicadores -->
+  <rect x="1060" y="460" width="296" height="100" class="box"/>
+  <text x="1076" y="482" class="lbl" font-weight="700">SaÌdas  indicadores</text>
+  <text x="1076" y="502" class="lblSm">LED ext. + R ~1 k©</text><text x="1240" y="502" class="lblPin">A0A3</text>
+  <text x="1076" y="520" class="lblSm">LED int. + R ~1 k©</text><text x="1240" y="520" class="lblPin">D27D30</text>
+  <text x="1076" y="538" class="lblSm">Buzzer</text><text x="1240" y="538" class="lblPin">D6</text>
+  <line x1="1060" y1="510" x2="1020" y2="380" class="sig"/>
+
+  <!-- Tabela completa -->
+  <rect x="736" y="580" width="620" height="220" class="box"/>
+  <rect x="736" y="580" width="620" height="22" class="tblHdr"/>
+  <text x="748" y="595" class="tblTxt" font-weight="700">Mapa de pinos  Maquete fÌsica (E08/E09)</text>
+  <text x="748" y="618" class="tblTxt">D2D5</text><text x="820" y="618" class="tblTxt">Botıes pedido exterior (montado)</text>
+  <text x="748" y="636" class="tblTxt">D6</text><text x="820" y="636" class="tblTxt">Buzzer</text>
+  <text x="748" y="654" class="tblTxt">D7</text><text x="820" y="654" class="tblTxt">Reset / rearme</text>
+  <text x="748" y="672" class="tblTxt">D8, D11D13</text><text x="820" y="672" class="tblTxt">Hall posiÁ„o piso (prÛximo E08)</text>
+  <text x="748" y="690" class="tblTxt">D9, D33, D31, D32</text><text x="820" y="690" class="tblTxt">L298N IN1IN4</text>
+  <text x="748" y="708" class="tblTxt">D20, D21</text><text x="820" y="708" class="tblTxt">I2C í TCA9548A í 4◊ SH1106 (montado)</text>
+  <text x="748" y="726" class="tblTxt">D22</text><text x="820" y="726" class="tblTxt">Hall porta  LOW = fechada (permissiva OK)</text>
+  <text x="748" y="744" class="tblTxt">D23D26 / D27D30</text><text x="820" y="744" class="tblTxt">Botıes / LEDs interiores (pendente)</text>
+  <text x="748" y="762" class="tblTxt">A0A3</text><text x="820" y="762" class="tblTxt">LEDs exteriores (montado)</text>
+  <text x="1050" y="618" class="tblTxt">DiferenÁa vs sim v06:</text>
+  <text x="1050" y="636" class="tblTxt">A4988 í L298N (4 GPIO)</text>
+  <text x="1050" y="654" class="tblTxt">Interruptor í Hall (lÛgica invertida porta)</text>
+  <text x="1050" y="672" class="tblTxt">SSD1306 í SH1106 + TCA9548A</text>
+  <text x="1050" y="690" class="tblTxt">CompilaÁ„o: pio run (22/06/2026 OK)</text>
+
+  <!-- Nota montagem -->
+  <rect x="736" y="820" width="620" height="56" class="note"/>
+  <text x="752" y="840" class="noteTxt">Montagem E08 em curso: botıes ext., LEDs ext. e OLEDs j· integrados. PrÛximo: Hall ◊4, depois motor + L298N.</text>
+  <text x="752" y="856" class="noteTxt">Teste isolado Hall: elevador/testes/bancada/sensores_hall/sensorhall.ino</text>
+  <text x="752" y="868" class="noteTxt">Cadeia SP/S0 no desenho = representaÁ„o funcional (interlock em software), n„o ligaÁ„o sÈrie fÌsica.</text>
+
+  <!-- Title block -->
+  <rect x="1050" y="972" width="326" height="66" class="titleBlk"/>
+  <line x1="1050" y1="994" x2="1376" y2="994" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="1050" y1="1016" x2="1376" y2="1016" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="1180" y1="972" x2="1180" y2="1038" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="1280" y1="972" x2="1280" y2="1038" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="1060" y="986" class="tbLbl">Desenho</text>
+  <text x="1060" y="1008" class="tbLbl">TÌtulo</text>
+  <text x="1060" y="1030" class="tbLbl">Escala</text>
+  <text x="1190" y="986" class="tbVal">ELV-SCH-002</text>
+  <text x="1190" y="1008" class="tbVal">ForÁa + Comando REAL</text>
+  <text x="1190" y="1030" class="tbVal">NTS</text>
+  <text x="1290" y="986" class="tbLbl">Rev.</text>
+  <text x="1290" y="1008" class="tbLbl">Data</text>
+  <text x="1290" y="1030" class="tbLbl">Folha</text>
+  <text x="1330" y="986" class="tbVal">A</text>
+  <text x="1330" y="1008" class="tbVal">2026-06-22</text>
+  <text x="1330" y="1030" class="tbVal">1 / 1</text>
+
+  <text x="32" y="1032" class="lblSm">elevador_real_forca_comando.svg ∑ ELV-SCH-002 ∑ Maquete fÌsica E08/E09</text>
+</svg>

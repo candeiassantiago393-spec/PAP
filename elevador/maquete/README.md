@@ -21,5 +21,6 @@ Registo visual e estado da montagem do protótipo real.
 
 - Sensores Hall instalados
 - Motor + L298N acoplado ao tambor
-- Cabine 3D e cabo de aço
+- Estrutura madeira + cabine (recipiente) — fotos em [hardware/mecanica/imagens/](../hardware/mecanica/imagens/)
+- Tambor e cabo de aço
 - Vista geral do shaft completo

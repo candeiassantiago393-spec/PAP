@@ -30,12 +30,14 @@ Programar → Simulação → Bancada → Maquete
 | Botões/LEDs interiores | Pendente |
 | Permissiva porta | Pendente |
 | Buzzer + reset | Pendente |
-| Cabine 3D + cabo + tambor | Pendente |
+| Estrutura madeira + cabine (recipiente) | Montado — fotos pendentes |
+| Tambor + cabo de aço | Pendente |
 
 ## Decisões técnicas
 
 - Montar I/O visível primeiro (botões, LEDs, displays)
 - Motor e sensores a seguir (maior impacto mecânico)
+- **Estrutura mecânica:** construção manual em **madeira** + **recipiente adaptado** como cabine (em vez de impressão 3D prevista no plano inicial)
 
 ## Dificuldades
 
@@ -59,7 +61,7 @@ Na montagem física surgiram **falhas intermitentes por mau contacto** e **cabos
 ## Evidências
 
 - [Vídeo maquete](../../elevador/maquete/imagens/videos/2026-06-22_maquete_botoes_leds_displays.mp4)
-- `elevador/maquete/imagens/fotos/` _(a preencher)_
+- `elevador/hardware/mecanica/imagens/` _(estrutura madeira + cabine — a preencher)_
 
 ## Próximo passo
 

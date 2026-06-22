@@ -44,6 +44,7 @@ Subsistemas planeados ou em versão inicial — **foco secundário nesta fase**:
 | Painéis de controlo | Interfaces de supervisão | Inicial |
 | Meteorologia | Sensores ambientais gerais | Inicial |
 | Porta do prédio | Código de acesso à entrada | Inicial |
+| Cofre / código secreto | Acesso por PIN (teclado + servo) | [Simulação Wokwi](../../logicas_extras/cofre/) |
 | RFID | Cartões por andar (porta prédio + apartamento) | Inicial |
 | Toldo automático | Estendal por deteção de chuva | Inicial |
 
@@ -126,7 +127,8 @@ Programar/Projetar → Simulação virtual → Teste bancada → Montagem maquet
 - [ ] LEDs interiores
 - [ ] Permissiva de porta
 - [ ] Buzzer, reset
-- [ ] Cabine 3D, cabo, tambor
+- [x] Estrutura madeira + cabine (recipiente adaptado)
+- [ ] Tambor + cabo de aço
 
 Ver [elevador/maquete/ESTADO_ATUAL.md](../elevador/maquete/ESTADO_ATUAL.md) e vídeo em `elevador/maquete/imagens/videos/`.
 
@@ -198,5 +200,5 @@ App desenvolvida pelo autor para gestão de tarefas, projetos e documentação d
 - [x] Configurar PlatformIO para compilação no Cursor
 - [ ] Migrar fotos adicionais da maquete
 - [ ] Esquemas KiCad/Fritzing (se existirem)
-- [ ] Ficheiros STL da cabine 3D
+- [ ] Fotos estrutura mecânica → `elevador/hardware/mecanica/imagens/`
 - [ ] Apresentação 3D interativa (fase posterior)

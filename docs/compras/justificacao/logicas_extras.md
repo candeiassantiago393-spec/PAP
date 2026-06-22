@@ -20,7 +20,7 @@ Componentes para **subsistemas do prédio inteligente** — independentes do ele
 | | |
 |---|---|
 | **Função** | **Entrada de código numérico** para acesso à porta do prédio — o utilizador pressiona combinação de teclas para pedir abertura. |
-| **Subsistema** | [porta_predio](../../../logicas_extras/porta_predio/) |
+| **Subsistema** | [porta_predio](../../../logicas_extras/porta_predio/) · protótipo [cofre](../../../logicas_extras/cofre/) |
 | **Etapa** | E12 |
 | **Fatura** | [2026EC1403323](../faturas_mauser/2026EC1403323.md) — 4,07 € |
 

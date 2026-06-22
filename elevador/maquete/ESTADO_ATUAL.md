@@ -13,7 +13,7 @@
 [→] Montagem na maquete          ← ESTAMOS AQUI
 [ ] Integração motor + movimento
 [ ] Testes sistema completo
-[ ] Acabamentos e cabine 3D
+[ ] Acabamentos mecânicos (tambor, cabo) — estrutura madeira + cabine já feitas
 ```
 
 ---
@@ -39,7 +39,7 @@
 4. LEDs interiores (4)
 5. Permissiva de porta (interruptor)
 6. Buzzer + botão reset
-7. Cabine impressa 3D, cabo de aço, tambor
+7. Tambor + cabo de aço _(estrutura madeira e cabine/recipiente já montadas — fotos em `hardware/mecanica/imagens/`)_
 
 ---
 
@@ -59,3 +59,4 @@
 _(Adicionar aqui observações à medida que se monta — cablagem, fixações, problemas mecânicos.)_
 
 - 2026-06-22: Primeira integração de I/O exterior e displays na estrutura física.
+- Estrutura mecânica construída **à mão em madeira**; cabine = **recipiente adaptado** (não impressão 3D). Fotos a adicionar em [hardware/mecanica/imagens/](../hardware/mecanica/imagens/).
