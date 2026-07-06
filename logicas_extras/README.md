@@ -21,7 +21,7 @@ Subsistemas do prédio inteligente **além do elevador**.
 ├── README.md           → visão geral do módulo
 ├── documentacao/       → funcionamento.md, pinagem.md
 ├── simulacao/          → wokwi/ quando aplicável
-├── real/               → montagem física (preencher na maquete)
+├── real/               → montagem física: pinagem.md, notas, fotos/, código PlatformIO
 └── testes/             → registo de testes (preencher na bancada)
 ```
 
