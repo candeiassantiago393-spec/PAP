@@ -6,10 +6,10 @@ Subsistemas do prédio inteligente **além do elevador**. Versões iniciais — 
 
 | Pasta | Função | Estado |
 |-------|--------|--------|
-| [cofre/](cofre/) | Cofre com código secreto (teclado + servo) | **Simulação Wokwi** |
-| [esp32-candeias-box/](esp32-candeias-box/) | Caixa ESP32 OLED multi-ecrã (ambiente, PIR, estufa, gás, fogo) | **Simulação Wokwi + real** |
-| [rfid/](rfid/) | Cartões por andar (prédio + apartamento) | Inicial |
-| [toldo_automatico/](toldo_automatico/) | Estendal por sensor de chuva | **Simulação Wokwi** |
+| [cartoes_predio/](cartoes_predio/) | Lógica de cartões de prédio (RFID por andar) | Inicial |
+| [central_de_controlo/](central_de_controlo/) | Central de controlo ESP32 OLED multi-ecrã (ambiente, PIR, estufa, gás, fogo) | **Simulação Wokwi + real** |
+| [cofre/](cofre/) | Código de acesso à porta do prédio (teclado + servo) — _rename para `codigo_porta_predio` pendente_ | **Simulação Wokwi** |
+| [estendal_inteligente/](estendal_inteligente/) | Estendal por sensor de chuva | **Simulação Wokwi** |
 | [legacy/](legacy/) | Versões antigas de cada módulo | — |
 
 ## Estrutura por módulo
@@ -27,8 +27,8 @@ Subsistemas do prédio inteligente **além do elevador**. Versões iniciais — 
 
 | Módulo | Comando |
 |--------|---------|
-| Painel ecra ESP32 | `cd esp32-candeias-box && pio run` |
-| Cofre | `cd cofre/simulacao/wokwi && pio run` → Wokwi |
+| Central de controlo ESP32 | `cd central_de_controlo && pio run` |
+| Código porta prédio | `cd cofre/simulacao/wokwi && pio run` → Wokwi |
 
 ## Prioridade
 
