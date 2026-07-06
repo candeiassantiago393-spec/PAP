@@ -15,6 +15,7 @@ Projeto interativo para ESP32 com OLED, botões e vários subsistemas: ambiente,
 | **MOVIMENTO** | PIR, cooldown 30 s, ecrã de alerta de intruso |
 | **PLANTAS** | Humidade do solo, barra 0–100 %, LEDs, bomba com limite de tempo |
 | **GRAFICO** | Sparkline das últimas leituras de temperatura |
+| **GAS** | Nível de gás (0–100 %), barra com limite; alarme (buzzer + LED amarelo a piscar + ecrã "ALERTA GAS") acima de 60 % |
 | **Instagram** | QR code para o perfil (último ecrã) |
 
 **Extra:** transições laterais entre ecrãs, indicador de página (pontinhos), **modo feira** (rotação automática a cada 5 s; pausa ao carregar botões; volta após 2 min sem interação).
@@ -33,6 +34,7 @@ Lógica da estufa baseada no [Projeto-Estufa v1.3](https://github.com/candeiassa
 | Buzzer | 25 |
 | DHT22 | 26 |
 | Solo (potenciómetro / analógico) | 34 |
+| Gás (MQ-2/MQ-135 real; potenciómetro na simulação) | 35 |
 | LED vermelho / amarelo / verde | 16 / 17 / 18 |
 | Bomba (LED na simulação) | 19 |
 

@@ -21,6 +21,11 @@
 #define PIN_LED_GREEN 18
 #define PIN_PUMP 19
 
+// Sensor de gas (MQ-2/MQ-135) — saida analogica simulada por potenciometro
+#define PIN_GAS 35
+#define GAS_LIMIT 60           // % acima do qual dispara o alarme de gas
+#define GAS_ALARM_BLINK_MS 250
+
 #define SOIL_LIMIT_LOW 35
 #define SOIL_LIMIT_HIGH 75
 #define GREENHOUSE_INTERVAL_MS 1000
@@ -66,8 +71,9 @@ enum ScreenId {
   SCREEN_MOTION = 2,
   SCREEN_PLANTAS = 3,
   SCREEN_GRAPH = 4,
-  SCREEN_INSTAGRAM = 5,
-  SCREEN_COUNT = 6
+  SCREEN_GAS = 5,
+  SCREEN_INSTAGRAM = 6,
+  SCREEN_COUNT = 7
 };
 
 ScreenId currentScreen = SCREEN_HOME;
@@ -80,6 +86,11 @@ const int transitionIntervalMs = 20;
 unsigned long lastTransitionTick = 0;
 
 bool alertActive = false;
+
+int gasPercent = 0;
+bool gasAlert = false;
+unsigned long lastGasBlinkMs = 0;
+bool gasBlinkState = false;
 
 float envTemp = NAN;
 float envHum = NAN;
@@ -356,6 +367,38 @@ void drawPlantasScreen(int xOffset) {
   }
 }
 
+void drawGasScreen(int xOffset) {
+  char line[28];
+  const int barX = 4 + xOffset;
+  const int barY = 22;
+  const int barW = 120;
+  const int barH = 10;
+  const int innerW = barW - 2;
+  const int markX = barX + 1 + (innerW * GAS_LIMIT) / 100;
+
+  drawHeader("GAS", xOffset);
+
+  display.setTextSize(1);
+  display.setCursor(4 + xOffset, 14);
+  display.print("Nivel de gas");
+
+  display.drawRect(barX, barY, barW, barH, SSD1306_WHITE);
+  int fillW = map(constrain(gasPercent, 0, 100), 0, 100, 0, innerW);
+  if (fillW > 0) display.fillRect(barX + 1, barY + 1, fillW, barH - 2, SSD1306_WHITE);
+  display.drawFastVLine(markX, barY + barH, 3, SSD1306_WHITE);
+
+  snprintf(line, sizeof(line), "%d%%", gasPercent);
+  drawTextRight(xOffset, 40, line);
+
+  snprintf(line, sizeof(line), "Limite %d%%", GAS_LIMIT);
+  display.setCursor(4 + xOffset, 40);
+  display.print(line);
+
+  display.setCursor(4 + xOffset, 52);
+  display.print("Estado: ");
+  display.print(gasPercent >= GAS_LIMIT ? "PERIGO" : "OK");
+}
+
 void drawScreenDots(ScreenId active) {
   const int y = 3;
   const int spacing = 5;
@@ -396,6 +439,24 @@ void drawIntruderAlert() {
   display.display();
 }
 
+void drawGasAlert() {
+  char line[20];
+  display.clearDisplay();
+  display.drawRect(2, 2, SCREEN_WIDTH - 4, SCREEN_HEIGHT - 4, SSD1306_WHITE);
+
+  drawCenteredText(6, "ALERTA", 1);
+  display.drawLine(8, 17, SCREEN_WIDTH - 8, 17, SSD1306_WHITE);
+
+  drawCenteredText(22, "GAS", 2);
+  snprintf(line, sizeof(line), "Nivel: %d%%", gasPercent);
+  drawCenteredText(44, line, 1);
+
+  display.drawLine(8, 52, SCREEN_WIDTH - 8, 52, SSD1306_WHITE);
+  drawCenteredText(55, "Ventilar o local!", 1);
+
+  display.display();
+}
+
 void drawScreen(ScreenId screen, int xOffset) {
   switch (screen) {
     case SCREEN_HOME:
@@ -412,6 +473,9 @@ void drawScreen(ScreenId screen, int xOffset) {
       break;
     case SCREEN_GRAPH:
       drawGraphScreen(xOffset);
+      break;
+    case SCREEN_GAS:
+      drawGasScreen(xOffset);
       break;
     case SCREEN_INSTAGRAM:
       drawInstagramScreen(xOffset);
@@ -477,6 +541,8 @@ void updateTransition() {
 void updateAlarmBuzzer() {
   if (alertActive) {
     setBuzzer(true);
+  } else if (gasAlert) {
+    setBuzzer(true);
   } else if (!soilBuzzerOn) {
     setBuzzer(false);
   }
@@ -485,6 +551,11 @@ void updateAlarmBuzzer() {
 void renderUI() {
   if (alertActive) {
     drawIntruderAlert();
+    return;
+  }
+
+  if (gasAlert) {
+    drawGasAlert();
     return;
   }
 
@@ -530,6 +601,31 @@ int readSoilPercent() {
   int raw = analogRead(PIN_SOIL);
   int pct = map(raw, 0, 4095, 0, 100);
   return constrain(pct, 0, 100);
+}
+
+void setAllPlantOutputsLow();
+
+int readGasPercent() {
+  int raw = analogRead(PIN_GAS);
+  int pct = map(raw, 0, 4095, 0, 100);
+  return constrain(pct, 0, 100);
+}
+
+void updateGas() {
+  gasPercent = readGasPercent();
+  gasAlert = (gasPercent >= GAS_LIMIT);
+}
+
+void updateGasOutputs() {
+  if (alertActive || !gasAlert) return;
+  setAllPlantOutputsLow();
+  soilBuzzerOn = false;
+  unsigned long now = millis();
+  if (now - lastGasBlinkMs >= GAS_ALARM_BLINK_MS) {
+    lastGasBlinkMs = now;
+    gasBlinkState = !gasBlinkState;
+    digitalWrite(PIN_LED_YELLOW, gasBlinkState ? HIGH : LOW);
+  }
 }
 
 void setAllPlantOutputsLow() {
@@ -584,7 +680,7 @@ void updateAlarmLed() {
 }
 
 void updateGreenhouseOutputs() {
-  if (alertActive) return;
+  if (alertActive || gasAlert) return;
 
   setAllPlantOutputsLow();
   soilBuzzerOn = false;
@@ -652,6 +748,7 @@ void setup() {
   pinMode(PIN_PIR, INPUT);
   pinMode(PIN_BUZZER, OUTPUT);
   pinMode(PIN_SOIL, INPUT);
+  pinMode(PIN_GAS, INPUT);
   pinMode(PIN_LED_RED, OUTPUT);
   pinMode(PIN_LED_YELLOW, OUTPUT);
   pinMode(PIN_LED_GREEN, OUTPUT);
@@ -707,8 +804,10 @@ void loop() {
   updateTransition();
   updateEnvironmentData();
   updateGreenhouse();
+  updateGas();
   checkMotionAlert();
   updateAlarmLed();
+  updateGasOutputs();
   updateAlarmBuzzer();
   renderUI();
 
