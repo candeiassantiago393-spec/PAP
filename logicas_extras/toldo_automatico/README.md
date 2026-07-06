@@ -13,8 +13,8 @@ Sensor de chuva no **topo do prédio** deteta precipitação → aciona toldo/es
 | Conceito | Definido |
 | Montagem | **Em curso** |
 | Sensor de chuva | Comprado na **Temu** — por instalar no topo |
-| Actuador | Por definir (servo/relé) |
-| Firmware | Pendente — **após elevador na maquete** |
+| Actuador | **Servo** (recolhe/abre o estendal) |
+| Firmware | **Simulação Wokwi funcional** — [simulacao/wokwi/](simulacao/wokwi/) |
 
 ## Hardware planeado
 
@@ -28,7 +28,7 @@ Sensor de chuva no **topo do prédio** deteta precipitação → aciona toldo/es
 
 | Pasta | Conteúdo |
 |-------|----------|
-| [simulacao/](simulacao/) | Lógica chuva → acção |
+| [simulacao/wokwi/](simulacao/wokwi/) | **Projeto Wokwi** — sensor de chuva + servo (abrir para simular) |
 | [real/](real/) | Firmware + sensor |
 | [testes/](testes/) | Teste molhado/seco |
 | [documentacao/](documentacao/) | Esquema de ligação |

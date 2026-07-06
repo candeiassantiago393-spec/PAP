@@ -12,7 +12,7 @@ Subsistemas do prédio inteligente **além do elevador**. Versões iniciais — 
 | [seguranca/](seguranca/) | Alarmes e proteção (PIR no painel ecra) | Inicial |
 | [meteorologia/](meteorologia/) | Sensores ambientais — **ecrãs AMBIENTE/GRÁFICO no painel ecra** | **Funcional (demo)** |
 | [rfid/](rfid/) | Cartões por andar (prédio + apartamento) | Inicial |
-| [toldo_automatico/](toldo_automatico/) | Estendal por sensor de chuva | Planeado |
+| [toldo_automatico/](toldo_automatico/) | Estendal por sensor de chuva | **Simulação Wokwi** |
 | [legacy/](legacy/) | Versões antigas de cada módulo | — |
 
 ## Estrutura por módulo

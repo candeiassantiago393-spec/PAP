@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "author": "Santiago Candeias",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": -28.2, "left": 47.4, "attrs": {} },
+    { "type": "wokwi-slide-switch", "id": "sw1", "top": 42.8, "left": 79.9, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo1", "top": 94, "left": -19.2, "attrs": {} }
+  ],
+  "connections": [
+    [ "servo1:GND", "uno:GND.2", "black", [ "h-9.6", "v-19.2", "h240" ] ],
+    [ "servo1:V+", "uno:5V", "red", [ "h-9.6", "v48.1", "h240" ] ],
+    [ "servo1:PWM", "uno:9", "blue", [ "h-19.2", "v-211", "h249.6" ] ],
+    [ "sw1:1", "uno:GND.2", "black", [ "v48", "h115.2" ] ],
+    [ "sw1:3", "uno:5V", "red", [ "v48", "h96.2" ] ],
+    [ "sw1:2", "uno:2", "blue", [ "v9.6", "h192.1" ] ]
+  ],
+  "dependencies": {}
+}

@@ -4,7 +4,7 @@ Protótipos e simulações deste módulo (Wokwi, mocks, testes offline).
 
 ## Estado
 
-Pendente — ver [README do módulo](../README.md).
+**Simulação Wokwi funcional** — ver [wokwi/](wokwi/) (sensor de chuva + servo).
 
 ## Etapa
 
