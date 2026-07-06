@@ -1,11 +1,12 @@
-# Documentação — Cofre código secreto
+# Documentação — Código Porta Prédio
 
 | Ficheiro | Conteúdo |
 |----------|----------|
-| [pinagem.md](pinagem.md) | Mapa de pinos Arduino Uno |
-| [funcionamento.md](funcionamento.md) | Lógica do teclado e validação |
+| [funcionamento.md](funcionamento.md) | Fluxo PIN, servo, serial |
+| [pinagem.md](pinagem.md) | Ligações Arduino Uno |
 
-## Código
+## Navegação
 
-- Simulação: [../simulacao/wokwi/sketch.ino](../simulacao/wokwi/sketch.ino)
-- Cópia: [../cofre_codigo_secreto.ino](../cofre_codigo_secreto.ino)
+| | |
+|--|--|
+| Módulo | [../README.md](../README.md) |

@@ -1,21 +1,23 @@
 ﻿# Legacy — Lógicas Extras
 
-Versões antigas ou experimentais dos módulos do prédio inteligente.
+Arquivo de **versões antigas** ou protótipos substituídos.
 
-## Uso
+## Quando usar
 
-Quando um módulo evoluir (ex.: `porta_predio/v2/`), a versão anterior move-se para aqui:
+Quando um módulo evoluir, mover a versão anterior para aqui:
 
 ```text
 legacy/
-├── porta_predio_v1/
-├── rfid_prototipo/
+├── central_de_controlo_v1/
+├── cofre_arduino_only/
 └── ...
 ```
 
-## Estado
+## Conteúdo actual
 
-Vazio — sem código legado migrado ainda.
+| Item | Origem | Notas |
+|------|--------|-------|
+| _(vazio)_ | — | Nenhum código legado migrado ainda |
 
 ## Navegação
 
@@ -23,4 +25,3 @@ Vazio — sem código legado migrado ainda.
 |--|--|
 | Lógicas extras | [../README.md](../README.md) |
 | Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
-| Etapa | [E12](../../docs/ETAPAS/relatorios/E12_logicas_extras.md) |

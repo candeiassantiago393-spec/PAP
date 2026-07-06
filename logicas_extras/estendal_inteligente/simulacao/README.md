@@ -1,11 +1,22 @@
-﻿# Simulacao — toldo_automatico
+﻿# Simulação — Estendal Inteligente
 
-Protótipos e simulações deste módulo (Wokwi, mocks, testes offline).
+Projecto Wokwi: [wokwi/](wokwi/)
 
-## Estado
+## Compilar
 
-**Simulação Wokwi funcional** — ver [wokwi/](wokwi/) (sensor de chuva + servo).
+```bash
+cd logicas_extras/estendal_inteligente/simulacao/wokwi
+python -m platformio run
+```
 
-## Etapa
+Stop + Start no Wokwi após compilar.
 
-[E12 — Lógicas extras](../../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+## Teste
+
+Mudar o slide switch para ON → servo recolhe → espera 8 s → reabre.
+
+## Navegação
+
+| | |
+|--|--|
+| Módulo | [../../README.md](../../README.md) |

@@ -1,11 +1,13 @@
-﻿# Documentacao — rfid
+﻿# Documentação — Cartões de Prédio
 
-Notas técnicas, pinagem e decisões específicas do módulo.
+| Ficheiro | Conteúdo |
+|----------|----------|
+| [funcionamento.md](funcionamento.md) | Lógica de autorização e fluxo |
+| [pinagem.md](pinagem.md) | Ligações RC522 ↔ ESP32 (planeado) |
 
-## Estado
+## Navegação
 
-Pendente — ver [README do módulo](../README.md).
-
-## Etapa
-
-[E12 — Lógicas extras](../../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+| | |
+|--|--|
+| Módulo | [../README.md](../README.md) |
+| Lógicas extras | [../../README.md](../../README.md) |

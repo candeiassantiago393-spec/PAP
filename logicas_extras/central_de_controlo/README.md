@@ -1,6 +1,6 @@
-# ecra — Caixa inteligente ESP32 (candeias.dev)
+# Central de Controlo — Caixa ESP32 (candeias.dev)
 
-Projeto interativo para ESP32 com OLED, botões e vários subsistemas: ambiente, segurança, estufa e portfolio. Desenvolvido para simulação no [Wokwi](https://wokwi.com) e montagem numa caixa física (estilo MagSafe).
+Projeto interativo para ESP32 com OLED, botões e vários subsistemas: ambiente, segurança, estufa, gás, fogo, sismo e portfolio. Desenvolvido para simulação no [Wokwi](https://wokwi.com) e montagem numa caixa física (estilo MagSafe).
 
 **Autor / marca:** [candeias.dev](https://candeias.dev) · Instagram [@candeias.dev](https://www.instagram.com/candeias.dev)
 
@@ -49,14 +49,15 @@ Lógica da estufa baseada no [Projeto-Estufa v1.3](https://github.com/candeiassa
 ## Estrutura do projeto
 
 ```
-ecra/
+central_de_controlo/
 ├── sketch.ino          # Sketch Arduino (Wokwi)
-├── src/main.cpp        # Cópia para PlatformIO (manter em sync)
+├── src/main.cpp        # Cópia PlatformIO (manter em sync)
 ├── diagram.json        # Circuito Wokwi
 ├── wokwi.toml          # Firmware compilado
 ├── platformio.ini
-├── libraries.txt
-├── gen_qr.py           # Regenerar bitmap do QR Instagram
+├── documentacao/       # funcionamento.md, pinagem.md
+├── real/               # Montagem física (pendente)
+├── testes/             # Registo testes (pendente)
 └── README.md
 ```
 

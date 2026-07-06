@@ -1,11 +1,16 @@
-﻿# Simulacao — rfid
+﻿# Simulação — Cartões de Prédio
 
-Protótipos e simulações deste módulo (Wokwi, mocks, testes offline).
+Protótipo offline antes da montagem com RC522 físico.
 
 ## Estado
 
-Pendente — ver [README do módulo](../README.md).
+**Pendente** — ainda não há projecto Wokwi. Opções:
 
-## Etapa
+| Abordagem | Descrição |
+|-----------|-----------|
+| Wokwi + mock | Simular UID por botão / Serial |
+| Teste Serial | Firmware mínimo que imprime UID sem simulador |
 
-[E12 — Lógicas extras](../../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+## Referência
+
+Documentação: [../documentacao/funcionamento.md](../documentacao/funcionamento.md)

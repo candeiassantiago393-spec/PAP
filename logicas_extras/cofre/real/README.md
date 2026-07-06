@@ -1,20 +1,20 @@
-# Implementação real — Cofre
+# Implementação real — Código Porta Prédio
 
-Firmware e montagem física do cofre na maquete do prédio.
+Montagem do teclado + servo na porta/cofre da maquete.
 
 ## Estado
 
-**Pendente** — simulação Wokwi concluída; hardware real por montar.
+**Pendente** — preencher quando montar o teclado Mauser e servo na bancada.
 
-## Hardware previsto
+## Checklist
 
-| Componente | Nota |
-|------------|------|
-| Teclado matricial 3×4 | [Mauser 096-4642](../../../docs/compras/faturas_mauser/2026EC1403323.md) |
-| Servo micro | Fechadura do cofre |
-| LEDs + buzzer | Feedback (como na simulação) |
-| Arduino Uno ou ESP32 | A definir |
+- [ ] Ligar teclado matricial 3×4 ([096-4642](../../../docs/compras/faturas_mauser/2026EC1403323.md))
+- [ ] Confirmar pinagem vs [pinagem](../documentacao/pinagem.md)
+- [ ] Servo na fechadura da porta
+- [ ] LEDs vermelho/verde + buzzer
+- [ ] Transferir firmware de [simulacao/wokwi/sketch.ino](../simulacao/wokwi/sketch.ino)
 
-## Migração desde simulação
+## Notas
 
-Base: [../simulacao/wokwi/sketch.ino](../simulacao/wokwi/sketch.ino)
+- Arduino Uno ou ESP32 — a definir na montagem
+- Gravar pinagem real aqui quando diferir da simulação

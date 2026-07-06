@@ -1,11 +1,11 @@
-# Funcionamento — Cofre código secreto
+# Funcionamento — Código Porta Prédio
 
 ## Variáveis principais
 
-| Variável | Valor / tipo | Descrição |
-|----------|--------------|-----------|
-| `codigoCorreto` | `"1904"` | PIN válido (hardcoded na v1) |
-| `input` | `String` | Dígitos introduzidos desde o último reset |
+| Variável | Valor | Descrição |
+|----------|-------|-----------|
+| `codigoCorreto` | `"1904"` | PIN válido |
+| `input` | `String` | Dígitos desde o último reset |
 
 ## Fluxo
 
@@ -13,7 +13,11 @@
 Tecla numérica ──► concatena em input
 Tecla * ──► input = "" (reset)
 Tecla # ──► compara input com codigoCorreto
-              ├─ igual  → LED verde, servo 90°, bip 1 kHz
+              ├─ igual  → LED verde, bip 1 kHz
+              │           servo 0→90° (suave, delay 15 ms/passo)
+              │           espera 8 s
+              │           servo 90→0° (suave)
+              │           LED verde OFF
               └─ diferente → LED vermelho, bip 200 Hz
             input = ""
 ```
@@ -22,8 +26,8 @@ Tecla # ──► compara input com codigoCorreto
 
 | Posição | Significado |
 |---------|-------------|
-| `0°` | Cofre fechado (início) |
-| `90°` | Cofre aberto (após código correcto) |
+| `0°` | Porta/fechadura fechada |
+| `90°` | Aberta (durante os 8 s após código correcto) |
 
 ## Serial Monitor (9600 baud)
 
@@ -36,5 +40,5 @@ Tecla # ──► compara input com codigoCorreto
 
 - Timeout se não confirmar em X segundos
 - Limite de tentativas erradas
-- Fechar servo automaticamente após abertura
-- Código configurável (EEPROM ou menu)
+- Código configurável (EEPROM)
+- Migrar para ESP32 + teclado físico Mauser

@@ -1,11 +1,21 @@
-﻿# Testes — rfid
+﻿# Testes — Cartões de Prédio
 
-Testes isolados de hardware e lógica antes da integração.
+Registo de testes na bancada e na maquete.
 
 ## Estado
 
-Pendente — ver [README do módulo](../README.md).
+**Pendente** — documentar resultados quando montar o hardware.
 
-## Etapa
+## Testes planeados
 
-[E12 — Lógicas extras](../../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+| ID | Teste | Resultado | Data |
+|----|-------|-----------|------|
+| T1 | Leitura UID cartão A | — | — |
+| T2 | Leitura UID cartão B | — | — |
+| T3 | Cartão autorizado abre fechadura | — | — |
+| T4 | Cartão desconhecido nega acesso | — | — |
+| T5 | Dois cartões seguidos (cooldown) | — | — |
+
+## Referência
+
+Pinagem: [../documentacao/pinagem.md](../documentacao/pinagem.md)

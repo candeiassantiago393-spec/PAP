@@ -1,11 +1,12 @@
-﻿# Documentacao — toldo_automatico
+﻿# Documentação — Estendal Inteligente
 
-Notas técnicas, pinagem e decisões específicas do módulo.
+| Ficheiro | Conteúdo |
+|----------|----------|
+| [funcionamento.md](funcionamento.md) | Lógica chuva → servo |
+| [pinagem.md](pinagem.md) | Ligações Arduino Uno |
 
-## Estado
+## Navegação
 
-Pendente — ver [README do módulo](../README.md).
-
-## Etapa
-
-[E12 — Lógicas extras](../../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+| | |
+|--|--|
+| Módulo | [../README.md](../README.md) |

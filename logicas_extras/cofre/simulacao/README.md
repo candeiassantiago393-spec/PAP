@@ -1,15 +1,36 @@
-# Simulação — Cofre
+# Simulação — Código Porta Prédio
 
-Projeto Wokwi exportado localmente.
+Projecto Wokwi em [wokwi/](wokwi/).
 
-## Pasta activa
+## Compilar (obrigatório antes de simular)
 
-[simulacao/wokwi/](wokwi/) — contém `diagram.json`, `sketch.ino`, `wokwi.toml`
+A extensão Wokwi **não compila** `.ino` — é preciso gerar o firmware:
 
-## Link online
+```bash
+cd logicas_extras/cofre/simulacao/wokwi
+python -m platformio run
+```
 
-https://wokwi.com/projects/462220624733136897
+Depois: **Stop + Start** na simulação.
 
 ## Teste rápido
 
-Código de demonstração: **1904** → pressionar **#**
+1. Clicar nas teclas `1` `9` `0` `4` `#`
+2. Servo abre, espera 8 s, fecha
+3. Código errado → LED vermelho
+
+## Ficheiros
+
+| Ficheiro | Função |
+|----------|--------|
+| `sketch.ino` | Firmware |
+| `diagram.json` | Circuito |
+| `wokwi.toml` | Aponta para `.pio/build/uno/firmware.hex` |
+| `platformio.ini` | Board uno + Keypad + Servo |
+
+## Navegação
+
+| | |
+|--|--|
+| Módulo | [../../README.md](../../README.md) |
+| Wokwi detalhe | [wokwi/README.md](wokwi/README.md) |

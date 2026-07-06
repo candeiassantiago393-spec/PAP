@@ -1,11 +1,19 @@
-﻿# Real — toldo_automatico
+﻿# Implementação real — Estendal Inteligente
 
-Firmware e implementação física na maquete do prédio.
+Montagem do sensor de chuva no topo do prédio e servo no estendal.
 
 ## Estado
 
-Pendente — ver [README do módulo](../README.md).
+**Pendente** — sensor Temu comprado; instalação na maquete por fazer.
 
-## Etapa
+## Checklist
 
-[E12 — Lógicas extras](../../../docs/ETAPAS/relatorios/E12_logicas_extras.md)
+- [ ] Instalar sensor chuva no topo da maquete
+- [ ] Ligar ao Arduino/ESP32 conforme [pinagem](../documentacao/pinagem.md)
+- [ ] Montar servo no mecanismo do estendal
+- [ ] Testar com água real (regador) vs seco
+- [ ] Ajustar ângulos do servo (0°/90°) à mecânica
+
+## Firmware
+
+Base: [../simulacao/wokwi/sketch.ino](../simulacao/wokwi/sketch.ino)

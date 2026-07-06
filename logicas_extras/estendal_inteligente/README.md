@@ -1,47 +1,70 @@
-﻿# Toldo Automático — Prédio Inteligente
+﻿# Estendal Inteligente — Prédio Inteligente
 
-Estendal que se fecha automaticamente quando chove.
+Estendal/toldo que **recolhe automaticamente** quando o sensor de chuva deteta precipitação.
 
 ## Objectivo na maquete
 
-Sensor de chuva no **topo do prédio** deteta precipitação → aciona toldo/estendal na zona exterior da maquete.
+Sensor de chuva no **topo do prédio** → aciona o estendal na zona exterior da maquete.
 
-## Estado (jun 2026)
+| Campo | Valor |
+|-------|-------|
+| **Estado** | Simulação Wokwi funcional |
+| **MCU** | Arduino Uno |
+| **Actuador** | Servo (recolhe/abre) |
+| **Etapa** | [E12 — Lógicas extras](../../docs/ETAPAS/relatorios/E12_logicas_extras.md) |
+
+---
+
+## Funcionamento (resumo)
+
+1. Sensor de chuva detecta precipitação
+2. Servo roda 0° → 90° (recolhe estendal)
+3. Mantém 8 s recolhido
+4. Reabre 90° → 0°
+
+Detalhes: [documentacao/funcionamento.md](documentacao/funcionamento.md)
+
+---
+
+## Estado hardware (jul 2026)
 
 | Item | Estado |
 |------|--------|
-| Conceito | Definido |
-| Montagem | **Em curso** |
-| Sensor de chuva | Comprado na **Temu** — por instalar no topo |
-| Actuador | **Servo** (recolhe/abre o estendal) |
-| Firmware | **Simulação Wokwi funcional** — [simulacao/wokwi/](simulacao/wokwi/) |
+| Sensor chuva (Temu) | Comprado — por instalar no topo |
+| Servo | Simulado — montar na maquete |
+| Firmware real | **Pendente** |
 
-## Hardware planeado
-
-| Componente | Estado |
-|------------|--------|
-| Sensor chuva (Temu) | Comprado — montagem no topo |
-| Actuador toldo | Por definir |
-| Microcontrolador | ESP32 ou partilhado com outro módulo |
+---
 
 ## Estrutura
 
 | Pasta | Conteúdo |
 |-------|----------|
-| [simulacao/wokwi/](simulacao/wokwi/) | **Projeto Wokwi** — sensor de chuva + servo (abrir para simular) |
-| [real/](real/) | Firmware + sensor |
-| [testes/](testes/) | Teste molhado/seco |
-| [documentacao/](documentacao/) | Esquema de ligação |
+| [simulacao/wokwi/](simulacao/wokwi/) | **Simular aqui** |
+| [documentacao/](documentacao/) | Funcionamento e pinagem |
+| [real/](real/) | Montagem física — **pendente** |
+| [testes/](testes/) | Teste molhado/seco — **pendente** |
+
+---
+
+## Simular no Cursor
+
+```bash
+cd logicas_extras/estendal_inteligente/simulacao/wokwi
+python -m platformio run
+```
+
+Abrir `sketch.ino` → Wokwi Start → mudar **slide switch** (simula chuva).
+
+| Wokwi online | https://wokwi.com/projects/468789716183085057 |
+
+---
 
 ## Relacionado
 
 | Módulo | Ligação |
 |--------|---------|
-| Meteorologia | [meteorologia/](../meteorologia/) — DHT22 no painel ecra (ambiente interior) |
-
-## Prioridade
-
-Depois do **elevador funcional** na maquete (E08/E10).
+| Central de controlo | [../central_de_controlo/](../central_de_controlo/) — ambiente interior (DHT22) |
 
 ## Navegação
 
@@ -49,4 +72,3 @@ Depois do **elevador funcional** na maquete (E08/E10).
 |--|--|
 | Lógicas extras | [../README.md](../README.md) |
 | Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
-| Etapa E12 | [../../docs/ETAPAS/relatorios/E12_logicas_extras.md](../../docs/ETAPAS/relatorios/E12_logicas_extras.md) |

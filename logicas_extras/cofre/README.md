@@ -1,25 +1,27 @@
-# Cofre — Código Secreto
+# Código Porta Prédio — Teclado + Servo
 
-Subsistema de **acesso por código numérico** — protótipo de cofre com teclado matricial, servo e feedback visual/sonoro.
+Subsistema de **acesso por código numérico** à porta do prédio (ou cofre na maquete): teclado matricial 3×4, servo, LEDs e buzzer.
 
-Relacionado com a lógica da [porta do prédio](../porta_predio/) (mesmo conceito de PIN + validação), aplicado aqui a um **cofre/fechadura** na maquete do prédio inteligente.
+> Pasta actual: `cofre/` — rename para `codigo_porta_predio` pendente.
 
 | Campo | Valor |
 |-------|-------|
 | **Estado** | Simulação Wokwi funcional |
 | **MCU** | Arduino Uno |
-| **Plataforma** | Wokwi |
+| **Código** | `1904` + `#` para confirmar |
 | **Etapa** | [E12 — Lógicas extras](../../docs/ETAPAS/relatorios/E12_logicas_extras.md) |
 
 ---
 
 ## Funcionamento
 
-1. Utilizador introduz dígitos no teclado 3×4
+1. Introduzir dígitos no teclado 3×4
 2. `#` confirma o código
-3. **Código correcto** (`1904`): LED verde, servo abre (90°), bip curto
-4. **Código errado**: LED vermelho, bip longo grave
-5. `*` limpa a entrada (reset)
+3. **Correcto** (`1904`): LED verde, bip curto, servo abre suavemente (0°→90°), **fica 8 s aberto**, fecha suavemente (90°→0°)
+4. **Incorrecto**: LED vermelho, bip grave, servo não move
+5. `*` limpa a entrada
+
+Detalhes: [documentacao/funcionamento.md](documentacao/funcionamento.md)
 
 ---
 
@@ -27,62 +29,53 @@ Relacionado com a lógica da [porta do prédio](../porta_predio/) (mesmo conceit
 
 | Pasta | Conteúdo |
 |-------|----------|
-| [simulacao/wokwi/](simulacao/wokwi/) | Projeto Wokwi exportado — **abrir esta pasta para simular** |
-| [real/](real/) | Implementação física na maquete (futuro) |
-| [testes/](testes/) | Testes isolados teclado/servo |
-| [documentacao/](documentacao/) | Pinagem e lógica detalhada |
-| [cofre_codigo_secreto.ino](cofre_codigo_secreto.ino) | Cópia do firmware (referência) |
+| [simulacao/wokwi/](simulacao/wokwi/) | **Simular aqui** — Wokwi + PlatformIO |
+| [documentacao/](documentacao/) | Pinagem e fluxo |
+| [real/](real/) | Montagem física — **pendente** |
+| [testes/](testes/) | Testes bancada — **pendente** |
+| [tranca_keypad_arduino/](tranca_keypad_arduino/) | Repo original + vídeo demo |
 
 ---
 
-## Wokwi
+## Simular no Cursor
+
+```bash
+cd logicas_extras/cofre/simulacao/wokwi
+python -m platformio run
+```
+
+1. Abrir `sketch.ino` → `F1` → **Wokwi: Start Simulator**
+2. Introduzir `1904` + `#`
 
 | Campo | Valor |
 |-------|-------|
-| **Link** | https://wokwi.com/projects/462220624733136897 |
-| **Export local** | [simulacao/wokwi/](simulacao/wokwi/) |
-| **Autor Wokwi** | Santiago Candeias |
-
-### Simular no Cursor
-
-1. Abrir pasta `logicas_extras/cofre/simulacao/wokwi/`
-2. Abrir `sketch.ino`
-3. `F1` → **Wokwi: Start Simulator**
-4. Introduzir `1904` + `#` para testar acesso
+| Wokwi online | https://wokwi.com/projects/462220624733136897 |
 
 ---
 
-## Componentes (simulação)
+## Hardware
 
-| Componente | Função |
-|------------|--------|
-| Arduino Uno | Controlador |
-| Teclado matricial 3×4 | Entrada do código |
-| Servo | Abrir/fechar “porta” do cofre |
-| LED vermelho (D11) | Acesso negado |
-| LED verde (D12) | Acesso permitido |
-| Buzzer (D13) | Feedback sonoro |
+| Componente | Simulação | Real (Mauser) |
+|------------|-----------|---------------|
+| Arduino Uno | ✓ | ✓ |
+| Teclado 3×4 | Membrane keypad Wokwi | [096-4642](../../docs/compras/faturas_mauser/2026EC1403323.md) |
+| Servo | ✓ | Micro servo |
+| LEDs + buzzer | ✓ | 220 Ω nos LEDs |
 
----
-
-## Ligação ao prédio inteligente
-
-- **Porta do prédio:** mesma ideia de código PIN — pode reutilizar lógica do `sketch.ino`
-- **Hardware comprado (E12):** teclado matricial 3×4 Mauser [096-4642](../../docs/compras/faturas_mauser/2026EC1403323.md) — candidato à implementação real
+Pinagem: [documentacao/pinagem.md](documentacao/pinagem.md)
 
 ---
 
-## Próximos passos
+## Relacionado
 
-- [ ] Adaptar para ESP32 / teclado físico Mauser
-- [ ] Integrar na maquete (cofre ou porta de apartamento)
-- [ ] Alterar código secreto via configuração (não hardcoded)
+| Módulo | Ligação |
+|--------|---------|
+| Cartões de prédio | [../cartoes_predio/](../cartoes_predio/) — acesso alternativo RFID |
+| Central de controlo | [../central_de_controlo/](../central_de_controlo/) — alarmes |
 
 ## Navegação
 
 | | |
 |--|--|
 | Lógicas extras | [../README.md](../README.md) |
-| Porta prédio | [../porta_predio/](../porta_predio/) |
 | Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
-| Etapa E12 | [../../docs/ETAPAS/relatorios/E12_logicas_extras.md](../../docs/ETAPAS/relatorios/E12_logicas_extras.md) |

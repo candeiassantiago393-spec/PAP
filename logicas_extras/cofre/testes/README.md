@@ -1,15 +1,22 @@
-# Testes — Cofre
+# Testes — Código Porta Prédio
 
-Testes isolados antes da integração na maquete.
+Registo de testes na bancada e na maquete.
 
-## Sugestões
+## Estado
 
-| Teste | Objectivo |
-|-------|-----------|
-| Teclado only | Ler matriz sem servo — validar pinagem |
-| Servo only | Abrir/fechar sem lógica de código |
-| Código válido/inválido | Integração completa (como Wokwi) |
+**Pendente** — simulação Wokwi validada; testes físicos por documentar.
+
+## Testes planeados
+
+| ID | Teste | Resultado | Data |
+|----|-------|-----------|------|
+| T1 | Teclado — cada tecla no Serial | ✓ Wokwi | — |
+| T2 | Código 1904# abre servo | ✓ Wokwi | — |
+| T3 | Auto-fecho após 8 s | ✓ Wokwi | — |
+| T4 | Código errado — LED vermelho | ✓ Wokwi | — |
+| T5 | Teclado físico Mauser | — | — |
+| T6 | Servo na fechadura real | — | — |
 
 ## Referência
 
-Simulação validada: [../simulacao/wokwi/](../simulacao/wokwi/)
+Simulação: [../simulacao/wokwi/](../simulacao/wokwi/)
