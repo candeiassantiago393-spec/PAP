@@ -1,7 +1,11 @@
 [wokwi]
 version = 1
-firmware = "sketch.ino"
-elf = ""
+firmware = ".pio/build/uno/firmware.hex"
+elf = ".pio/build/uno/firmware.elf"
+
+# Compilar antes de simular:
+#   python -m platformio run
+# e reiniciar a simulacao (Stop + Start).
 
 [[libraries]]
 name = "Servo"
