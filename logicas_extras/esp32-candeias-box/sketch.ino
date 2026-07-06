@@ -396,7 +396,7 @@ void drawGasScreen(int xOffset) {
 
   display.setCursor(4 + xOffset, 52);
   display.print("Estado: ");
-  display.print(gasPercent >= GAS_LIMIT ? "PERIGO" : "OK");
+  display.print(gasPercent >= GAS_LIMIT ? "FUGA!" : "OK");
 }
 
 void drawScreenDots(ScreenId active) {
@@ -444,15 +444,19 @@ void drawGasAlert() {
   display.clearDisplay();
   display.drawRect(2, 2, SCREEN_WIDTH - 4, SCREEN_HEIGHT - 4, SSD1306_WHITE);
 
-  drawCenteredText(6, "ALERTA", 1);
-  display.drawLine(8, 17, SCREEN_WIDTH - 8, 17, SSD1306_WHITE);
+  drawCenteredText(6, "!! AVISO !!", 1);
+  display.drawLine(8, 16, SCREEN_WIDTH - 8, 16, SSD1306_WHITE);
 
-  drawCenteredText(22, "GAS", 2);
+  // Mensagem principal a piscar para chamar a atencao
+  if (gasBlinkState) {
+    drawCenteredText(22, "FUGA DE", 2);
+    drawCenteredText(40, "GAS!!", 2);
+  } else {
+    drawCenteredText(31, "FUGA DE GAS!!", 1);
+  }
+
   snprintf(line, sizeof(line), "Nivel: %d%%", gasPercent);
-  drawCenteredText(44, line, 1);
-
-  display.drawLine(8, 52, SCREEN_WIDTH - 8, 52, SSD1306_WHITE);
-  drawCenteredText(55, "Ventilar o local!", 1);
+  drawCenteredText(54, line, 1);
 
   display.display();
 }
