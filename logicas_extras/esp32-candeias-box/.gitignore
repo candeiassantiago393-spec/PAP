@@ -1,0 +1,24 @@
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Build / IDE
+.vscode/.browse.c_cpp.db*
+.vscode/ipch/
+*.o
+*.a
+*.elf
+*.bin.map
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Referência local (clone separado)
+_estufa_ref/
+
+# Python cache
+__pycache__/
+*.pyc

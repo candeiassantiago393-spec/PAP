@@ -1,0 +1,8 @@
+[wokwi]
+version = 1
+firmware = ".pio/build/esp32dev/firmware.bin"
+elf = ".pio/build/esp32dev/firmware.elf"
+
+# Depois de alterar sketch.ino ou src/main.cpp, corre:
+#   python -m platformio run
+# e reinicia a simulacao (Stop + Start).
