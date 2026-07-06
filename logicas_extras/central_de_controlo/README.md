@@ -16,8 +16,11 @@ Projeto interativo para ESP32 com OLED, botões e vários subsistemas: ambiente,
 | **PLANTAS** | Humidade do solo, barra 0–100 %, LEDs, bomba com limite de tempo |
 | **GRAFICO** | Sparkline das últimas leituras de temperatura |
 | **GAS** | Nível de gás (0–100 %), barra com limite; alarme (buzzer + LED amarelo a piscar + ecrã "FUGA DE GAS!!") acima de 60 % |
-| **FOGO** | Intensidade de chama (0–100 %), barra com limite; alarme (buzzer + LED vermelho a piscar + ecrã "FOGO / INCENDIO") acima de 60 %. Prioridade máxima sobre os outros alertas |
+| **FOGO** | Intensidade de chama (0–100 %), barra com limite; alarme (buzzer + LED vermelho a piscar + ecrã "FOGO / INCENDIO") acima de 60 % |
+| **SISMO** | Intensidade sísmica (0–100 %), barra com limite; alarme (buzzer + LED verde a piscar + ecrã "SISMO / TERRAMOTO") acima de 60 % |
 | **Instagram** | QR code para o perfil (último ecrã) |
+
+**Prioridade dos alertas:** FOGO > SISMO > INTRUSO (PIR) > GÁS.
 
 **Extra:** transições laterais entre ecrãs, indicador de página (pontinhos), **modo feira** (rotação automática a cada 5 s; pausa ao carregar botões; volta após 2 min sem interação).
 
@@ -37,6 +40,7 @@ Lógica da estufa baseada no [Projeto-Estufa v1.3](https://github.com/candeiassa
 | Solo (potenciómetro / analógico) | 34 |
 | Gás (MQ-2/MQ-135 real; potenciómetro na simulação) | 35 |
 | Fogo/chama (KY-026 real, saída analógica; potenciómetro na simulação) | 4 |
+| Sismo/vibração (SW-420 real, digital; potenciómetro na simulação) | 13 |
 | LED vermelho / amarelo / verde | 16 / 17 / 18 |
 | Bomba (LED na simulação) | 19 |
 

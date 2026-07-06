@@ -92,6 +92,14 @@
       "left": -124.8,
       "attrs": { "text": "FOGO (pot)" }
     },
+    { "type": "wokwi-potentiometer", "id": "potSismo", "top": 460.8, "left": -86.4, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text10",
+      "top": 451.2,
+      "left": -124.8,
+      "attrs": { "text": "SISMO (pot)" }
+    },
     { "type": "wokwi-led", "id": "ledVerm", "top": 134.4, "left": 220.8, "attrs": { "color": "red" } },
     { "type": "wokwi-led", "id": "ledVerde", "top": 163.2, "left": 220.8, "attrs": { "color": "limegreen" } },
     { "type": "wokwi-led", "id": "ledAmar", "top": 192, "left": 220.8, "attrs": { "color": "yellow" } },
@@ -146,6 +154,10 @@
     [ "potFogo:SIG", "esp:4", "orange", [ "v0" ] ],
     [ "potFogo:VCC", "esp:3V3", "red", [ "v0" ] ],
     [ "potFogo:GND", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "potSismo:SIG", "esp:13", "green", [ "v0" ] ],
+    [ "potSismo:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "potSismo:GND", "esp:GND.2", "black", [ "v0" ] ],
 
     [ "esp:16", "rVerm:1", "red", [ "v0" ] ],
     [ "rVerm:2", "ledVerm:A", "red", [ "v0" ] ],
