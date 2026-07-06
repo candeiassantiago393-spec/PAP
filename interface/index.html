@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#12141a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Candeias">
+  <meta name="app-version" content="3.5.14">
+  <title>Candeias — candeias.dev</title>
+  <link rel="manifest" href="manifest.json?v=3.5.14">
+  <link rel="apple-touch-icon" href="icons/icon.svg">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/app.css?v=3.5.14">
+  <link rel="stylesheet" href="css/shell.css?v=3.5.14">
+  <link rel="stylesheet" href="css/auth.css?v=3.5.14">
+  <link rel="stylesheet" href="css/mobile.css?v=3.5.14">
+</head>
+<body>
+  <div id="login-gate" class="login-gate"></div>
+  <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+  <div class="app-shell hidden" id="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">
+          <div class="brand-icon" id="sidebar-avatar">C</div>
+          <div class="brand-text">
+            <h1>Candeias</h1>
+            <span>Control</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-hubs" id="sidebar-hubs" aria-label="Main hubs"></div>
+
+      <div class="sidebar-areas" id="sidebar-areas">
+        <button type="button" class="sidebar-section-toggle" id="area-filters-toggle" aria-expanded="true" aria-controls="area-filters">
+          <span class="sidebar-toggle-arrow" aria-hidden="true">▾</span>
+          <span class="nav-section-label" data-i18n="nav.filterByArea">Filter by area</span>
+        </button>
+        <div id="area-filters" class="sidebar-section-body"></div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="btn-ai" id="btn-ai-capture" data-i18n="sidebar.ai">AI Assistant</button>
+        <button class="btn-quick" id="btn-quick-capture" data-i18n="sidebar.quickNote">+ Quick note</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="app-header" id="app-header">
+        <button type="button" class="app-header-profile" id="btn-header-profile" aria-label="Settings">
+          <div class="app-avatar" id="header-avatar">C</div>
+          <div class="app-header-brand">
+            <span class="app-header-name">Candeias</span>
+            <span class="app-header-chevron">▾</span>
+          </div>
+        </button>
+        <div class="app-header-actions">
+          <button type="button" class="app-header-btn" id="btn-header-search" aria-label="Search"><span class="ui-glyph" aria-hidden="true">⌕</span></button>
+          <button type="button" class="app-header-btn" id="btn-notif" aria-label="Notifications">
+            <span class="ui-glyph" aria-hidden="true">!</span><span class="app-header-badge hidden" id="header-badge-inbox">0</span>
+          </button>
+          <button type="button" class="app-header-btn" id="btn-cal-nav" aria-label="Calendar">
+            <span class="ui-glyph" aria-hidden="true">Cal</span><span class="app-header-badge hidden" id="header-badge-today">0</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="app-tabs-wrap" id="app-tabs-wrap">
+        <div class="app-tabs-inner">
+          <div class="app-tab-indicator" id="app-tab-indicator" aria-hidden="true"></div>
+          <div class="app-tabs" id="app-tabs" role="tablist"></div>
+        </div>
+      </div>
+
+      <header class="topbar legacy-topbar command-topbar">
+        <button class="btn btn-icon btn-ghost hidden" id="btn-menu" aria-label="Menu">☰</button>
+        <nav class="app-breadcrumb" id="app-breadcrumb" aria-label="Breadcrumb"></nav>
+        <div class="topbar-titles-fallback hidden" id="topbar-titles-fallback" aria-hidden="true">
+          <div class="topbar-title" id="view-title">Dashboard</div>
+          <div class="topbar-subtitle" id="view-subtitle">candeias.dev control panel</div>
+        </div>
+        <div class="topbar-spacer"></div>
+        <div class="search-box" id="search-trigger">
+          <span class="ui-glyph" aria-hidden="true">⌕</span>
+          <input type="text" placeholder="Search..." readonly>
+          <kbd>Ctrl K</kbd>
+        </div>
+        <button class="btn btn-primary" id="btn-add" data-i18n="topbar.new">+ New</button>
+      </header>
+
+      <div class="workspace-bar" id="workspace-bar"></div>
+      <div class="filter-bar hidden" id="filter-bar"></div>
+      <div class="keyboard-hints hidden" id="keyboard-hints">
+        <kbd>Ctrl K</kbd> Search · <kbd>Esc</kbd> Close modal · Calendar: filters in the top bar
+      </div>
+      <div class="content-stage" id="content-stage">
+        <div class="content" id="content"></div>
+      </div>
+
+      <div class="bottom-nav-wrap">
+        <nav class="bottom-nav" id="bottom-nav" aria-label="Main"></nav>
+      </div>
+    </main>
+  </div>
+
+  <div id="modal-root"></div>
+
+  <script src="js/auth.js?v=3.5.14"></script>
+  <script src="js/constants.js?v=3.5.14"></script>
+  <script src="js/utils.js?v=3.5.14"></script>
+  <script src="js/school-schedule.js?v=3.5.14"></script>
+  <script src="js/tools.js?v=3.5.14"></script>
+  <script src="js/stats-analytics.js?v=3.5.14"></script>
+  <script src="js/ai-assistant.js?v=3.5.14"></script>
+  <script src="js/demo-data.js?v=3.5.14"></script>
+  <script src="js/store.js?v=3.5.14"></script>
+  <script src="js/i18n.js?v=3.5.14"></script>
+  <script src="js/shell.js?v=3.5.14"></script>
+  <script src="js/sync.js?v=3.5.14"></script>
+  <script src="js/app-update.js?v=3.5.14"></script>
+  <script src="js/vault.js?v=3.5.14"></script>
+  <script src="js/gmail.js?v=3.5.14"></script>
+  <script src="js/views.js?v=3.5.14"></script>
+  <script src="js/modals.js?v=3.5.14"></script>
+  <script src="js/app.js?v=3.5.14"></script>
+</body>
+</html>

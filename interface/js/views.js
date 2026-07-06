@@ -1,0 +1,1599 @@
+const AppViews = {
+  itemMeta(item) {
+    const parts = [];
+    if (item.areaId) { const a = Store.getArea(item.areaId); if (a) parts.push(`${a.icon} ${a.name}`); }
+    if (item.projectId) { const p = Store.getProject(item.projectId); if (p) parts.push(p.name); }
+    if (item.subContextId && item.areaId) {
+      const ctx = Store.getArea(item.areaId)?.subContexts?.find((c) => c.id === item.subContextId);
+      if (ctx) parts.push(`${ctx.icon} ${ctx.name}`);
+    }
+    if (item.projectId) {
+      const stages = Store.getItemProjectStages(item);
+      if (stages.length) parts.push(stages.join(' · '));
+    }
+    const dates = Utils.itemScheduleDates(item);
+    if (dates.length) parts.push(Utils.fmtScheduleDates(dates));
+    else if (item.dueDate) parts.push(`${I18n.t('field.due')}: ${Utils.fmtDate(item.dueDate)}`);
+    if (item.duration) parts.push(`${item.duration} min`);
+    if (item.hoursLogged) parts.push(Utils.fmtHours(item.hoursLogged));
+    if (item.workStatus && item.workStatus !== 'In progress') parts.push(I18n.enum(item.workStatus));
+    return parts.join(' · ');
+  },
+
+  renderItemCard(item) {
+    if (item.isSchoolSchedule) {
+      return `<div class="item-card school-item">
+        <div class="item-type">🏫 School · ${Utils.fmtTime(item.startDate)}–${Utils.fmtTime(item.endDate)}</div>
+        <div class="item-title">${Utils.esc(item.title)}</div>
+        ${item.location ? `<div class="school-room">Room ${Utils.esc(item.location)}</div>` : ''}
+      </div>`;
+    }
+    if (item.type === 'checklist') {
+      return this.renderChecklistCard(item);
+    }
+    const pin = item.pinned ? '<span class="tag" style="background:var(--warning);color:#000">📌</span> ' : '';
+    const overdue = Utils.isOverdue(item) ? '<span class="tag" style="background:rgba(255,71,87,.2);color:var(--danger)">overdue</span> ' : '';
+    let extra = '';
+    if (item.type === 'contact') {
+      const grp = item.contactGroupId ? Store.getContactGroup(item.contactGroupId) : null;
+      const ci = item.contactInfo || {};
+      extra = `<div style="font-size:12px;color:var(--text-muted);margin-top:6px">
+        ${ci.company ? Utils.esc(ci.company) + ' · ' : ''}${Utils.esc(ci.email || ci.phone || '')}</div>`;
+      if (grp) extra = `<span class="tag contact-group-tag" style="border-color:${grp.color};color:${grp.color}">${grp.icon} ${Utils.esc(grp.name)}</span> ` + extra;
+    }
+    if (item.type === 'link' && item.url) extra = `<div style="font-size:12px;color:var(--green);margin-top:6px">${Utils.esc(item.url)}</div>`;
+    if (item.attachments?.length) {
+      extra += `<div class="attachment-list attachment-list--inline">${item.attachments.map((a, i) => Utils.renderAttachmentChip(a, item.id, i)).join('')}</div>`;
+    }
+    return `
+      <div class="item-card ${item.completed ? 'completed' : ''}" data-action="open-item" data-id="${item.id}">
+        <div class="item-type">${Utils.typeIcon(item.type)} ${Utils.typeLabel(item.type)} ${pin}${overdue}</div>
+        <div class="item-title">${Utils.esc(item.title)}</div>
+        ${item.body ? `<p class="item-body-preview">${Utils.esc(item.body.slice(0, 120))}${item.body.length > 120 ? '…' : ''}</p>` : ''}
+        ${extra}
+        <div class="item-meta">${Utils.esc(this.itemMeta(item))}
+          ${item.tags.map((t) => `<span class="tag tag-click" data-action="filter-tag" data-tag="${Utils.esc(t)}">#${Utils.esc(t)}</span>`).join('')}
+        </div>
+        <div class="item-actions">
+          <button class="btn btn-sm" data-action="open-item" data-id="${item.id}">${I18n.t('action.edit')}</button>
+          ${item.archived ? `<button class="btn btn-sm btn-ghost" data-action="unarchive-item" data-id="${item.id}">${I18n.t('action.restore')}</button>` : `<button class="btn btn-sm btn-ghost" data-action="toggle-pin" data-id="${item.id}">${item.pinned ? I18n.t('action.unpin') : I18n.t('action.pin')}</button>
+          <button class="btn btn-sm btn-ghost" data-action="archive-item" data-id="${item.id}">${I18n.t('action.archive')}</button>`}
+          <button class="btn btn-sm btn-ghost danger-left" data-action="delete-item" data-id="${item.id}">${I18n.t('action.delete')}</button>
+        </div>
+      </div>`;
+  },
+
+  renderChecklistCard(item) {
+    const items = item.checklistItems || [];
+    const done = items.filter((c) => c.done).length;
+    const allDone = items.length > 0 && done === items.length;
+    const pin = item.pinned ? '<span class="tag" style="background:var(--warning);color:#000">📌</span> ' : '';
+    const subRow = (c, idx) => `
+      <div class="wishlist-row checklist-subrow ${c.done ? 'done' : ''}">
+        <button type="button" class="task-check ${c.done ? 'checked' : ''}" data-action="toggle-checklist-item" data-id="${item.id}" data-idx="${idx}">${c.done ? '✓' : ''}</button>
+        <span class="wishlist-text">${Utils.esc(c.text)}</span>
+      </div>`;
+    return `
+      <div class="item-card checklist-card ${allDone ? 'completed' : ''}">
+        <div class="item-type">${Utils.typeIcon(item.type)} ${Utils.typeLabel(item.type)} ${pin}</div>
+        <div class="item-title" data-action="open-item" data-id="${item.id}">${Utils.esc(item.title)}</div>
+        ${items.length ? `<div class="checklist-progress muted sm">${done}/${items.length} ${I18n.t('checklist.done')}</div>` : ''}
+        <div class="checklist-items">${items.length ? items.map(subRow).join('') : `<p class="muted sm">${I18n.t('checklist.empty')}</p>`}</div>
+        ${item.body ? `<p class="item-body-preview">${Utils.esc(item.body.slice(0, 120))}${item.body.length > 120 ? '…' : ''}</p>` : ''}
+        <div class="item-meta">${Utils.esc(this.itemMeta(item))}
+          ${item.tags.map((t) => `<span class="tag tag-click" data-action="filter-tag" data-tag="${Utils.esc(t)}">#${Utils.esc(t)}</span>`).join('')}
+        </div>
+        <div class="item-actions">
+          <button class="btn btn-sm" data-action="open-item" data-id="${item.id}">${I18n.t('action.edit')}</button>
+          ${item.archived ? `<button class="btn btn-sm btn-ghost" data-action="unarchive-item" data-id="${item.id}">${I18n.t('action.restore')}</button>` : `<button class="btn btn-sm btn-ghost" data-action="toggle-pin" data-id="${item.id}">${item.pinned ? I18n.t('action.unpin') : I18n.t('action.pin')}</button>
+          <button class="btn btn-sm btn-ghost" data-action="archive-item" data-id="${item.id}">${I18n.t('action.archive')}</button>`}
+          <button class="btn btn-sm btn-ghost danger-left" data-action="delete-item" data-id="${item.id}">${I18n.t('action.delete')}</button>
+        </div>
+      </div>`;
+  },
+
+  renderTaskRow(item) {
+    const canCheck = item.type === 'task';
+    const timer = Store.state.settings.activeTimer;
+    const isRunning = timer?.itemId === item.id;
+    const elapsed = isRunning ? Store.getTimerElapsed() : 0;
+    const timerLabel = isRunning ? `⏱ ${Math.floor(elapsed / 60)}:${String(Math.floor(elapsed % 60)).padStart(2, '0')}` : '⏱';
+    return `
+      <div class="task-row ${Utils.isOverdue(item) ? 'task-overdue' : ''}">
+        <div class="task-check ${item.completed ? 'checked' : ''}" data-action="${canCheck ? 'toggle-task' : 'open-item'}" data-id="${item.id}">${item.completed ? '✓' : ''}</div>
+        <div class="task-content ${item.completed ? 'completed' : ''}" data-action="open-item" data-id="${item.id}">
+          <div class="task-title">${item.pinned ? '📌 ' : ''}${Utils.esc(item.title)}</div>
+          <div class="task-details">${Utils.esc(this.itemMeta(item))}</div>
+        </div>
+        ${canCheck && !item.completed ? `<button type="button" class="btn btn-sm btn-ghost timer-btn ${isRunning ? 'active' : ''}" data-action="${isRunning ? 'stop-timer' : 'start-timer'}" data-id="${item.id}" title="${isRunning ? I18n.t('timer.stopHint') : I18n.t('timer.startHint')}">${timerLabel}</button>` : ''}
+        ${isRunning ? `<button type="button" class="btn btn-sm btn-ghost timer-cancel-btn" data-action="cancel-timer" title="${I18n.t('timer.cancelHint')}">✕</button>` : ''}
+      </div>`;
+  },
+
+  renderDashboard() {
+    const stats = App.getFilteredStats();
+    const widgets = Store.getDashboardWidgets();
+    const show = (k) => widgets.includes(k);
+    const pinned = App.getFilteredItems({ pinned: true }).slice(0, 5);
+    const overdue = App.getFilteredItems({ overdue: true });
+    const devStage = Store.getPipelineStages().find((s) => /develop|desenvolv/i.test(s)) || 'In development';
+    const devProjects = App.filterProjects(Store.state.projects.filter((p) => !p.archived && p.pipeline === devStage));
+    const recent = App.filterItems(Store.state.settings.recentItems.map((id) => Store.getItem(id)).filter(Boolean)).slice(0, 5);
+    const review = App.getFilteredWeeklyReview();
+
+    let html = App.renderScopeBanner();
+    if (show('banners')) {
+      const emptyScore = typeof CloudSync !== 'undefined' ? CloudSync.dataScore(Store.state) : 0;
+      html += `${stats.overdue > 0 ? `<div class="overdue-banner">⚠ ${I18n.t('dash.overdueBanner', { n: stats.overdue })} · <a href="#" data-action="nav" data-view="overdue">${I18n.t('dash.viewAll')}</a></div>` : ''}
+      ${stats.inbox > 0 ? `<div class="info-banner">📥 ${I18n.t('dash.inboxBanner', { n: stats.inbox })} · <a href="#" data-action="nav" data-view="inbox">${I18n.t('dash.classify')}</a></div>` : ''}
+      ${emptyScore === 0 ? `<div class="overdue-banner" style="border-color:#f59e0b">⚠ App looks empty · <a href="#" data-action="restore-my-data">Recover my data</a></div>` : ''}
+      ${Store.state.settings.fullDemoLoaded ? `<div class="info-banner" style="opacity:0.85">💡 Demo data loaded · <a href="#" data-action="clear-all-data">Clear and start fresh</a></div>` : ''}`;
+    }
+    if (show('stats')) {
+      const openPct = stats.tasksOpen + stats.tasksWeekDone > 0
+        ? Math.round((stats.tasksWeekDone / (stats.tasksOpen + stats.tasksWeekDone)) * 100) : 0;
+      html += `<div class="insight-grid">
+        <div class="insight-card" data-action="nav" data-view="inbox">
+          <div><div class="insight-value">${stats.inbox}</div><div class="insight-label">${I18n.t('view.inbox')}</div></div>
+          <div class="insight-hint">${stats.inbox > 0 ? I18n.t('shell.hint.inbox') : I18n.t('shell.hint.inboxZero')}</div>
+        </div>
+        <div class="insight-card" data-action="nav" data-view="tasks">
+          <div><div class="insight-value">${stats.tasksOpen}</div><div class="insight-label">${I18n.t('shell.metric.openTasks')}</div></div>
+          <div class="insight-hint">${stats.tasksWeekDone} ${I18n.t('shell.metric.doneWeek')}</div>
+        </div>
+        <div class="insight-card" data-action="nav" data-view="overdue">
+          <div><div class="insight-value">${stats.overdue}</div><div class="insight-label">${I18n.t('view.overdue')}</div></div>
+          <div class="insight-hint">${stats.overdue > 0 ? I18n.t('shell.hint.overdue') : '✓'}</div>
+        </div>
+        <div class="insight-card" data-action="nav" data-view="projects">
+          <div><div class="insight-value">${stats.projects}</div><div class="insight-label">${I18n.t('view.projects')}</div></div>
+          <div class="insight-hint">${stats.hoursLogged} ${I18n.t('shell.metric.logged')}</div>
+        </div>
+      </div>
+      <div class="engage-section">
+        <div class="engage-title">${I18n.t('shell.engage.title')}</div>
+        <div class="engage-scroll">
+          <div class="engage-card" data-action="nav" data-view="tasks"><div class="engage-icon">⚡</div><div class="engage-val">${openPct}%</div><div class="engage-lbl">${I18n.t('shell.engage.completion')}</div></div>
+          <div class="engage-card" data-action="nav" data-view="pinned"><div class="engage-icon">📌</div><div class="engage-val">${pinned.length}</div><div class="engage-lbl">${I18n.t('view.pinned')}</div></div>
+          <div class="engage-card" data-action="nav" data-view="review"><div class="engage-icon">📋</div><div class="engage-val">${review.done.length}</div><div class="engage-lbl">${I18n.t('shell.engage.done')}</div></div>
+          <div class="engage-card" data-action="nav" data-view="stats"><div class="engage-icon">📊</div><div class="engage-val">${stats.hoursLogged}</div><div class="engage-lbl">${I18n.t('shell.metric.hours')}</div></div>
+        </div>
+      </div>
+      <div class="shell-cta" data-action="export-backup">
+        <div class="shell-cta-icon">📄</div>
+        <div class="shell-cta-body"><div class="shell-cta-title">${I18n.t('shell.cta.backup')}</div><div class="shell-cta-desc">${I18n.t('shell.cta.backupDesc')}</div></div>
+        <button type="button" class="shell-cta-btn" aria-hidden="true">↓</button>
+      </div>
+      <div class="stats-grid desktop-stats">
+        <div class="stat-card" data-action="nav" data-view="inbox"><div class="stat-value">${stats.inbox}</div><div class="stat-label">Inbox</div></div>
+        <div class="stat-card" data-action="nav" data-view="tasks"><div class="stat-value">${stats.tasksOpen}</div><div class="stat-label">Open tasks</div></div>
+        <div class="stat-card"><div class="stat-value">${stats.tasksWeekDone}</div><div class="stat-label">Done/week</div></div>
+        <div class="stat-card" data-action="nav" data-view="overdue"><div class="stat-value">${stats.overdue}</div><div class="stat-label">Overdue</div></div>
+        <div class="stat-card" data-action="nav" data-view="projects"><div class="stat-value">${stats.projects}</div><div class="stat-label">Projects</div></div>
+        <div class="stat-card"><div class="stat-value">${stats.hoursLogged}</div><div class="stat-label">Hours logged</div></div>
+      </div>`;
+    }
+    html += '<div class="dash-grid"><div>';
+    if (show('pinned') && pinned.length) {
+      html += `<div class="section-header"><div class="section-title">📌 ${I18n.t('dash.pinned')}</div></div>${pinned.map((i) => this.renderItemCard(i)).join('')}`;
+    }
+    if (show('recent')) {
+      html += `<div class="section-header"><div class="section-title">${I18n.t('dash.recent')}</div></div>
+        ${recent.length ? recent.map((i) => this.renderItemCard(i)).join('') : App.getFilteredItems().slice(0, 4).map((i) => this.renderItemCard(i)).join('')}`;
+    }
+    html += '</div><div>';
+    if (show('dev')) {
+      html += `<div class="section-header"><div class="section-title">${I18n.t('dash.inDev')}</div></div>
+        ${devProjects.map((p) => this.renderProjectMini(p)).join('') || `<p class="muted">${I18n.t('dash.noProjectsInDev')}</p>`}`;
+    }
+    if (show('overdue') && overdue.length) {
+      html += `<div class="section-header mt"><div class="section-title danger">${I18n.t('view.overdue')}</div></div>${overdue.slice(0, 3).map((i) => this.renderTaskRow(i)).join('')}`;
+    }
+    if (show('review')) {
+      html += `<div class="section-header mt"><div class="section-title">${I18n.t('dash.weeklyReview')}</div><button class="btn btn-sm" data-action="nav" data-view="review">${I18n.t('dash.open')}</button></div>
+        <p class="muted">${review.done.length} ${I18n.t('dash.completed').toLowerCase()} · ${review.open.length} ${I18n.t('project.filter.open').toLowerCase()} · ${review.inbox.length} inbox</p>`;
+    }
+    html += `</div></div>
+      <footer class="app-footer"><a href="https://candeias.dev" target="_blank" rel="noopener">candeias.dev</a> · Candeias v${APP_VERSION}</footer>`;
+    return html;
+  },
+
+  renderProjectItemRow(item) {
+    if (item.type === 'checklist') return this.renderChecklistCard(item);
+    if (item.type === 'task') return this.renderTaskRow(item);
+    return this.renderItemCard(item);
+  },
+
+  renderProjectMini(p) {
+    return `<div class="project-card mini" data-action="open-project" data-id="${p.id}">
+      <div class="project-header"><div class="project-color" style="background:${p.color}"></div>
+      <div><div class="project-name">${Utils.esc(p.name)}</div><div class="project-client">${Utils.esc(p.client)}</div></div></div>
+      ${p.pipeline ? `<span class="pipeline-badge">${Utils.esc(I18n.enum(p.pipeline))}</span>` : ''}
+      ${p.paymentStatus ? `<span class="tag">${Utils.esc(p.paymentStatus)}</span>` : ''}
+    </div>`;
+  },
+
+  renderInbox() {
+    const allItems = Store.getItems({ inbox: true, snoozed: false });
+    const items = App.filterInboxItems(allItems);
+    const hasFilters = App.inboxFilters.type !== 'all' || App.inboxFilters.priority !== 'all'
+      || App.inboxFilters.tag || App.inboxFilters.timeRange !== 'all'
+      || App.inboxFilters.pickDate || App.inboxFilters.pickMonth || App.inboxFilters.pickYear;
+    const snoozed = App.filterItems(Store.state.items.filter((i) => i.snoozedUntil && i.snoozedUntil > Utils.todayStr()));
+    return `
+      ${App.renderScopeBanner()}
+      <div class="section-header"><div class="section-title">Inbox (${items.length}${hasFilters ? ` of ${allItems.length}` : ''})</div>
+        <button class="btn btn-sm btn-primary" data-action="quick-ultra">⚡ Ultra-fast</button></div>
+      ${hasFilters ? `<div class="info-banner">Active filters · <a href="#" data-action="clear-inbox-filters">Clear filters</a></div>` : ''}
+      ${items.map((i) => `
+        <div class="item-card mb">
+          <div class="item-type">${Utils.typeIcon(i.type)} ${Utils.typeLabel(i.type)} · ${Utils.fmtDate(i.createdAt.slice(0, 10))}</div>
+          <div class="item-title">${Utils.esc(i.title)}</div>
+          <p class="muted">${Utils.esc(i.body)}</p>
+          <div class="btn-row">
+            <button class="btn btn-sm btn-primary" data-action="classify-inbox" data-id="${i.id}">Classify</button>
+            <button class="btn btn-sm" data-action="open-item" data-id="${i.id}">Edit</button>
+            <button class="btn btn-sm" data-action="snooze-item" data-id="${i.id}">Snooze 1d</button>
+            <button class="btn btn-sm btn-ghost" data-action="delete-item" data-id="${i.id}">Delete</button>
+          </div>
+        </div>`).join('') || `<div class="empty-state"><div class="icon">📥</div><h3>${hasFilters ? 'No items match these filters' : 'Inbox empty'}</h3><p>Streak: ${Store.state.settings.inboxStreak || 0} days</p></div>`}
+      ${snoozed.length ? `<div class="section-header mt"><div class="section-title">Snoozed</div></div>${snoozed.map((i) => this.renderItemCard(i)).join('')}` : ''}`;
+  },
+
+  renderToday() {
+    const today = Utils.todayStr();
+    let events = App.getFilteredItems({ types: ['event', 'reminder'], date: today });
+    let tasks = App.getFilteredItems({ type: 'task', period: 'day', snoozed: false });
+    return `${App.renderScopeBanner()}
+      <div class="section-header"><div class="section-title">Events & Reminders</div></div>
+      ${events.length ? events.map((i) => this.renderItemCard(i)).join('') : '<p class="muted mb">No events today</p>'}
+      <div class="section-header mt"><div class="section-title">Tasks</div></div>
+      ${tasks.length ? tasks.map((i) => this.renderTaskRow(i)).join('') : '<div class="empty-state"><div class="icon">☀</div><h3>Free day</h3></div>'}`;
+  },
+
+  renderOverdue() {
+    const items = App.getFilteredItems({ overdue: true });
+    return `${App.renderScopeBanner()}<div class="section-header"><div class="section-title">Overdue (${items.length})</div></div>
+      ${items.length ? items.map((i) => this.renderTaskRow(i)).join('') : '<div class="empty-state"><h3>Nothing overdue 🎉</h3></div>'}`;
+  },
+
+  renderPinned() {
+    const items = App.getFilteredItems({ pinned: true });
+    return `${App.renderScopeBanner()}<div class="section-header"><div class="section-title">Pinned (${items.length})</div></div>
+      ${items.map((i) => this.renderItemCard(i)).join('') || '<div class="empty-state"><p>No pinned items</p></div>'}`;
+  },
+
+  renderBlocked() {
+    const items = App.getFilteredItems({ blocked: true });
+    return `${App.renderScopeBanner()}<div class="section-header"><div class="section-title">Blocked (${items.length})</div></div>
+      ${items.map((i) => this.renderTaskRow(i)).join('') || '<div class="empty-state"><p>Nothing blocked</p></div>'}`;
+  },
+
+  renderArchive() {
+    const allItems = Store.getItems({ archived: true });
+    const allProjects = Store.getArchivedProjects();
+    let items = App.filterArchiveByDate(allItems);
+    let projects = App.filterArchiveByDate(allProjects);
+    items = App.filterItems(items);
+    projects = App.filterProjects(projects);
+    const hasFilters = App.hasArchiveDateFilters();
+    return `${App.renderScopeBanner()}
+      <div class="section-header"><div class="section-title">${I18n.t('view.archive')}</div></div>
+      ${hasFilters ? `<div class="info-banner">Date filters active · ${projects.length} of ${allProjects.length} projects · ${items.length} of ${allItems.length} items · <a href="#" data-action="clear-archive-filters">Clear filters</a></div>` : ''}
+      <h3 class="sub-heading">${I18n.t('archive.projects')} (${projects.length}${hasFilters ? ` of ${allProjects.length}` : ''})</h3>
+      ${projects.map((p) => `<div class="item-card mb">
+        <div class="flex-center" data-action="open-project" data-id="${p.id}" style="cursor:pointer">
+          <strong>${Utils.esc(p.name)}</strong>
+          <span class="muted sm"> · ${Utils.fmtDate(App.archiveDateStr(p))}</span>
+        </div>
+        <div class="item-actions mt">
+          <button class="btn btn-sm" data-action="edit-project" data-id="${p.id}">${I18n.t('action.edit')}</button>
+          <button class="btn btn-sm btn-ghost" data-action="unarchive-project" data-id="${p.id}">${I18n.t('action.restore')}</button>
+          <button class="btn btn-sm btn-ghost danger-left" data-action="delete-project" data-id="${p.id}">${I18n.t('action.delete')}</button>
+        </div>
+      </div>`).join('') || `<p class="muted">${I18n.t('archive.noProjects')}</p>`}
+      <h3 class="sub-heading mt">${I18n.t('archive.items')} (${items.length}${hasFilters ? ` of ${allItems.length}` : ''})</h3>
+      ${items.map((i) => this.renderItemCard(i)).join('') || `<p class="muted">${hasFilters ? 'No items match these dates' : I18n.t('archive.noItems')}</p>`}`;
+  },
+
+  renderReview() {
+    const r = App.getFilteredWeeklyReview();
+    Store.state.settings.lastWeeklyReview = new Date().toISOString();
+    Store.save();
+    return `${App.renderScopeBanner()}
+      <div class="section-header"><div class="section-title">Weekly review</div></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-value">${r.done.length}</div><div class="stat-label">Completed</div></div>
+        <div class="stat-card"><div class="stat-value">${r.open.length}</div><div class="stat-label">Open</div></div>
+        <div class="stat-card"><div class="stat-value">${r.inbox.length}</div><div class="stat-label">Inbox</div></div>
+        <div class="stat-card"><div class="stat-value">${r.overdue.length}</div><div class="stat-label">Overdue</div></div>
+      </div>
+      ${r.inbox.length ? `<h3 class="sub-heading">Inbox to classify</h3>${r.inbox.map((i) => this.renderItemCard(i)).join('')}` : '<p class="muted">✓ Inbox zero!</p>'}
+      ${r.overdue.length ? `<h3 class="sub-heading mt danger">Overdue</h3>${r.overdue.map((i) => this.renderTaskRow(i)).join('')}` : ''}
+      ${r.blocked.length ? `<h3 class="sub-heading mt">Blocked</h3>${r.blocked.map((i) => this.renderTaskRow(i)).join('')}` : ''}
+      <h3 class="sub-heading mt">This week</h3>
+      ${r.weekItems.slice(0, 15).map((i) => i.type === 'task' ? this.renderTaskRow(i) : this.renderItemCard(i)).join('') || '<p class="muted">No items</p>'}`;
+  },
+
+  renderStats() {
+    const stats = App.getFilteredStats();
+    const items = Store.getItems();
+    const projects = App.filterProjects(Store.getActiveProjects());
+    const a = StatsAnalytics.build(items, projects, {
+      subscriptions: Store.state.subscriptions,
+      clients: Store.state.clients || [],
+      settings: Store.state.settings,
+      vaultEntries: Store.state.vaultEntries || [],
+    });
+
+    const weeklyShort = a.weeklyDone.map((w) => ({ ...w, shortLabel: w.label.replace(/\s\d{4}$/, '') }));
+    const priorityData = a.priorityBreakdown.map((d) => ({
+      ...d,
+      label: d.label.charAt(0).toUpperCase() + d.label.slice(1),
+      color: StatsAnalytics.PRIORITY_COLORS[d.label] || '#00d26a',
+    }));
+    const typeData = a.typeBreakdown.map((d) => ({
+      ...d,
+      label: Utils.typeLabel(d.label),
+      color: StatsAnalytics.TYPE_COLORS[Object.keys(ITEM_TYPES).indexOf(d.label)] || '#00d26a',
+    }));
+
+    const kpis = `
+      <div class="stats-grid stats-kpi-grid">
+        ${StatsAnalytics.renderKpi(stats.tasksOpen, I18n.t('stats.openTasks'), { action: { view: 'tasks' } })}
+        ${StatsAnalytics.renderKpi(stats.tasksDone, I18n.t('stats.tasksDone'), { sub: `${a.completionRate}% ${I18n.t('stats.completionRate')}` })}
+        ${StatsAnalytics.renderKpi(stats.tasksWeekDone, I18n.t('stats.thisWeek'), { sub: `ø ${a.avgWeeklyDone}/${I18n.t('stats.week')}` })}
+        ${StatsAnalytics.renderKpi(stats.overdue, I18n.t('stats.overdue'), { action: { view: 'overdue' }, accent: stats.overdue ? 'var(--danger)' : '' })}
+        ${StatsAnalytics.renderKpi(stats.hoursLogged, I18n.t('stats.projectHours'), { sub: a.itemHours ? `+${Utils.fmtHours(a.itemHours)} ${I18n.t('stats.onTasks')}` : '' })}
+        ${StatsAnalytics.renderKpi(stats.inbox, I18n.t('stats.inbox'), { action: { view: 'inbox' } })}
+        ${StatsAnalytics.renderKpi(stats.inboxStreak || Store.state.settings.inboxStreak || 0, I18n.t('stats.inboxStreak'), { sub: I18n.t('stats.days') })}
+        ${StatsAnalytics.renderKpi(a.pomodoroSessions, I18n.t('stats.pomodoro'), { action: { view: 'tools' } })}
+        ${StatsAnalytics.renderKpi(stats.projects, I18n.t('stats.projects'), { action: { view: 'projects' } })}
+        ${StatsAnalytics.renderKpi(stats.clients, I18n.t('stats.clients'), { action: { view: 'clients' } })}
+        ${StatsAnalytics.renderKpi(`${a.subscriptionMonthly.toFixed(0)}€`, I18n.t('stats.subsMonth'), { sub: a.renewalsSoon ? `${a.renewalsSoon} ${I18n.t('stats.renewSoon')}` : '', action: { view: 'subscriptions' } })}
+        ${StatsAnalytics.renderKpi(a.vaultCount, I18n.t('stats.vault'), { action: { view: 'vault' } })}
+      </div>`;
+
+    const charts = `
+      <div class="stats-charts-grid">
+        ${StatsAnalytics.renderPanel(I18n.t('stats.weeklyDone'), StatsAnalytics.renderBarChart(weeklyShort, a.maxWeekly, { ariaLabel: I18n.t('stats.weeklyDone') }))}
+        ${StatsAnalytics.renderPanel(I18n.t('stats.activity'), StatsAnalytics.renderHeatmap(a.activityHeatmap, a.maxActivity))}
+        ${StatsAnalytics.renderPanel(I18n.t('stats.byArea'), StatsAnalytics.renderHBarChart(a.areaBreakdown, null, {
+          labelFn: (d) => `${d.icon} ${d.label}`,
+        }))}
+        ${StatsAnalytics.renderPanel(I18n.t('stats.byPriority'), StatsAnalytics.renderDonut(priorityData))}
+        ${StatsAnalytics.renderPanel(I18n.t('stats.openByKanban'), StatsAnalytics.renderHBarChart(a.kanbanBreakdown, null))}
+        ${StatsAnalytics.renderPanel(I18n.t('stats.byType'), StatsAnalytics.renderDonut(typeData))}
+        ${a.projectHours.length ? StatsAnalytics.renderPanel(I18n.t('stats.hoursByProject'), StatsAnalytics.renderHBarChart(
+          a.projectHours.map((p) => ({ label: p.name, count: p.hours, color: p.color })),
+          a.maxProjectHours
+        )) : ''}
+        ${a.pipelineBreakdown.length ? StatsAnalytics.renderPanel(I18n.t('stats.pipeline'), StatsAnalytics.renderHBarChart(a.pipelineBreakdown, null)) : ''}
+        ${a.clientStatusBreakdown.length ? StatsAnalytics.renderPanel(I18n.t('stats.clientsByStatus'), StatsAnalytics.renderDonut(a.clientStatusBreakdown)) : ''}
+      </div>`;
+
+    const extras = `
+      <div class="stats-extras-grid">
+        ${StatsAnalytics.renderPanel(I18n.t('stats.insights'), `<ul class="stats-insights">
+          <li>${I18n.t('stats.insightCompletion', { rate: a.completionRate })}</li>
+          <li>${I18n.t('stats.insightOverdue', { rate: a.overdueRate })}</li>
+          <li>${I18n.t('stats.insightItems', { n: a.itemsTotal, tasks: a.tasksTotal })}</li>
+          ${a.gradesCount ? `<li>${I18n.t('stats.insightGrades', { avg: a.gradesAvg, n: a.gradesCount })}</li>` : ''}
+          ${stats.blocked ? `<li>${I18n.t('stats.insightBlocked', { n: stats.blocked })}</li>` : ''}
+        </ul>`)}
+        ${StatsAnalytics.renderPanel(I18n.t('stats.popularTags'), a.topTags.length
+          ? `<div class="tag-cloud tag-cloud--ranked">${a.topTags.map(({ tag, count }) =>
+            `<span class="tag tag-click" data-action="filter-tag" data-tag="${Utils.esc(tag)}">#${Utils.esc(tag)} <span class="tag-count">${count}</span></span>`
+          ).join('')}</div>`
+          : `<p class="muted">${I18n.t('stats.noTags')}</p>`)}
+        ${StatsAnalytics.renderPanel(I18n.t('stats.quickLinks'), `<div class="stats-quick-links">
+          <button class="btn btn-sm" data-action="nav" data-view="review">${I18n.t('nav.review')}</button>
+          <button class="btn btn-sm" data-action="nav" data-view="kanban">${I18n.t('nav.kanban')}</button>
+          <button class="btn btn-sm" data-action="nav" data-view="timeline">${I18n.t('nav.timeline')}</button>
+          <button class="btn btn-sm" data-action="nav" data-view="blocked">${I18n.t('nav.blocked')}</button>
+        </div>`)}
+      </div>`;
+
+    return `${App.renderScopeBanner()}
+      <div class="section-header"><div class="section-title">${I18n.t('view.stats')}</div></div>
+      ${kpis}
+      ${charts}
+      ${extras}`;
+  },
+
+  renderContactCard(item) {
+    const grp = item.contactGroupId ? Store.getContactGroup(item.contactGroupId) : null;
+    const ci = item.contactInfo || {};
+    return `<div class="contact-card item-card mb">
+      <div class="contact-card-head">
+        <div class="contact-card-avatar" style="background:${grp?.color || 'var(--green-dim)'}">${grp?.icon || '👤'}</div>
+        <div class="contact-card-main">
+          <div class="item-title">${Utils.esc(item.title)}</div>
+          ${ci.company ? `<div class="muted sm">${Utils.esc(ci.company)}</div>` : ''}
+          ${grp ? `<span class="tag contact-group-tag" style="border-color:${grp.color};color:${grp.color}">${grp.icon} ${Utils.esc(grp.name)}</span>` : ''}
+        </div>
+      </div>
+      ${item.body ? `<p class="item-body-preview muted">${Utils.esc(item.body.slice(0, 100))}</p>` : ''}
+      <div class="contact-card-details">
+        ${ci.email ? `<div class="contact-detail-row">✉ <a href="mailto:${Utils.esc(ci.email)}">${Utils.esc(ci.email)}</a></div>` : ''}
+        ${ci.phone ? `<div class="contact-detail-row">📞 <a href="tel:${Utils.esc(ci.phone)}">${Utils.esc(ci.phone)}</a></div>` : ''}
+      </div>
+      <div class="item-actions">
+        ${ci.email ? `<button class="btn btn-sm btn-ghost" data-action="copy-contact-email" data-id="${item.id}">Copy email</button>` : ''}
+        ${ci.phone ? `<button class="btn btn-sm btn-ghost" data-action="copy-contact-phone" data-id="${item.id}">Copy phone</button>` : ''}
+        <button class="btn btn-sm" data-action="open-item" data-id="${item.id}">Edit</button>
+        <button class="btn btn-sm btn-ghost" data-action="archive-item" data-id="${item.id}">Archive</button>
+      </div>
+      </div>`;
+  },
+
+  renderEmailAccountCard(account, expanded = false) {
+    const connected = typeof Gmail !== 'undefined' && Gmail.isTokenValid(account);
+    const preview = account.gmailPreview || [];
+    const messages = expanded ? preview : preview.slice(0, 3);
+    const fromShort = (from) => {
+      const m = from.match(/^([^<]+)</);
+      return Utils.esc((m ? m[1] : from).trim().replace(/"/g, '') || from);
+    };
+    return `<div class="email-account-card item-card" style="border-color:${account.color}44">
+      <div class="email-account-head">
+        <span class="area-dot lg" style="background:${account.color}"></span>
+        <div class="flex1">
+          <div class="email-account-title">${account.icon} ${Utils.esc(account.name)}</div>
+          <div class="muted sm">${Utils.esc(account.email)}</div>
+        </div>
+        ${connected ? `<span class="email-status connected">● Synced</span>` : ''}
+        ${account.unreadCount > 0 ? `<span class="nav-badge">${account.unreadCount}</span>` : ''}
+      </div>
+      <div class="btn-row mt mb">
+        <button class="btn btn-sm btn-primary" data-action="open-gmail-external" data-id="${account.id}">Open Gmail</button>
+        <button class="btn btn-sm" data-action="compose-email" data-id="${account.id}">Compose</button>
+        ${connected
+          ? `<button class="btn btn-sm btn-ghost" data-action="refresh-gmail" data-id="${account.id}">↻ Refresh</button>
+             <button class="btn btn-sm btn-ghost" data-action="disconnect-gmail" data-id="${account.id}">Disconnect</button>`
+          : `<button class="btn btn-sm" data-action="connect-gmail" data-id="${account.id}">Connect Gmail</button>`}
+        ${!expanded ? `<button class="btn btn-sm btn-ghost" data-action="email-filter" data-id="${account.id}">View all</button>` : ''}
+      </div>
+      ${account.lastFetch ? `<p class="muted sm mb">Last sync: ${new Date(account.lastFetch).toLocaleString()}</p>` : ''}
+      ${messages.length ? `<div class="email-preview-list">
+        ${messages.map((m) => `<button type="button" class="email-message-row ${m.unread ? 'unread' : ''}" data-action="open-gmail-message" data-id="${account.id}" data-message="${m.id}">
+          <div class="email-message-from">${fromShort(m.from)}</div>
+          <div class="email-message-subject">${Utils.esc(m.subject)}</div>
+          <div class="email-message-snippet muted sm">${Utils.esc(m.snippet)}</div>
+        </button>`).join('')}
+      </div>` : connected ? '<p class="muted sm">Inbox empty or no recent messages.</p>' : '<p class="muted sm">Connect Gmail to preview inbox here, or open Gmail in the browser.</p>'}
+    </div>`;
+  },
+
+  renderEmails() {
+    const accounts = Store.getEmailAccounts();
+    const filter = App.emailFilter || 'all';
+    const clientId = Store.state.settings.googleClientId?.trim();
+    const filtered = filter === 'all' ? accounts : accounts.filter((a) => a.id === filter);
+    const relatedContacts = filter !== 'all'
+      ? Store.getItems({ type: 'contact' }).filter((c) => {
+          const email = c.contactInfo?.email?.toLowerCase() || '';
+          const domain = (Store.getEmailAccount(filter)?.email || '').split('@')[1]?.toLowerCase();
+          return domain && email.endsWith(`@${domain}`);
+        }).slice(0, 5)
+      : [];
+    return `<div class="section-header">
+      <div class="section-title">Emails${filter !== 'all' ? ` — ${Utils.esc(Store.getEmailAccount(filter)?.name || '')}` : ''}</div>
+      <div class="btn-row">
+        <button class="btn btn-sm btn-primary" data-action="add-email-account">+ Account</button>
+        <button class="btn btn-sm" data-action="manage-email-accounts">⚙ Accounts</button>
+        ${filter !== 'all' ? '<button class="btn btn-sm btn-ghost" data-action="email-filter" data-id="all">← All accounts</button>' : ''}
+      </div></div>
+      <p class="muted mb">Work, school, personal — open Gmail or sync inbox preview when connected.</p>
+      ${!clientId ? `<div class="info-banner">📧 To sync inbox here, add your <strong>Google OAuth Client ID</strong> in <a href="#" data-action="nav" data-view="settings" style="color:var(--green)">Settings → Gmail</a>. Without it you can still open Gmail in the browser.</div>` : ''}
+      ${filter === 'all' && accounts.length > 1 ? `<div class="email-accounts-grid">${filtered.map((a) => this.renderEmailAccountCard(a, false)).join('')}</div>`
+        : filtered.map((a) => this.renderEmailAccountCard(a, true)).join('')}
+      ${relatedContacts.length ? `<div class="settings-box mt"><h3 class="sub-heading">Related contacts</h3>
+        ${relatedContacts.map((c) => `<div class="category-row item-card mb mini">
+          <strong>${Utils.esc(c.title)}</strong>
+          <span class="muted sm">${Utils.esc(c.contactInfo?.email || '')}</span>
+          <button class="btn btn-sm btn-ghost" data-action="open-item" data-id="${c.id}">Edit</button>
+        </div>`).join('')}</div>` : ''}`;
+  },
+
+  renderEmailAccountsList() {
+    const accounts = Store.getEmailAccounts();
+    return `${accounts.map((a) => `<div class="category-row item-card mb mini">
+      <span class="area-dot" style="background:${a.color}"></span>
+      <span>${a.icon} <strong>${Utils.esc(a.name)}</strong></span>
+      <span class="muted sm">${Utils.esc(a.email)}${a.gmailAuthIndex != null ? ` · u/${a.gmailAuthIndex}` : ''}</span>
+      <div class="btn-row" style="margin-left:auto">
+        <button class="btn btn-sm btn-ghost" data-action="edit-email-account" data-id="${a.id}">Edit</button>
+        <button class="btn btn-sm btn-ghost" data-action="delete-email-account" data-id="${a.id}">Delete</button>
+      </div></div>`).join('')}
+    <button class="btn btn-sm mt btn-primary" data-action="add-email-account">+ New email account</button>`;
+  },
+
+  renderContacts() {
+    const groups = Store.getContactGroups();
+    let items = App.getFilteredItems({ type: 'contact' });
+    if (App.contactFilter && App.contactFilter !== 'all') {
+      items = items.filter((i) => i.contactGroupId === App.contactFilter);
+    }
+    if (App.contactSearch) {
+      const q = App.contactSearch.toLowerCase();
+      items = items.filter((i) =>
+        i.title.toLowerCase().includes(q) ||
+        i.body?.toLowerCase().includes(q) ||
+        i.contactInfo?.email?.toLowerCase().includes(q) ||
+        i.contactInfo?.phone?.includes(q) ||
+        i.contactInfo?.company?.toLowerCase().includes(q)
+      );
+    }
+    const total = App.getFilteredItems({ type: 'contact' }).length;
+    const counts = Object.fromEntries(groups.map((g) => [g.id, App.getFilteredItems({ type: 'contact', contactGroupId: g.id }).length]));
+    return `${App.renderScopeBanner()}<div class="section-header"><div class="section-title">Contacts (${items.length}${App.contactFilter !== 'all' || App.contactSearch ? ` of ${total}` : ''})</div>
+      <div class="btn-row">
+        <button class="btn btn-sm btn-primary" data-action="new-contact">+ Contact</button>
+        <button class="btn btn-sm" data-action="manage-contact-groups">⚙ Groups</button>
+      </div></div>
+      <p class="muted mb">Filter by group. Customize categories in <a href="#" data-action="nav" data-view="personalization" style="color:var(--green)">Personalization</a>.</p>
+      ${App.contactFilter !== 'all' || App.contactSearch ? `<div class="info-banner">Active filters · <a href="#" data-action="clear-contact-filters">Clear</a></div>` : ''}
+      ${items.map((i) => this.renderContactCard(i)).join('') || '<div class="empty-state"><p>No contacts in this filter</p></div>'}
+      <div class="contact-group-stats mt">
+        ${groups.map((g) => `<span class="tag" style="border-color:${g.color};color:${g.color}">${g.icon} ${Utils.esc(g.name)}: ${counts[g.id] || 0}</span>`).join('')}
+      </div>`;
+  },
+
+  renderConfigStringList(listKey, items, desc) {
+    return `<p class="muted mb">${desc}</p>
+      ${items.map((item, i) => `<div class="category-row item-card mb mini">
+        <span class="config-list-index muted sm">${i + 1}</span>
+        <strong>${Utils.esc(item)}</strong>
+        <div class="btn-row" style="margin-left:auto">
+          <button class="btn btn-sm btn-ghost" data-action="move-config-list" data-list="${listKey}" data-index="${i}" data-dir="-1" ${i === 0 ? 'disabled' : ''}>↑</button>
+          <button class="btn btn-sm btn-ghost" data-action="move-config-list" data-list="${listKey}" data-index="${i}" data-dir="1" ${i === items.length - 1 ? 'disabled' : ''}>↓</button>
+          <button class="btn btn-sm btn-ghost" data-action="rename-config-list" data-list="${listKey}" data-value="${Utils.esc(item)}">Rename</button>
+          <button class="btn btn-sm btn-ghost" data-action="remove-config-list" data-list="${listKey}" data-value="${Utils.esc(item)}">Delete</button>
+        </div></div>`).join('')}
+      <button class="btn btn-sm btn-primary mt" data-action="add-config-list" data-list="${listKey}">+ Add</button>`;
+  },
+
+  renderProjectStagesPerProjectList() {
+    const projects = Store.getActiveProjects().sort((a, b) => a.name.localeCompare(b.name, 'pt'));
+    const defaultStages = Store.getProjectStages();
+    if (!projects.length) {
+      return `<p class="muted">${I18n.t('project.stagesNoProjects')}</p>`;
+    }
+    return projects.map((p) => {
+      const custom = !!p.stages?.length;
+      const stagesText = custom ? p.stages.join('\n') : '';
+      const preview = custom ? p.stages.join(' → ') : defaultStages.join(' → ');
+      const area = Store.getArea(p.areaId);
+      return `<div class="settings-box mb project-stages-card">
+        <div class="section-header" style="margin-bottom:8px">
+          <div>
+            <strong>${Utils.esc(p.name)}</strong>
+            <span class="muted sm"> · ${area ? `${area.icon} ${Utils.esc(area.name)}` : ''}</span>
+          </div>
+          <span class="tag">${custom ? I18n.t('project.stagesCustom') : I18n.t('project.stagesUseDefault')}</span>
+        </div>
+        <p class="muted sm mb">${I18n.t('project.stagesPerProjectHint')}</p>
+        <textarea class="form-control project-stages-input" id="proj-stages-${p.id}" rows="4" placeholder="${Utils.esc(defaultStages.join('\n'))}">${Utils.esc(stagesText)}</textarea>
+        <p class="muted sm mt">${custom ? '' : `${I18n.t('project.stagesUseDefault')}: `}${Utils.esc(preview)}</p>
+        <div class="btn-row mt">
+          <button type="button" class="btn btn-sm btn-primary" data-action="save-project-stages" data-pid="${p.id}">${I18n.t('action.save')}</button>
+          <button type="button" class="btn btn-sm btn-ghost" data-action="clear-project-stages" data-pid="${p.id}">${I18n.t('project.stagesResetDefault')}</button>
+          <button type="button" class="btn btn-sm btn-ghost" data-action="edit-project" data-id="${p.id}">${I18n.t('project.edit')}</button>
+        </div>
+      </div>`;
+    }).join('');
+  },
+
+  renderPersonalization() {
+    const tab = App.personalizationTab || 'vault';
+    const tabs = [
+      ['vault', '🔐 Vault'],
+      ['contacts', '👤 Contacts'],
+      ['emails', '✉ Emails'],
+      ['tags', '🏷 Tags'],
+      ['areas', '📁 Areas'],
+      ['tasks', '✓ Tasks'],
+      ['clients', '🤝 Clients'],
+      ['links', '🔗 Links'],
+      ['subs', '💳 Subscriptions'],
+      ['school', '📚 School'],
+      ['templates', '📋 Templates'],
+      ['dashboard', '◉ Dashboard'],
+      ['data', '⬇ Data'],
+    ];
+    let body = '';
+    if (tab === 'vault') {
+      const folders = Store.getVaultFolders();
+      body = `<p class="muted mb">Vault folders/filters — passwords, API keys, hosting, university, etc.</p>
+        ${folders.map((vf) => {
+          const count = Store.state.vaultEntries.filter((e) => e.folder === vf.name).length;
+          return `<div class="category-row item-card mb mini">
+            <span class="area-dot" style="background:${vf.color}"></span>
+            <span>${vf.icon} <strong>${Utils.esc(vf.name)}</strong></span>
+            <span class="muted sm">${count} entry(ies)</span>
+            <div class="btn-row" style="margin-left:auto">
+              <button class="btn btn-sm btn-ghost" data-action="edit-vault-folder" data-id="${vf.id}">Edit</button>
+              <button class="btn btn-sm btn-ghost" data-action="delete-vault-folder" data-id="${vf.id}">Delete</button>
+            </div></div>`;
+        }).join('')}
+        <button class="btn btn-sm btn-primary mt" data-action="add-vault-folder">+ New vault folder</button>`;
+    } else if (tab === 'contacts') {
+      body = `<p class="muted mb">Groups to filter contacts: Work, University, Clients…</p>${this.renderContactGroupsList()}`;
+    } else if (tab === 'emails') {
+      body = `<p class="muted mb">Email accounts for Work, School, Personal — used in the Emails section and Gmail links.</p>${this.renderEmailAccountsList()}`;
+    } else if (tab === 'tags') {
+      const tags = Store.getQuickTags();
+      body = `<p class="muted mb">Tags shown in Quick Note and capture.</p>
+        <div class="tag-cloud mb">${tags.map((t) => `<span class="tag">${Utils.esc(t)} <button type="button" class="tag-del" data-action="delete-quick-tag" data-tag="${Utils.esc(t)}">✕</button></span>`).join('')}</div>
+        <div class="form-row">
+          <input class="form-control" id="new-quick-tag" placeholder="New tag (e.g. university)">
+          <button class="btn btn-sm btn-primary" data-action="add-quick-tag">Add</button>
+        </div>`;
+    } else if (tab === 'areas') {
+      const workspaces = Store.getWorkspaces();
+      const areas = Store.state.areas;
+      body = `<p class="muted mb">Work areas and workspace mapping (Work, School, Personal).</p>
+        <h3 class="sub-heading">Areas</h3>
+        ${areas.map((area) => `<div class="category-row item-card mb mini">
+          <span class="area-dot" style="background:${area.color}"></span>
+          <span>${area.icon} <strong>${Utils.esc(area.name)}</strong></span>
+          <span class="muted sm">${Store.getProjectsByArea(area.id).length} proj · ${Store.getItems({ areaId: area.id }).length} items</span>
+          <div class="btn-row" style="margin-left:auto">
+            <button class="btn btn-sm btn-ghost" data-action="edit-area" data-id="${area.id}">Edit</button>
+          </div></div>`).join('')}
+        <button class="btn btn-sm btn-primary mt mb" data-action="add-area">+ New area</button>
+        <h3 class="sub-heading mt">Workspaces</h3>
+        ${Object.entries(workspaces).map(([wsId, ws]) => `<div class="settings-box mb">
+          <div class="form-row mb">
+            <div class="form-group"><label>Icon</label><input class="form-control ws-icon-input" data-ws-field="icon" data-ws="${wsId}" value="${Utils.esc(ws.icon)}" maxlength="4"></div>
+            <div class="form-group flex1"><label>Nome</label><input class="form-control ws-label-input" data-ws-field="label" data-ws="${wsId}" value="${Utils.esc(ws.label)}"></div>
+          </div>
+          <p class="muted sm mb">Included areas:</p>
+          <div class="workspace-area-grid">${areas.map((a) => {
+            const checked = (ws.areaIds || []).includes(a.id);
+            return `<label class="checkbox-row sm"><input type="checkbox" data-action="toggle-workspace-area" data-ws="${wsId}" data-area="${a.id}" ${checked ? 'checked' : ''}> ${a.icon} ${Utils.esc(a.name)}</label>`;
+          }).join('')}</div>
+        </div>`).join('')}
+        <button class="btn btn-sm" data-action="save-workspaces">Save workspaces</button>`;
+    } else if (tab === 'tasks') {
+      body = `<h3 class="sub-heading">${I18n.t('project.stagesPerProjectTitle')}</h3>
+        <p class="muted mb">${I18n.t('project.stagesPerProjectDesc')}</p>
+        ${this.renderProjectStagesPerProjectList()}
+        <h3 class="sub-heading mt-lg">${I18n.t('project.stagesDefaultTitle')}</h3>
+        ${this.renderConfigStringList('projectStages', Store.getProjectStages(), I18n.t('project.stagesConfigDesc'))}
+        <p class="muted mt sm">${Store.getProjectStages().join(' → ')}</p>
+        <h3 class="sub-heading mt-lg">Kanban columns</h3>
+        ${this.renderConfigStringList('kanbanColumns', Store.getKanbanColumns(), 'Kanban board columns (candeias.dev).')}
+        <h3 class="sub-heading mt">Work statuses</h3>
+        ${this.renderConfigStringList('workStatuses', Store.getWorkStatuses(), 'Internal task status (In progress, Blocked…).')}
+        <h3 class="sub-heading mt">Priorities</h3>
+        ${this.renderConfigStringList('priorities', Store.getPriorities(), 'Priority levels on tasks.')}`;
+    } else if (tab === 'clients') {
+      body = `<h3 class="sub-heading">Client statuses</h3>
+        ${this.renderConfigStringList('clientStatuses', Store.getClientStatuses(), 'Lead, Active, Inactive…')}
+        <h3 class="sub-heading mt">candeias.dev pipeline</h3>
+        ${this.renderConfigStringList('pipelineStages', Store.getPipelineStages(), 'Freelance project pipeline stages.')}
+        <p class="muted mt sm">Current order: ${Store.getPipelineStages().join(' → ')}</p>
+        <h3 class="sub-heading mt">Payment statuses</h3>
+        ${this.renderConfigStringList('paymentStatuses', Store.getPaymentStatuses(), 'To invoice, Paid, Partial…')}`;
+    } else if (tab === 'links') {
+      const cats = Store.getLinkCategories();
+      body = `<p class="muted mb">Categories to organize links.</p>
+        ${cats.map((c) => {
+          const count = Store.getItems({ type: 'link' }).filter((i) => i.linkCategoryId === c.id).length;
+          return `<div class="category-row item-card mb mini">
+            <span class="area-dot" style="background:${c.color}"></span>
+            <span>${c.icon} <strong>${Utils.esc(c.name)}</strong></span>
+            <span class="muted sm">${count} link(s)</span>
+            <div class="btn-row" style="margin-left:auto">
+              <button class="btn btn-sm btn-ghost" data-action="edit-link-category" data-id="${c.id}">Edit</button>
+              <button class="btn btn-sm btn-ghost" data-action="delete-link-category" data-id="${c.id}">Delete</button>
+            </div></div>`;
+        }).join('')}
+        <button class="btn btn-sm btn-primary mt" data-action="add-link-category">+ New category</button>`;
+    } else if (tab === 'subs') {
+      body = this.renderConfigStringList('subscriptionCategories', Store.getSubscriptionCategories(), 'Categories for subscriptions (Personal, Dev, Cloud…).');
+    } else if (tab === 'school') {
+      const discs = Store.getDisciplines();
+      body = `<p class="muted mb">Preset subjects for school grades (Tools → Grades).</p>
+        ${discs.map((d) => `<div class="category-row item-card mb mini">
+          <strong>${Utils.esc(d.name)}</strong>
+          <span class="muted sm">weight ${d.defaultWeight}%</span>
+          <div class="btn-row" style="margin-left:auto">
+            <button class="btn btn-sm btn-ghost" data-action="edit-discipline" data-id="${d.id}">Edit</button>
+            <button class="btn btn-sm btn-ghost" data-action="delete-discipline" data-id="${d.id}">Delete</button>
+          </div></div>`).join('')}
+        <button class="btn btn-sm btn-primary mt" data-action="add-discipline">+ New subject</button>
+        <p class="muted mt sm"><a href="#" data-action="nav" data-view="tools">Open grade calculator</a></p>`;
+    } else if (tab === 'templates') {
+      const custom = Store.getCustomTemplates();
+      body = `<p class="muted mb">Built-in templates plus your custom ones.</p>
+        <h3 class="sub-heading">Built-in</h3>
+        <div class="card-grid mb">${BUILTIN_TEMPLATES.map((t) => `<div class="item-card mini"><div class="item-type">${t.icon} ${Utils.esc(t.name)}</div><p class="muted sm">Key: ${t.key}</p></div>`).join('')}</div>
+        <h3 class="sub-heading">Custom</h3>
+        ${custom.map((t) => `<div class="category-row item-card mb mini">
+          <span>${t.icon} <strong>${Utils.esc(t.name)}</strong></span>
+          <span class="muted sm">${t.type}</span>
+          <div class="btn-row" style="margin-left:auto">
+            <button class="btn btn-sm btn-ghost" data-action="use-custom-template" data-id="${t.id}">Use</button>
+            <button class="btn btn-sm btn-ghost" data-action="delete-custom-template" data-id="${t.id}">Delete</button>
+          </div></div>`).join('') || '<p class="muted mb">No custom templates</p>'}
+        <button class="btn btn-sm btn-primary mt" data-action="add-custom-template">+ New template</button>`;
+    } else if (tab === 'dashboard') {
+      body = `<p class="muted mb">Choose what appears on the Dashboard.</p>
+        ${DASHBOARD_WIDGETS.map((w) => {
+          const checked = Store.getDashboardWidgets().includes(w.key);
+          return `<label class="a11y-option item-card mb mini">
+            <input type="checkbox" data-action="toggle-dashboard-widget" data-widget="${w.key}" ${checked ? 'checked' : ''}>
+            <div><strong>${Utils.esc(w.label)}</strong><p class="muted sm">${Utils.esc(w.desc)}</p></div>
+          </label>`;
+        }).join('')}`;
+    } else if (tab === 'data') {
+      body = `<p class="muted mb">Export or import all custom categories and lists (JSON).</p>
+        <div class="btn-row">
+          <button class="btn btn-sm btn-primary" data-action="export-personalization">⬇ Export config</button>
+          <button class="btn btn-sm" data-action="import-personalization">⬆ Import config</button>
+        </div>
+        <p class="muted mt sm">Includes: vault, contacts, emails, tags, kanban, pipeline, workspaces, links, school, templates, dashboard.</p>`;
+    }
+    return `<div class="section-header"><div class="section-title">Personalization</div></div>
+      <p class="muted mb">Custom categories and filters — adapt the app to your workflow.</p>
+      <div class="filter-bar-inline mb personalization-tabs">${tabs.map(([k, l]) => `<button class="filter-chip ${tab === k ? 'active' : ''}" data-personal-tab="${k}">${l}</button>`).join('')}</div>
+      <div class="settings-box">${body}</div>`;
+  },
+
+  renderContactGroupsList() {
+    const groups = Store.getContactGroups();
+    return `${groups.map((g) => {
+      const count = Store.getItems({ type: 'contact', contactGroupId: g.id }).length;
+      return `<div class="category-row item-card mb mini">
+        <span class="area-dot" style="background:${g.color}"></span>
+        <span>${g.icon} <strong>${Utils.esc(g.name)}</strong></span>
+        <span class="muted sm">${count} contact(s)</span>
+        <div class="btn-row" style="margin-left:auto">
+          <button class="btn btn-sm btn-ghost" data-action="edit-contact-group" data-id="${g.id}">Edit</button>
+          <button class="btn btn-sm btn-ghost" data-action="delete-contact-group" data-id="${g.id}">Delete</button>
+        </div></div>`;
+    }).join('')}
+    <button class="btn btn-sm mt btn-primary" data-action="add-contact-group">+ New contact group</button>`;
+  },
+
+  renderContactGroupsSettings() {
+    return `<div class="settings-box mb"><h3>Contact groups</h3>
+      <p class="muted mb">Categories to filter contacts.</p>
+      ${this.renderContactGroupsList()}</div>`;
+  },
+
+  renderClients() {
+    if (App.clientDetailId) return this.renderClientDetail(App.clientDetailId);
+    const status = App.clientFilter || 'all';
+    let clients = Store.getClients();
+    if (status !== 'all') clients = Store.getClients({ status });
+    if (App.clientSearch) {
+      clients = Store.getClients({ search: App.clientSearch });
+    }
+    const stats = Store.getStats();
+    return `
+      <div class="section-header">
+        <div class="section-title">Clients — candeias.dev</div>
+        <button class="btn btn-primary btn-sm" data-action="new-client">+ Client</button>
+      </div>
+      <div class="stats-grid mb">
+        <div class="stat-card"><div class="stat-value">${stats.clients}</div><div class="stat-label">Total</div></div>
+        <div class="stat-card"><div class="stat-value">${stats.clientsActive}</div><div class="stat-label">Active</div></div>
+        <div class="stat-card"><div class="stat-value">${stats.leads}</div><div class="stat-label">Leads</div></div>
+      </div>
+      <div class="filter-bar-inline mb">
+        ${['all', ...Store.getClientStatuses()].map((s) => `<button class="filter-chip ${status === s ? 'active' : ''}" data-client-filter="${s}">${s === 'all' ? 'All' : s}</button>`).join('')}
+      </div>
+      <div class="card-grid">
+        ${clients.map((c) => this.renderClientCard(c)).join('')}
+      </div>
+      ${!clients.length ? '<div class="empty-state"><div class="icon">🤝</div><h3>No clients</h3><p>Add clients from your freelance work</p></div>' : ''}`;
+  },
+
+  renderClientCard(c) {
+    const projects = Store.getProjectsByClientId(c.id);
+    const primary = c.contacts.find((p) => p.isPrimary) || c.contacts[0];
+    const statusClass = { Lead: 'status-lead', Active: 'status-active', Ativo: 'status-active', Inactive: 'status-inactive', Inativo: 'status-inactive', Maintenance: 'status-maint', Manutenção: 'status-maint' }[c.status] || '';
+    return `
+      <div class="client-card" data-action="open-client" data-id="${c.id}">
+        <div class="client-card-header">
+          <div class="client-avatar">${(c.name[0] || '?').toUpperCase()}</div>
+          <div>
+            <div class="client-name">${Utils.esc(c.name)}</div>
+            <div class="client-company">${Utils.esc(c.company || c.email)}</div>
+          </div>
+          <span class="client-status ${statusClass}">${Utils.esc(c.status)}</span>
+        </div>
+        <div class="client-card-body">
+          ${c.phone ? `<div class="client-info-row">📞 ${Utils.esc(c.phone)}</div>` : ''}
+          ${c.email ? `<div class="client-info-row">✉ ${Utils.esc(c.email)}</div>` : ''}
+          ${primary ? `<div class="client-info-row">👤 ${Utils.esc(primary.name)}${primary.role ? ` · ${Utils.esc(primary.role)}` : ''}</div>` : ''}
+        </div>
+        <div class="client-card-footer">
+          <span class="muted">${projects.length} project(s) · ${c.contacts.length} contact(s)</span>
+          ${c.tags.slice(0, 2).map((t) => `<span class="tag">#${Utils.esc(t)}</span>`).join('')}
+        </div>
+      </div>`;
+  },
+
+  renderClientDetail(clientId) {
+    const client = Store.getClient(clientId);
+    if (!client) return '<p>Client not found</p>';
+    const projects = Store.getProjectsByClientId(clientId);
+    const items = Store.getItemsByClientId(clientId);
+    const vault = Store.getVaultByClientId(clientId);
+    const tab = App.clientTab || 'overview';
+
+    const tabs = {
+      overview: 'Overview',
+      contacts: `Contacts (${client.contacts.length})`,
+      projects: `Projects (${projects.length})`,
+      activity: `Activity (${items.length})`,
+      credentials: `Credentials (${vault.length})`,
+    };
+
+    let body = '';
+    if (tab === 'overview') {
+      body = `
+        <div class="client-detail-grid mb">
+          <div class="settings-box">
+            <h3>Client details</h3>
+            <div class="detail-list">
+              ${client.company ? `<div><span class="muted">Company</span><br>${Utils.esc(client.company)}</div>` : ''}
+              ${client.email ? `<div><span class="muted">Email</span><br><a href="mailto:${Utils.esc(client.email)}">${Utils.esc(client.email)}</a></div>` : ''}
+              ${client.phone ? `<div><span class="muted">Phone</span><br><a href="tel:${Utils.esc(client.phone)}">${Utils.esc(client.phone)}</a></div>` : ''}
+              ${client.website ? `<div><span class="muted">Website</span><br><a href="${Utils.esc(client.website)}" target="_blank">${Utils.esc(client.website)}</a></div>` : ''}
+              ${client.nif ? `<div><span class="muted">NIF</span><br>${Utils.esc(client.nif)}</div>` : ''}
+              ${client.address ? `<div><span class="muted">Address</span><br>${Utils.esc(client.address)}</div>` : ''}
+            </div>
+          </div>
+          <div class="settings-box">
+            <h3>Status & notes</h3>
+            <p><span class="client-status">${Utils.esc(client.status)}</span></p>
+            ${client.notes ? `<p class="muted mt" style="white-space:pre-wrap">${Utils.esc(client.notes)}</p>` : '<p class="muted">No notes</p>'}
+            ${client.tags.length ? `<div class="tag-cloud mt">${client.tags.map((t) => `<span class="tag">#${Utils.esc(t)}</span>`).join('')}</div>` : ''}
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-sm btn-primary" data-action="edit-client" data-id="${clientId}">Edit client</button>
+          <button class="btn btn-sm" data-action="new-client-project" data-id="${clientId}">+ Project</button>
+          <button class="btn btn-sm" data-action="add-client-contact" data-id="${clientId}">+ Contact</button>
+          <button class="btn btn-sm" data-action="client-vault" data-id="${clientId}">+ Credential</button>
+        </div>`;
+    } else if (tab === 'contacts') {
+      body = `
+        <div class="section-header"><div class="section-title">Contact people</div>
+          <button class="btn btn-sm btn-primary" data-action="add-client-contact" data-id="${clientId}">+ Contact</button></div>
+        ${client.contacts.length ? client.contacts.map((p) => `
+          <div class="contact-person-card">
+            <div class="contact-person-main">
+              <div class="client-avatar sm">${(p.name[0] || '?').toUpperCase()}</div>
+              <div>
+                <div class="contact-person-name">${Utils.esc(p.name)} ${p.isPrimary ? '<span class="tag">Primary</span>' : ''}</div>
+                <div class="muted">${Utils.esc(p.role || 'Contact')}</div>
+                ${p.email ? `<div class="client-info-row">✉ <a href="mailto:${Utils.esc(p.email)}">${Utils.esc(p.email)}</a></div>` : ''}
+                ${p.phone ? `<div class="client-info-row">📞 ${Utils.esc(p.phone)}</div>` : ''}
+              </div>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-sm" data-action="edit-client-contact" data-client="${clientId}" data-id="${p.id}">Edit</button>
+              <button class="btn btn-sm btn-ghost" data-action="delete-client-contact" data-client="${clientId}" data-id="${p.id}">Delete</button>
+              ${!p.isPrimary ? `<button class="btn btn-sm" data-action="set-primary-contact" data-client="${clientId}" data-id="${p.id}">Primary</button>` : ''}
+            </div>
+          </div>`).join('') : '<div class="empty-state"><p>No contacts — add the manager, marketing, etc.</p></div>'}`;
+    } else if (tab === 'projects') {
+      body = `
+        <div class="section-header"><div class="section-title">Projects</div>
+          <button class="btn btn-sm btn-primary" data-action="new-client-project" data-id="${clientId}">+ Project</button></div>
+        ${projects.length ? projects.map((p) => this.renderProjectMini(p)).join('') : '<div class="empty-state"><p>No projects — cria o primeiro site/app</p></div>'}`;
+    } else if (tab === 'activity') {
+      body = items.length
+        ? items.map((i) => (i.type === 'task' ? this.renderTaskRow(i) : this.renderItemCard(i))).join('')
+        : '<div class="empty-state"><p>No activity for this client</p></div>';
+    } else if (tab === 'credentials') {
+      body = `
+        <div class="section-header"><div class="section-title">Client credentials</div>
+          <button class="btn btn-sm btn-primary" data-action="client-vault" data-id="${clientId}">+ Credential</button></div>
+        <p class="muted mb">Hosting, FTP, WordPress admin, domains, etc.</p>
+        ${vault.length ? vault.map((e) => `
+          <div class="vault-entry">
+            <div class="vault-entry-icon">🔑</div>
+            <div class="vault-entry-info">
+              <div class="vault-entry-title">${Utils.esc(e.service)}</div>
+              <div class="vault-entry-sub">${Utils.esc(e.email || e.username || '')}</div>
+            </div>
+            <button class="btn btn-sm" data-action="edit-vault" data-id="${e.id}">Open</button>
+          </div>`).join('') : '<div class="empty-state"><p>No credentials — add in Vault</p></div>'}`;
+    }
+
+    return `
+      <button class="btn btn-ghost btn-sm mb" data-action="back-clients">← Back</button>
+      <div class="client-detail-header mb">
+        <div class="client-avatar lg">${(client.name[0] || '?').toUpperCase()}</div>
+        <div>
+          <div class="client-name lg">${Utils.esc(client.name)}</div>
+          <div class="client-company">${Utils.esc(client.company)} · <span class="client-status">${Utils.esc(client.status)}</span></div>
+        </div>
+      </div>
+      <div class="project-tabs">${Object.entries(tabs).map(([k, label]) =>
+        `<button class="tab ${tab === k ? 'active' : ''}" data-client-tab="${k}">${label}</button>`).join('')}</div>
+      ${body}`;
+  },
+
+  renderLinks() {
+    const items = App.getFilteredItems({ type: 'link' });
+    return `${App.renderScopeBanner()}<div class="section-header"><div class="section-title">Links (${items.length})</div>
+      <button class="btn btn-sm btn-primary" data-action="new-link">+ Link</button></div>
+      <p class="muted mb sm">Categories in Personalization → Links</p>
+      ${items.map((i) => {
+        const cat = i.linkCategoryId ? Store.getLinkCategory(i.linkCategoryId) : null;
+        const extra = cat ? `<span class="tag" style="border-color:${cat.color};color:${cat.color}">${cat.icon} ${Utils.esc(cat.name)}</span> ` : '';
+        return this.renderItemCard(i).replace('<div class="item-type">', `<div class="item-type">${extra}`);
+      }).join('') || '<div class="empty-state"><p>No links</p></div>'}`;
+  },
+
+  renderSubscriptions() {
+    const subs = Store.state.subscriptions;
+    const total = subs.reduce((s, x) => s + (parseFloat(x.amount) || 0), 0);
+    return `
+      <div class="section-header"><div class="section-title">Subscriptions (${subs.length}) · ${total.toFixed(2)}€/month</div>
+        <button class="btn btn-sm btn-primary" data-action="add-subscription">+ Subscription</button></div>
+      ${subs.map((s) => `
+        <div class="vault-entry">
+          <div class="vault-entry-icon">💳</div>
+          <div class="vault-entry-info">
+            <div class="vault-entry-title">${Utils.esc(s.name)}</div>
+            <div class="vault-entry-sub">${s.amount}€ · Renews ${Utils.fmtDate(s.renewalDate)} · ${Utils.esc(s.category)}</div>
+          </div>
+          <button class="btn btn-sm btn-ghost" data-action="delete-sub" data-id="${s.id}">✕</button>
+        </div>`).join('') || '<div class="empty-state"><p>No subscriptions</p></div>'}`;
+  },
+
+  renderTemplates() {
+    const custom = Store.getCustomTemplates();
+    return `
+      <div class="section-header"><div class="section-title">Templates</div>
+        <button class="btn btn-sm" data-action="nav" data-view="personalization">⚙ Customize</button></div>
+      <div class="card-grid">
+        ${BUILTIN_TEMPLATES.map((t) => `<div class="item-card" data-action="use-template" data-template="${t.key}">
+          <div class="item-type">${t.icon} Template</div>
+          <div class="item-title">${Utils.esc(t.name)}</div>
+        </div>`).join('')}
+        ${custom.map((t) => `<div class="item-card" data-action="use-custom-template" data-id="${t.id}">
+          <div class="item-type">${t.icon} Custom</div>
+          <div class="item-title">${Utils.esc(t.name)}</div>
+        </div>`).join('')}
+      </div>`;
+  },
+
+  renderTimelineBar(task) {
+    const dur = task.duration;
+    const loadPct = Math.min(100, Math.round(((dur || 30) / 480) * 100));
+    const classes = ['timeline-bar'];
+    if (task.completed) classes.push('timeline-bar--done');
+    if (task.priority === 'urgent') classes.push('timeline-bar--urgent');
+    else if (task.priority === 'high') classes.push('timeline-bar--high');
+    return `<div class="${classes.join(' ')}" title="${Utils.esc(task.title)}" data-action="open-item" data-id="${task.id}">
+      <div class="timeline-bar__title">${Utils.esc(task.title)}</div>
+      <div class="timeline-bar__meta">
+        <span class="timeline-bar__dur">${dur ? Utils.fmtMinutes(dur) : '?'}</span>
+        ${task.completed ? `<span class="timeline-bar__done">✓</span>` : ''}
+      </div>
+      <div class="timeline-bar__load" aria-hidden="true"><i style="width:${loadPct}%"></i></div>
+    </div>`;
+  },
+
+  renderTimeline() {
+    const weeks = Utils.weekDates(App.calendarDate);
+    const weekLabel = `${Utils.fmtDate(weeks[0])} — ${Utils.fmtDate(weeks[6])}`;
+    const maxPerDay = 6;
+    let html = `<div class="section-header"><div class="section-title">${I18n.t('view.timeline')}</div>
+      <div class="calendar-nav">
+        <button class="btn btn-icon" id="tl-prev" title="${I18n.t('timeline.prevWeek')}">‹</button><span>${weekLabel}</span>
+        <button class="btn btn-icon" id="tl-next" title="${I18n.t('timeline.nextWeek')}">›</button>
+      </div></div><div class="timeline-shell"><div class="timeline-grid">`;
+    for (const day of weeks) {
+      let tasks = App.getFilteredItems({ date: day, type: 'task' });
+      if (!App.timelineShowDone) tasks = tasks.filter((t) => !t.completed);
+      tasks.sort((a, b) => {
+        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        return (b.duration || 0) - (a.duration || 0) || a.title.localeCompare(b.title);
+      });
+      const expanded = !!App.timelineExpandedDays[day];
+      const hiddenCount = expanded ? 0 : Math.max(0, tasks.length - maxPerDay);
+      const visible = expanded ? tasks : tasks.slice(0, maxPerDay);
+      const totalMin = tasks.reduce((s, t) => s + (t.duration || 0), 0);
+      const isToday = day === Utils.todayStr();
+      html += `<div class="timeline-col">
+        <div class="timeline-day ${isToday ? 'today' : ''}">
+          <span class="timeline-day-label">${Utils.fmtDate(day)}</span>
+          ${totalMin ? `<span class="timeline-day-total">${Utils.fmtMinutes(totalMin)} · ${tasks.length}</span>` : `<span class="timeline-day-total">${tasks.length}</span>`}
+        </div>
+        <div class="timeline-day-body">
+          ${visible.length
+            ? visible.map((t) => this.renderTimelineBar(t)).join('')
+            : `<div class="timeline-empty">${I18n.t('timeline.empty')}</div>`}
+          ${hiddenCount > 0 ? `<button type="button" class="timeline-more-btn" data-action="timeline-expand" data-day="${day}">${I18n.t('timeline.showMore').replace('{n}', hiddenCount)}</button>` : ''}
+          ${expanded && tasks.length > maxPerDay ? `<button type="button" class="timeline-more-btn" data-action="timeline-collapse" data-day="${day}">${I18n.t('timeline.less')}</button>` : ''}
+        </div>
+      </div>`;
+    }
+    return html + '</div></div>';
+  },
+
+  renderCalendar() {
+    if (App.filters.calMode === 'school') return this.renderSchoolTimetable();
+    if (App.calView === 'week') return this.renderCalendarWeek();
+    if (App.calView === 'agenda') return this.renderCalendarAgenda();
+    return this.renderCalendarMonth();
+  },
+
+  renderSchoolTimetable() {
+    const schedule = Store.state.settings.schoolSchedule;
+    const weekStart = Utils.startOfWeek(App.calendarDate);
+    const weekLabel = `${Utils.fmtDate(weekStart.toISOString().slice(0, 10))} — ${Utils.fmtDate(Utils.addDays(weekStart.toISOString().slice(0, 10), 4))}`;
+    const cols = SCHOOL_WEEKDAYS.map((wd) => {
+      const dateStr = Utils.addDays(weekStart.toISOString().slice(0, 10), wd.id);
+      const slots = SchoolSchedule.getForDate(dateStr, schedule);
+      const isToday = dateStr === Utils.todayStr();
+      return `<div class="timetable-col ${isToday ? 'today' : ''}">
+        <div class="timetable-day-head"><span class="timetable-day-name">${wd.short}</span>
+          <span class="timetable-day-date">${new Date(dateStr + 'T12:00:00').getDate()}</span></div>
+        <div class="timetable-slots">
+          ${slots.length ? slots.map((s) => `
+            <div class="timetable-slot">
+              <div class="timetable-time">${Utils.fmtTime(s.startDate)}–${Utils.fmtTime(s.endDate)}</div>
+              <div class="timetable-subject">${Utils.esc(s.title)}</div>
+              ${s.location ? `<div class="timetable-room">${Utils.esc(s.location)}</div>` : ''}
+            </div>`).join('') : '<div class="timetable-empty">—</div>'}
+        </div>
+      </div>`;
+    }).join('');
+    const enabled = schedule?.enabled;
+    return `<div class="calendar-header"><h2>🏫 School Schedule</h2>
+      <div class="calendar-nav">
+        <button class="btn btn-icon" id="cal-prev">‹</button>
+        <span class="timetable-week-label">${weekLabel}</span>
+        <button class="btn btn-icon" id="cal-next">›</button>
+        <button class="btn btn-sm" id="cal-today">Today</button>
+        <button class="btn btn-sm" data-action="edit-school-schedule">✏ Edit</button>
+      </div></div>
+      ${!enabled ? '<div class="info-banner">Schedule disabled. Click «Edit» to enable.</div>' : ''}
+      <p class="muted mb">Repeats automatically every week (Monday to Friday).</p>
+      <div class="timetable-grid">${cols}</div>`;
+  },
+
+  renderCalendarMonth() {
+    const year = App.calendarDate.getFullYear();
+    const month = App.calendarDate.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const startPad = (firstDay.getDay() + 6) % 7;
+    const today = Utils.todayStr();
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const weekdays = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    let cells = '';
+    const totalCells = Math.ceil((startPad + lastDay.getDate()) / 7) * 7;
+    for (let i = 0; i < totalCells; i++) {
+      const dayNum = i - startPad + 1;
+      let dateStr, otherMonth = false;
+      if (dayNum < 1) { const d = new Date(year, month, dayNum); dateStr = d.toISOString().slice(0, 10); otherMonth = true; }
+      else if (dayNum > lastDay.getDate()) { const d = new Date(year, month + 1, dayNum - lastDay.getDate()); dateStr = d.toISOString().slice(0, 10); otherMonth = true; }
+      else dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
+      const dayItems = App.getCalItemsForDate(dateStr);
+      const dots = dayItems.slice(0, 4).map((it) => {
+        const color = it.isSchoolSchedule ? '#10b981' : (Store.getArea(it.areaId)?.color || 'var(--green)');
+        return `<span class="cal-dot" style="background:${color}"></span>`;
+      }).join('');
+      cells += `<div class="cal-day ${otherMonth?'other-month':''} ${dateStr===today?'today':''} ${App.selectedCalDay===dateStr?'selected':''}" data-cal-day="${dateStr}">
+        <div class="cal-day-num">${otherMonth ? new Date(dateStr).getDate() : dayNum}</div><div>${dots}</div>
+        <div class="cal-events-preview">${dayItems.length ? dayItems.length + ' item(s)' : ''}</div></div>`;
+    }
+    let dayPanel = '';
+    if (App.selectedCalDay) {
+      const dayItems = App.getCalItemsForDate(App.selectedCalDay);
+      dayPanel = `<div class="day-panel"><div class="section-header"><div class="section-title">${Utils.fmtDate(App.selectedCalDay)}</div>
+        <button class="btn btn-sm btn-primary" data-action="add-cal-day" data-date="${App.selectedCalDay}">+ Add</button></div>
+        ${dayItems.length ? dayItems.map((i) => i.type==='task' && !i.isSchoolSchedule ? this.renderTaskRow(i) : this.renderItemCard(i)).join('') : '<p class="muted">Nothing on this day</p>'}</div>`;
+    }
+    return `<div class="calendar-header"><h2>${monthNames[month]} ${year}</h2>
+      <div class="calendar-nav">
+        <button class="btn btn-icon" id="cal-prev">‹</button>
+        <button class="btn btn-sm" id="cal-today">Today</button>
+        <button class="btn btn-icon" id="cal-next">›</button>
+        <button class="btn btn-sm" data-action="export-ics">Export ICS</button>
+      </div></div>
+      <div class="cal-grid">${weekdays.map((d)=>`<div class="cal-weekday">${d}</div>`).join('')}${cells}</div>${dayPanel}`;
+  },
+
+  renderCalendarWeek() {
+    const weeks = Utils.weekDates(App.calendarDate);
+    return `<div class="section-header"><div class="section-title">Week view</div>
+      <button class="btn btn-sm" data-action="export-ics">Export ICS</button></div>
+      <div class="week-grid">${weeks.map((day) => {
+        const items = App.getCalItemsForDate(day);
+        return `<div class="week-col ${day===Utils.todayStr()?'today':''}"><div class="week-day-head">${Utils.fmtDate(day)}</div>
+          ${items.map((i) => `<div class="week-item ${i.isSchoolSchedule?'school-week-item':''}" data-action="${i.isSchoolSchedule?'':'open-item'}" data-id="${i.id}">${i.isSchoolSchedule?'🏫':Utils.typeIcon(i.type)} ${Utils.esc(i.title)}${i.location?` · ${Utils.esc(i.location)}`:''}</div>`).join('') || '<p class="muted">—</p>'}</div>`;
+      }).join('')}</div>`;
+  },
+
+  renderCalendarAgenda() {
+    const schedule = Store.state.settings.schoolSchedule;
+    const year = App.calendarDate.getFullYear();
+    const month = App.calendarDate.getMonth();
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    let items = Store.getItems().filter((i) => Utils.itemScheduleDates(i).length);
+    if (schedule?.enabled) {
+      for (let d = 1; d <= lastDay; d++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        items.push(...SchoolSchedule.getForDate(dateStr, schedule));
+      }
+    }
+    const mode = App.filters.calMode;
+    if (mode === 'school') items = items.filter((i) => i.isSchoolSchedule);
+    else if (mode === 'events') items = items.filter((i) => ['event', 'reminder'].includes(i.type));
+    else if (mode === 'tasks') items = items.filter((i) => i.type === 'task');
+    else if (mode === 'both' && schedule?.showInCalendar === false) items = items.filter((i) => !i.isSchoolSchedule);
+    items = items.sort((a, b) => (a.startDate || a.dueDate).localeCompare(b.startDate || b.dueDate)).slice(0, 60);
+    return `<div class="section-header"><div class="section-title">Agenda</div>
+      <button class="btn btn-sm" data-action="export-ics">Export ICS</button></div>
+      ${items.map((i) => `<div class="agenda-row ${i.isSchoolSchedule ? 'school-agenda-row' : ''}" ${i.isSchoolSchedule ? '' : `data-action="open-item" data-id="${i.id}"`}>
+        <div class="agenda-date">${Utils.fmtScheduleDates(Utils.itemScheduleDates(i))} ${Utils.fmtTime(i.startDate)}</div>
+        <div>${i.isSchoolSchedule ? '🏫' : Utils.typeIcon(i.type)} ${Utils.esc(i.title)}${i.location ? ` · ${Utils.esc(i.location)}` : ''}</div></div>`).join('') || '<p class="muted">No events</p>'}`;
+  },
+
+  renderTasks() {
+    let items;
+    if (App.taskFilter === 'overdue') items = App.getFilteredItems({ type: 'task', overdue: true });
+    else if (App.taskFilter === 'urgent') items = App.getFilteredItems({ type: 'task', urgent: true });
+    else if (App.taskFilter === 'blocked') items = App.getFilteredItems({ type: 'task', blocked: true });
+    else if (App.filters.period && App.filters.period !== 'all') items = App.getFilteredItems({ type: 'task', period: App.filters.period, snoozed: false });
+    else items = App.getFilteredItems({ type: 'task', snoozed: false });
+    if (App.filters.subContextId) items = items.filter((i) => i.subContextId === App.filters.subContextId);
+    if (App.filters.tag) items = items.filter((i) => i.tags.includes(App.filters.tag));
+    const open = items.filter((i) => !i.completed);
+    const done = items.filter((i) => i.completed);
+    return `${App.renderScopeBanner()}
+      <div class="section-header"><div class="section-title">${open.length} open · ${done.length} completed</div></div>
+      ${open.map((i) => this.renderTaskRow(i)).join('')}
+      ${done.length ? `<div class="section-header mt"><div class="section-title muted">Completed</div></div>${done.map((i) => this.renderTaskRow(i)).join('')}` : ''}
+      ${!items.length ? '<div class="empty-state"><div class="icon">✓</div><h3>No tasks</h3></div>' : ''}`;
+  },
+
+  renderProjects() {
+    if (App.projectDetailId) return this.renderProjectDetail(App.projectDetailId);
+    const showArchived = App.projectFilter === 'archived';
+    const projects = App.filterProjects(showArchived ? Store.getArchivedProjects() : Store.getActiveProjects());
+    const grouped = {};
+    for (const p of projects) { if (!grouped[p.areaId]) grouped[p.areaId] = []; grouped[p.areaId].push(p); }
+    return `${App.renderScopeBanner()}
+      <div class="section-header"><div class="section-title">${I18n.t('view.projects')}</div>
+        <div class="btn-row">
+          <button class="btn btn-sm ${App.projectFilter==='active'?'btn-primary':''}" data-action="proj-filter" data-filter="active">${I18n.t('projects.active')}</button>
+          <button class="btn btn-sm ${App.projectFilter==='archived'?'btn-primary':''}" data-action="proj-filter" data-filter="archived">${I18n.t('projects.archived')}</button>
+          <button class="btn btn-primary btn-sm" data-action="add-project">${I18n.t('projects.add')}</button>
+        </div></div>
+      ${Object.entries(grouped).map(([areaId, projs]) => {
+        const area = Store.getArea(areaId);
+        return `<div class="mb-lg"><h3 class="sub-heading">${area?.icon} ${Utils.esc(area?.name)}</h3><div class="card-grid">
+          ${projs.map((p) => `<div class="project-card" data-action="open-project" data-id="${p.id}" style="cursor:pointer">
+            <div class="project-header"><div class="project-color" style="background:${p.color}"></div>
+            <div><div class="project-name">${Utils.esc(p.name)}</div><div class="project-client">${Utils.esc(p.client)} ${p.stack?`· ${Utils.esc(p.stack)}`:''}</div></div></div>
+            ${p.pipeline?`<span class="pipeline-badge">${Utils.esc(I18n.enum(p.pipeline))}</span>`:''}
+            ${p.paymentStatus?`<span class="tag">${Utils.esc(p.paymentStatus)}</span>`:''}
+            <div class="muted mt">${Store.getItems({projectId:p.id}).length} items · ${p.loggedHours||0}/${p.estimatedHours||'?'}h</div>
+            ${showArchived ? `<div class="item-actions mt">
+              <button class="btn btn-sm" data-action="edit-project" data-id="${p.id}">${I18n.t('action.edit')}</button>
+              <button class="btn btn-sm btn-ghost" data-action="unarchive-project" data-id="${p.id}">${I18n.t('action.restore')}</button>
+              <button class="btn btn-sm btn-ghost danger-left" data-action="delete-project" data-id="${p.id}">${I18n.t('action.delete')}</button>
+            </div>` : ''}
+          </div>`).join('')}</div></div>`;
+      }).join('') || '<div class="empty-state"><div class="icon">📁</div><h3>No projects</h3></div>'}`;
+  },
+
+  renderProjectItemsPanel(projectId, items, { showTypeFilters = false, showStages = false } = {}) {
+    return `<div class="btn-row mb">
+        <button class="btn btn-sm btn-primary" data-action="add-proj-item" data-pid="${projectId}">+ ${I18n.t('project.items.new')}</button>
+      </div>
+      ${showTypeFilters ? App.renderProjectTypeFilters() : ''}
+      ${App.renderProjectItemFilters()}
+      ${showStages ? App.renderProjectStageFilters(projectId) : ''}
+      ${items.length ? items.map((i) => this.renderProjectItemRow(i)).join('') : '<div class="empty-state"><p>No items</p></div>'}`;
+  },
+
+  renderProjectDetail(projectId) {
+    App.projectTab = App.normalizeProjectTab(App.projectTab);
+    const project = Store.getProject(projectId);
+    if (!project) return '<p>Project not found</p>';
+    const area = Store.getArea(project.areaId);
+    const allProjectItems = Store.getItems({ projectId });
+    let items = allProjectItems;
+    const tabs = {
+      overview: 'Overview',
+      items: 'Items',
+      notes: 'Notes',
+      tasks: 'Tasks',
+      events: 'Events',
+      contacts: 'Contacts',
+      links: 'Links',
+      wishlist: 'Wishlist',
+      attachments: null,
+      hours: null,
+      versions: null,
+    };
+    const tabTypes = App.getProjectTabTypes(App.projectTab);
+    if (App.isProjectItemListTab(App.projectTab)) {
+      if (tabTypes) items = items.filter((i) => tabTypes.includes(i.type));
+      items = App.filterProjectItems(items);
+      items = App.sortProjectItems(items);
+    }
+    const tabHtml = Object.keys(tabs).map((t) => {
+      const labelKey = `project.tab.${t}`;
+      const label = I18n.t(labelKey) !== labelKey ? I18n.t(labelKey) : (typeof tabs[t] === 'string' ? tabs[t] : t.charAt(0).toUpperCase() + t.slice(1));
+      return `<button class="tab ${App.projectTab === t ? 'active' : ''}" data-tab="${t}">${Utils.esc(label)}</button>`;
+    }).join('');
+    let body = '';
+    if (App.projectTab === 'overview') {
+      const wishlist = project.wishlist || [];
+      const wishDone = wishlist.filter((w) => w.done).length;
+      body = `<div class="stats-grid mb">${Object.keys(ITEM_TYPES).map((tp) => {
+        const c = allProjectItems.filter((i) => i.type === tp);
+        const val = (tp === 'task' || tp === 'checklist') ? c.filter((x) => !x.completed).length : c.length;
+        const tab = App.projectTypeTab(tp);
+        return `<div class="stat-card" data-action="proj-tab" data-tab="${tab}"${tab === 'items' ? ` data-type="${tp}"` : ''} style="cursor:pointer">
+          <div class="stat-value">${val}</div><div class="stat-label">${Utils.typeIcon(tp)} ${Utils.typeLabel(tp)}</div></div>`;
+      }).join('')}${wishlist.length ? `<div class="stat-card" data-action="proj-tab" data-tab="wishlist" style="cursor:pointer"><div class="stat-value">${wishDone}/${wishlist.length}</div><div class="stat-label">${I18n.t('project.tab.wishlist')}</div></div>` : ''}</div>
+      <div class="btn-row mb">
+        <button class="btn btn-sm btn-primary" data-action="add-proj-item" data-pid="${projectId}">+ ${I18n.t('project.items.new')}</button>
+        <button class="btn btn-sm" data-action="edit-project" data-id="${projectId}">${I18n.t('action.edit')}</button>
+        <button class="btn btn-sm" data-action="focus-project" data-id="${projectId}">${I18n.t('projects.focus')}</button>
+        <button class="btn btn-sm" data-action="dup-project" data-id="${projectId}">${I18n.t('projects.duplicate')}</button>
+        ${project.archived
+          ? `<button class="btn btn-sm" data-action="unarchive-project" data-id="${projectId}">${I18n.t('action.restore')}</button>`
+          : `<button class="btn btn-sm" data-action="archive-project" data-id="${projectId}">${I18n.t('action.archive')}</button>`}
+        <button class="btn btn-sm btn-ghost danger-left" data-action="delete-project" data-id="${projectId}">${I18n.t('action.delete')}</button>
+      </div>
+      ${allProjectItems.slice(0, 8).map((i) => this.renderProjectItemRow(i)).join('')}`;
+    } else if (App.projectTab === 'wishlist') {
+      body = this.renderProjectWishlist(project, projectId);
+    } else if (App.projectTab === 'attachments') {
+      const atts = allProjectItems.filter((i) => i.attachments?.length);
+      body = atts.length ? atts.flatMap((i) => i.attachments.map((a, attIndex) =>
+        Utils.renderAttachmentChip(a, i.id, attIndex, i.title)
+      )).join('') : '<div class="empty-state"><p>No attachments</p></div>';
+    } else if (App.projectTab === 'hours') {
+      body = `<p class="mb">${project.loggedHours||0}h / ${project.estimatedHours||'?'}h estimated</p>
+        <button class="btn btn-sm btn-primary" data-action="log-hours" data-id="${projectId}">+ Log hours</button>`;
+    } else if (App.projectTab === 'versions') {
+      body = (project.versions||[]).map((v) => `<div class="item-card mb"><strong>v${Utils.esc(v.version)}</strong> — ${Utils.fmtDate(v.date)}<p class="muted">${Utils.esc(v.notes)}</p></div>`).join('')
+        + `<button class="btn btn-sm mt" data-action="add-version" data-id="${projectId}">+ Version</button>`;
+    } else if (App.projectTab === 'items') {
+      const showStages = !App.projectItemTypeFilter || ['task', 'checklist'].includes(App.projectItemTypeFilter);
+      body = this.renderProjectItemsPanel(projectId, items, { showTypeFilters: true, showStages });
+    } else if (tabTypes) {
+      body = this.renderProjectItemsPanel(projectId, items, {
+        showStages: App.projectTab === 'tasks',
+      });
+    }
+    const stages = Store.getProjectStagesForProject(projectId);
+    const stagesLine = stages.length
+      ? `<p class="muted sm mb">${I18n.t('project.stages')}: ${stages.map((s) => Utils.esc(s)).join(' → ')}</p>`
+      : '';
+    return `<button class="btn btn-ghost btn-sm mb" data-action="back-projects">${I18n.t('projects.back')}</button>
+      <div class="project-header mb"><div class="project-color" style="background:${project.color};height:56px"></div>
+      <div><div class="project-name lg">${Utils.esc(project.name)}</div>
+      <div class="project-client">${area?.icon} ${Utils.esc(area?.name)} · ${Utils.esc(project.client)}</div>
+      ${project.clientEmail?`<p class="muted">${Utils.esc(project.clientEmail)} · ${Utils.esc(project.clientPhone)}</p>`:''}
+      ${project.url?`<a href="${Utils.esc(project.url)}" target="_blank">${Utils.esc(project.url)}</a>`:''}</div></div>
+      ${stagesLine}
+      <div class="project-tabs">${tabHtml}</div>${body}`;
+  },
+
+  renderProjectWishlist(project, projectId) {
+    const items = project.wishlist || [];
+    const done = items.filter((w) => w.done).length;
+    const open = items.filter((w) => !w.done);
+    const completed = items.filter((w) => w.done);
+    const row = (w) => `
+      <div class="wishlist-row ${w.done ? 'done' : ''}">
+        <button type="button" class="task-check ${w.done ? 'checked' : ''}" data-action="toggle-wishlist-item" data-pid="${projectId}" data-wid="${w.id}">${w.done ? '✓' : ''}</button>
+        <span class="wishlist-text">${Utils.esc(w.text)}</span>
+        <button type="button" class="btn btn-sm btn-ghost danger-left" data-action="delete-wishlist-item" data-pid="${projectId}" data-wid="${w.id}">${I18n.t('action.delete')}</button>
+      </div>`;
+    return `
+      <p class="muted mb">${I18n.t('project.wishlist.desc')}</p>
+      <div class="wishlist-progress mb">${items.length ? `${done}/${items.length} ${I18n.t('project.wishlist.done')}` : I18n.t('project.wishlist.emptyHint')}</div>
+      <div class="wishlist-add mb">
+        <input type="text" class="form-control" id="wishlist-new-input" placeholder="${Utils.esc(I18n.t('project.wishlist.placeholder'))}" maxlength="240">
+        <button type="button" class="btn btn-primary btn-sm" data-action="add-wishlist-item" data-pid="${projectId}">${I18n.t('project.wishlist.add')}</button>
+      </div>
+      ${open.length ? `<div class="section-header"><div class="section-title">${I18n.t('project.wishlist.open')}</div></div>${open.map(row).join('')}` : ''}
+      ${completed.length ? `<div class="section-header mt"><div class="section-title muted">${I18n.t('project.wishlist.completed')}</div></div>${completed.map(row).join('')}` : ''}
+      ${!items.length ? `<div class="empty-state"><p>${I18n.t('project.wishlist.empty')}</p></div>` : ''}`;
+  },
+
+  renderKanbanCard(item, col, cols) {
+    const project = Store.getProject(item.projectId);
+    const done = (item.type === 'task' || item.type === 'checklist') && item.completed;
+    const due = item.dueDate ? `<span class="kanban-card-due ${Utils.isOverdue(item) ? 'overdue' : ''}">${Utils.fmtDate(item.dueDate)}</span>` : '';
+    const priority = (item.priority === 'urgent' || item.priority === 'high')
+      ? `<span class="kanban-card-priority priority-${item.priority}">${item.priority === 'urgent' ? '!!' : '!'}</span>`
+      : '';
+    const moveBtns = Store.getKanbanMoveTargets(col, cols).map((c) => {
+      const isDone = c === Store.getKanbanDoneColumn(cols);
+      return `<button type="button" class="btn btn-sm mini${isDone ? ' kanban-move-done' : ''}" data-kanban-move="${c}" data-id="${item.id}">→ ${Utils.esc(I18n.enum(c))}</button>`;
+    }).join('');
+    return `<div class="kanban-card${done ? ' kanban-card--done' : ''}${item.priority === 'urgent' ? ' kanban-card--urgent' : ''}${item.priority === 'high' ? ' kanban-card--high' : ''}" data-action="open-item" data-id="${item.id}">
+      <div class="kanban-card-head">
+        <span class="kanban-card-type">${Utils.typeIcon(item.type)} ${Utils.typeLabel(item.type)}</span>
+        ${priority}
+      </div>
+      <div class="kanban-card-title">${Utils.esc(item.title)}</div>
+      ${project ? `<div class="kanban-card-meta muted">${Utils.esc(project.name)}</div>` : ''}
+      ${due ? `<div class="kanban-card-meta">${due}</div>` : ''}
+      <div class="btn-row mt kanban-card-actions">${moveBtns}</div>
+    </div>`;
+  },
+
+  renderKanban() {
+    const scopedProjects = App.filterProjects(Store.getActiveProjects());
+    const items = App.getKanbanItems();
+    const cols = Store.getKanbanColumns();
+    const ws = App.workspace ? Store.getWorkspaces()[App.workspace] : null;
+    return `${App.renderScopeBanner()}
+      <div class="section-header"><div class="section-title">${I18n.t('view.kanban')} <span class="muted sm">(${items.length})</span></div></div>
+      ${ws ? `<p class="muted sm mb">${I18n.t('kanban.inWorkspace').replace('{ws}', `${ws.icon} ${ws.label}`)}</p>` : `<p class="muted sm mb">${I18n.t('kanban.pickWorkspace')}</p>`}
+      ${App.renderKanbanTypeFilters()}
+      ${App.renderKanbanStatusFilters()}
+      ${App.renderKanbanProjectFilters(scopedProjects)}
+      <div class="kanban-board">${cols.map((col) => {
+        const colItems = items.filter((i) => Store.getKanbanColumnForItem(i, cols) === col);
+        return `<div class="kanban-col"><div class="kanban-col-header">${Utils.esc(I18n.enum(col))} (${colItems.length})</div>
+          ${colItems.map((i) => this.renderKanbanCard(i, col, cols)).join('') || '<p class="muted">—</p>'}</div>`;
+      }).join('')}</div>`;
+  },
+
+  renderVault() {
+    if (!Vault.isSetup() || !Store.state.vaultUnlocked) {
+      return `<div class="vault-locked"><div class="vault-icon">🔐</div><h2>Candeias Vault</h2>
+        <p class="muted mb">${Vault.isSetup()?'Enter master password.':'Set master password.'}</p>
+        <form class="vault-form" id="vault-unlock-form"><div class="form-group"><label>Master Password</label>
+        <input type="password" class="form-control" id="vault-password" required></div>
+        <button type="submit" class="btn btn-primary w100">${Vault.isSetup()?'Unlock':'Create vault'}</button></form>
+        <p class="muted mt">AES-GCM · candeias.dev</p></div>`;
+    }
+    const folder = App.vaultFolder || 'all';
+    const folders = Store.getVaultFolders();
+    let entries = Store.state.vaultEntries;
+    if (folder !== 'all') {
+      const vf = Store.getVaultFolder(folder);
+      if (vf) entries = entries.filter((e) => e.folder === vf.name);
+    }
+    return `<div class="section-header"><div class="section-title">Vault (${entries.length})</div>
+      <div class="btn-row"><button class="btn btn-sm" id="vault-lock">Lock</button>
+      <button class="btn btn-primary btn-sm" id="btn-add-vault">+ Entry</button>
+      <button class="btn btn-sm" data-action="nav" data-view="personalization">⚙ Folders</button></div></div>
+      <div class="filter-bar-inline mb">
+        <button class="filter-chip ${folder==='all'?'active':''}" data-vault-folder="all">All</button>
+        ${folders.map((vf) => `<button class="filter-chip ${folder===vf.id?'active':''}" data-vault-folder="${vf.id}" style="${folder===vf.id?`border-color:${vf.color};color:${vf.color}`:''}">${vf.icon} ${Utils.esc(vf.name)}</button>`).join('')}
+      </div>
+      ${entries.map((e) => `<div class="vault-entry"><div class="vault-entry-icon">🔑</div>
+        <div class="vault-entry-info"><div class="vault-entry-title">${Utils.esc(e.service)} ${e.favorite?'⭐':''}</div>
+        <div class="vault-entry-sub">${Utils.esc(e.email||e.username||'')} ${e.expiryDate?'· Expires '+Utils.fmtDate(e.expiryDate):''}</div></div>
+        <div class="vault-actions"><button class="btn btn-sm" data-action="copy-password" data-id="${e.id}">Copy</button>
+        <button class="btn btn-sm" data-action="edit-vault" data-id="${e.id}">Edit</button>
+        <button class="btn btn-sm btn-ghost" data-action="delete-vault" data-id="${e.id}">✕</button></div></div>`).join('')||'<div class="empty-state"><div class="icon">🔐</div><h3>Vault empty</h3></div>'}`;
+  },
+
+  renderAreas() {
+    return `<div class="section-header"><div class="section-title">Areas & Contexts</div>
+      <button class="btn btn-primary btn-sm" id="btn-add-area">+ Area</button></div>
+      ${Store.state.areas.map((area) => `<div class="item-card mb">
+        <div class="flex-center mb"><span class="area-dot lg" style="background:${area.color}"></span>
+        <strong>${area.icon} ${Utils.esc(area.name)}</strong></div>
+        ${area.subContexts?.length?`<div class="sub-context-grid">${area.subContexts.map((c)=>`<span class="sub-ctx-btn">${c.icon} ${Utils.esc(c.name)}</span>`).join('')}</div>`:'<p class="muted">No sub-contexts</p>'}
+        <p class="muted mt">${Store.getProjectsByArea(area.id).length} projects · ${Store.getItems({areaId:area.id}).length} items</p>
+        <button class="btn btn-sm mt" data-action="add-subctx" data-area="${area.id}">+ Sub-context</button>
+      </div>`).join('')}
+      <div class="settings-box mt"><p class="muted">Pipeline: ${Store.getPipelineStages().join(' → ')} · <a href="#" data-action="nav" data-view="personalization">Customize</a></p>
+      <div class="btn-row mt"><button class="btn btn-sm" data-action="export-backup">Export backup</button>
+        <button class="btn btn-sm btn-ghost" data-action="load-demo">↺ Load demo examples</button></div></div>`;
+  },
+
+  renderSettings() {
+    const s = Store.state.settings;
+    const lang = s.language || 'en';
+    return `<div class="section-header"><div class="section-title">${I18n.t('view.settings')}</div></div>
+      <div class="settings-box mb"><h3>${I18n.t('settings.profile')}</h3>
+        <p class="muted mb">${I18n.t('settings.profile.desc')}</p>
+        <div class="profile-settings-row mb">
+          <div class="brand-icon lg has-photo-settings" id="settings-avatar">${Utils.renderProfileAvatarContent(s)}</div>
+          <div class="profile-settings-actions">
+            <input type="file" class="form-control" id="profile-photo-input" accept="image/jpeg,image/png,image/webp">
+            <button type="button" class="btn btn-sm mt" data-action="save-profile-photo">${I18n.t('settings.profile.save')}</button>
+            ${s.profilePhoto ? `<button type="button" class="btn btn-sm btn-ghost mt" data-action="remove-profile-photo">${I18n.t('settings.profile.remove')}</button>` : ''}
+          </div>
+        </div></div>
+      <div class="settings-box mb"><h3>${I18n.t('settings.language')}</h3>
+        <p class="muted mb">${I18n.t('settings.language.desc')}</p>
+        <button class="btn btn-sm ${lang==='en'?'btn-primary':''}" data-action="set-language" data-language="en">${I18n.t('settings.language.en')}</button>
+        <button class="btn btn-sm ${lang==='pt'?'btn-primary':''}" data-action="set-language" data-language="pt">${I18n.t('settings.language.pt')}</button></div>
+      <div class="settings-box mb"><h3>${I18n.t('settings.theme')}</h3>
+        <button class="btn btn-sm ${s.theme==='dark'?'btn-primary':''}" data-action="set-theme" data-theme="dark">Dark</button>
+        <button class="btn btn-sm ${s.theme==='light'?'btn-primary':''}" data-action="set-theme" data-theme="light">Light</button></div>
+      <div class="settings-box mb"><h3>Personalization</h3>
+        <p class="muted mb">Vault, contacts, tags, areas, kanban, pipeline, links, school, dashboard — all in one place.</p>
+        <button class="btn btn-sm btn-primary" data-action="nav" data-view="personalization">⚙ Open personalization</button></div>
+      <div class="settings-box mb"><h3>AI Assistant</h3>
+        <p class="muted mb">Optional — with API key uses OpenAI; without key uses local parser (free).</p>
+        <input class="form-control" type="password" id="openai-api-key" value="${Utils.esc(s.openaiApiKey || '')}" placeholder="sk-...">
+        <label class="checkbox-row mt"><input type="checkbox" id="use-ai-parser" ${s.useAiParser !== false ? 'checked' : ''}> Use OpenAI when key is set</label>
+        <button class="btn btn-sm mt" data-action="save-ai-settings">Save AI</button></div>
+      <div class="settings-box mb"><h3>FinControl (finance)</h3>
+        <p class="muted mb">Calendar link to open the finance app.</p>
+        <input class="form-control" id="fincontrol-url" value="${Utils.esc(s.fincontrolUrl || FINCONTROL_DEFAULT_URL)}" placeholder="http://localhost:5173">
+        <button class="btn btn-sm mt" data-action="save-fincontrol-url">Save URL</button>
+        <a class="btn btn-sm mt fincontrol-link" href="${Utils.esc(s.fincontrolUrl || FINCONTROL_DEFAULT_URL)}" target="_blank" rel="noopener">Open FinControl</a></div>
+      <div class="settings-box mb"><h3>Gmail integration</h3>
+        <p class="muted mb">Optional — preview inbox in the Emails section. In <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Google Cloud Console</a>: enable Gmail API, create OAuth Client ID (Web), add authorized origin <code>http://localhost:8080</code>.</p>
+        <input class="form-control" id="google-client-id" value="${Utils.esc(s.googleClientId || '')}" placeholder="123456789-abc.apps.googleusercontent.com">
+        <button class="btn btn-sm mt" data-action="save-gmail-settings">Save Gmail settings</button></div>
+      <div class="settings-box mb"><h3>School schedule</h3>
+        <p class="muted mb">Weekly schedule (Mon–Fri) on the calendar. Repeats automatically.</p>
+        <button class="btn btn-sm" data-action="edit-school-schedule">✏ Edit schedule</button></div>
+      <div class="settings-box mb"><h3>Accessibility</h3>
+        <p class="muted mb">Adapt the app to your needs.</p>
+        <button class="btn btn-sm" data-action="nav" data-view="accessibility">Open accessibility</button></div>
+      <div class="settings-box mb"><h3>Focus mode</h3>
+        <select class="form-control" id="focus-select"><option value="">Off</option>
+        ${Store.getActiveProjects().map((p)=>`<option value="${p.id}" ${s.focusProjectId===p.id?'selected':''}>${Utils.esc(p.name)}</option>`).join('')}</select></div>
+      <div class="settings-box mb"><h3>Saved searches</h3>
+        ${(s.savedSearches||[]).map((sr)=>`<div class="item-card mb mini">${Utils.esc(sr.name)}</div>`).join('')||'<p class="muted">None</p>'}</div>
+      <div class="settings-box mb"><h3>Data backup (PC → casa)</h3>
+        <p class="muted mb sm">Use isto no PC da empresa <strong>sem Firebase</strong>. Exporta agora, guarda o ficheiro na pasta <code>backups/</code> deste projeto. Em casa importas e depois ligamos o Firebase.</p>
+        <div class="btn-row">
+          <button class="btn btn-sm btn-primary" data-action="export-backup">⬇ Export backup</button>
+          <button class="btn btn-sm" data-action="import-backup">⬆ Import backup</button>
+        </div>
+        <p class="muted sm mt">O ficheiro JSON fica só no teu PC — não vai para o GitHub.</p></div>
+      ${CloudSync.isRenderMode?.() ? `<div class="settings-box mb"><h3>Cloud sync (Render)</h3>
+        <p class="muted mb sm">Password-protected · same data on PC and phone. Data stored on Render server (not GitHub).</p>
+        <p class="muted mt sm">${CloudSync.statusText()}</p>
+        <div class="btn-row mt">
+          <button class="btn btn-sm btn-primary" data-action="cloud-sync-now">↻ Sync now</button>
+        </div></div>` : `<div class="settings-box mb"><h3>Cloud sync (PC + phone)</h3>
+        <p class="muted mb sm">One account, same tasks everywhere. Uses free <a href="https://console.firebase.google.com/" target="_blank" rel="noopener">Firebase</a> (Auth + Firestore).</p>
+        <p class="muted mb sm"><strong>Setup once:</strong> Firebase → Create project → Authentication (Email) → Firestore → paste config below.</p>
+        <textarea class="form-control" id="firebase-config-json" rows="5" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","appId":"..."}'>${Utils.esc(s.firebaseConfig ? JSON.stringify(s.firebaseConfig, null, 2) : '')}</textarea>
+        <button class="btn btn-sm mt" data-action="save-firebase-config">Save Firebase config</button>
+        <p class="muted mt sm">${typeof CloudSync !== 'undefined' ? CloudSync.statusText() : ''}${s.cloudEmail ? ` · ${Utils.esc(s.cloudEmail)}` : ''}</p>
+        <div class="btn-row mt">
+          <button class="btn btn-sm btn-primary" data-action="cloud-sync-now">↻ Sync now</button>
+        </div></div>`}
+      <div class="settings-box mb"><h3>App update</h3>
+        <p class="muted mb">Versão instalada: <strong>v${APP_VERSION}</strong></p>
+        <p class="muted mb sm" id="app-update-status">${typeof AppUpdate !== 'undefined' ? AppUpdate.statusLabel() : ''}</p>
+        <div class="btn-row">
+          <button class="btn btn-sm" data-action="check-app-update">Verificar atualizações</button>
+          ${AppUpdate.updateReady
+            ? `<button class="btn btn-sm btn-primary" data-action="apply-app-update">↻ Atualizar para v${Utils.esc(AppUpdate.remoteVersion || 'nova')}</button>`
+            : `<button class="btn btn-sm" data-action="apply-app-update" title="Força recarregar a app do servidor">↻ Recarregar app</button>`}
+        </div>
+        <p class="muted sm mt">Depois de um deploy, toca em <strong>Verificar</strong>. Se disser que já estás atualizado mas a app parece antiga, usa <strong>Recarregar app</strong> (limpa cache do browser).</p></div>
+      <div class="settings-box mb"><h3>Palavra-passe</h3>
+        <p class="muted mb sm">${CloudSync.isRenderMode?.()
+          ? 'Alterar a palavra-passe desliga todos os telemóveis e PCs. Só a nova palavra-passe funciona.'
+          : CloudSync.isConfigured?.()
+            ? 'Alterar a palavra-passe da conta cloud desliga outras sessões Firebase.'
+            : 'Alterar a palavra-passe deste dispositivo.'}</p>
+        <button class="btn btn-sm btn-primary" data-action="open-change-password">Alterar palavra-passe</button></div>
+      <div class="settings-box mb"><h3>Account</h3>
+        <p class="muted mb">${CloudSync.isRenderMode?.() ? 'Login com palavra-passe Render · sync automático · Face ID só neste dispositivo.' : CloudSync.isConfigured() ? 'Cloud login syncs across devices. Face ID works on this device.' : 'Local login on this device only — enable cloud sync above.'}</p>
+        <button class="btn btn-sm btn-ghost danger-left" data-action="logout">Terminar sessão</button></div>
+      <div class="settings-box mb"><h3>Data</h3>
+        <p class="muted mb sm">${typeof CloudSync !== 'undefined' ? `${CloudSync.dataScore(Store.state)} records on this device` : ''}${CloudSync.hasEmergencyBackup?.() ? ' · local backup available' : ''}</p>
+        <div class="btn-row mb">
+          <button class="btn btn-sm btn-primary" data-action="restore-my-data">↺ Recover my data</button>
+          <button class="btn btn-sm" data-action="cloud-sync-now">Sync now</button>
+        </div>
+        <p class="muted mb sm">Recover tries: local backup → cloud backup → cloud sync. Export weekly for safety.</p>
+        <div class="btn-row">
+          <button class="btn btn-sm" data-action="export-backup">⬇ Export backup</button>
+          <button class="btn btn-sm" data-action="import-backup">⬆ Import backup</button>
+        </div>
+        <div class="btn-row mt">
+          <button class="btn btn-sm btn-ghost" data-action="clear-all-data">🗑 Clear all — start fresh</button>
+          <button class="btn btn-sm btn-ghost" data-action="load-demo">↺ Load demo examples</button>
+        </div></div>
+      <div class="settings-box about-box"><div class="brand-icon lg" id="settings-about-avatar">${Utils.renderProfileAvatarContent(s)}</div><h2>Candeias</h2><p class="green">candeias.dev</p>
+      <p class="muted">Organize. Build. Live.</p><p>Version ${APP_VERSION}</p>
+      <a href="https://candeias.dev" target="_blank" class="btn btn-sm mt">Visit site</a></div>`;
+  },
+
+  renderAccessibility() {
+    const a11y = { ...DEFAULT_ACCESSIBILITY, ...(Store.state.settings.accessibility || {}) };
+    const active = Object.values(a11y).filter(Boolean).length;
+    return `<div class="section-header"><div class="section-title">Accessibility</div>
+      <span class="muted">${active} active</span></div>
+      <p class="muted mb">Enable or disable features to make the app more comfortable.</p>
+      <div class="a11y-grid">
+        ${ACCESSIBILITY_OPTIONS.map((opt) => `
+          <button type="button" class="a11y-card ${a11y[opt.key] ? 'active' : ''}" data-action="toggle-a11y" data-a11y-key="${opt.key}">
+            <div class="a11y-card-head">
+              <span class="a11y-status">${a11y[opt.key] ? '✓ Enabled' : 'Disabled'}</span>
+            </div>
+            <div class="a11y-label">${opt.label}</div>
+            <div class="a11y-desc">${opt.desc}</div>
+          </button>`).join('')}
+      </div>`;
+  },
+
+  renderTools() {
+    const tab = App.toolsTab || 'calc';
+    const pom = Pomodoro.tick();
+    const rem = Pomodoro.remainingSec();
+    const grades = Store.state.grades || [];
+    const avg = Grades.weightedAverage(grades);
+    const tabs = [['calc', '⚡ Calculators'], ['pomodoro', '🍅 Pomodoro'], ['grades', '📚 Grades']];
+    let body = '';
+    if (tab === 'calc') {
+      body = `<div class="tools-grid">
+        <div class="settings-box"><h3>Voltage drop (ΔV)</h3>
+          <p class="muted sm mb">ΔV = 2 × I × R/km × L(m)/1000</p>
+          <div class="form-row"><input class="form-control" id="calc-i" type="number" step="0.1" placeholder="I (A)">
+          <input class="form-control" id="calc-r" type="number" step="0.01" placeholder="R Ω/km"></div>
+          <input class="form-control mt" id="calc-l" type="number" placeholder="Length (m)">
+          <button class="btn btn-sm mt" id="calc-vdrop">Calculate</button>
+          <div class="calc-result mt" id="calc-vdrop-out">—</div></div>
+        <div class="settings-box"><h3>AWG → mm²</h3>
+          <select class="form-control" id="calc-awg">${[10,12,14,16,18,20,22,24].map((a)=>`<option value="${a}">${a} AWG</option>`).join('')}</select>
+          <button class="btn btn-sm mt" id="calc-awg-btn">Convert</button>
+          <div class="calc-result mt" id="calc-awg-out">—</div></div>
+        <div class="settings-box"><h3>kW → cv</h3>
+          <input class="form-control" id="calc-kw" type="number" step="0.1" placeholder="kW">
+          <button class="btn btn-sm mt" id="calc-kw-btn">Convert</button>
+          <div class="calc-result mt" id="calc-kw-out">—</div></div>
+        <div class="settings-box"><h3>Cos φ</h3>
+          <div class="form-row"><input class="form-control" id="calc-kva" type="number" placeholder="kVA">
+          <input class="form-control" id="calc-kw2" type="number" placeholder="kW"></div>
+          <button class="btn btn-sm mt" id="calc-cos">Calculate</button>
+          <div class="calc-result mt" id="calc-cos-out">—</div></div>
+      </div>
+      <button class="btn btn-sm mt" data-action="use-template" data-template="field-sheet">+ Field sheet (template)</button>`;
+    } else if (tab === 'pomodoro') {
+      body = `<div class="pomodoro-box settings-box">
+        <div class="pomodoro-time">${Pomodoro.fmt(rem || (pom.phase === 'work' ? Pomodoro.WORK_SEC : Pomodoro.BREAK_SEC))}</div>
+        <div class="muted mb">${pom.running ? (pom.phase === 'work' ? 'Focus' : 'Break') : 'Ready'} · ${pom.sessions || 0} sessions</div>
+        <div class="btn-row">
+          ${pom.running ? `<button class="btn btn-sm" data-action="pomodoro-stop">Stop</button>` : `<button class="btn btn-primary btn-sm" data-action="pomodoro-start">▶ Focus 25min</button>`}
+          <button class="btn btn-sm btn-ghost" data-action="pomodoro-break">Break 5min</button>
+        </div></div>`;
+    } else {
+      body = `<div class="section-header"><div class="section-title">Average: ${avg}</div>
+        <button class="btn btn-sm btn-primary" data-action="add-grade">+ Subject</button></div>
+        <p class="muted mb sm">Preset subjects in <a href="#" data-action="nav" data-view="personalization" style="color:var(--green)">Personalization → School</a></p>
+        ${grades.map((g) => `<div class="item-card mb mini" style="display:flex;justify-content:space-between;align-items:center">
+          <div><strong>${Utils.esc(g.subject)}</strong> · weight ${g.weight} · ${g.grade}</div>
+          <button class="btn btn-sm btn-ghost" data-action="delete-grade" data-id="${g.id}">✕</button>
+        </div>`).join('') || '<p class="muted">No notes</p>'}`;
+    }
+    return `<div class="section-header"><div class="section-title">Tools</div></div>
+      <div class="filter-bar-inline mb">${tabs.map(([k,l])=>`<button class="filter-chip ${tab===k?'active':''}" data-tools-tab="${k}">${l}</button>`).join('')}</div>${body}`;
+  },
+
+  renderSearch() {
+    const q = App.searchQuery;
+    const typeFilter = App.searchType;
+    let items = q ? App.filterItems(Store.getItems({ search: q })) : [];
+    if (typeFilter) items = items.filter((i) => i.type === typeFilter);
+    const projects = q ? App.filterProjects(Store.state.projects.filter((p) => p.name.toLowerCase().includes(q.toLowerCase()))) : [];
+    return `${App.renderScopeBanner()}<div class="section-header"><div class="section-title">Search: "${Utils.esc(q)}"</div>
+      <button class="btn btn-sm" data-action="save-search">Save search</button></div>
+      <div class="filter-bar-inline mb">${['','note','task','event','contact','link'].map((t)=>`<button class="filter-chip ${App.searchType===t?'active':''}" data-search-type="${t}">${t||'All'}</button>`).join('')}</div>
+      ${projects.length?`<h3 class="sub-heading">Projects</h3>${projects.map((p)=>`<div class="item-card mb" data-action="open-project" data-id="${p.id}">${Utils.esc(p.name)}</div>`).join('')}`:''}
+      ${items.map((i)=>this.renderItemCard(i)).join('')||'<div class="empty-state"><p>No results</p></div>'}`;
+  },
+};

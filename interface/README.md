@@ -1,48 +1,63 @@
-# Interface — Organização de Trabalho
+# Candeias Control App
 
-App desenvolvida pelo autor (Santiago Candeias) para gestão pessoal de projetos, tarefas e documentação técnica do PAP.
+Personal productivity app — tasks, projects, vault, calendar, clients (candeias.dev).
 
-## Repositório
+**Live:** https://candeiassantiago393-spec.github.io/geral-controll-app/
 
-**[geral-controll-app](https://github.com/candeiassantiago393-spec/geral-controll-app)**
+## Login (private)
 
-## Função na PAP
+On **first open** on each device/browser, you create your own username and password.  
+Credentials are stored **only in that device's localStorage** — nothing is published in this repo.
 
-- Organizar fases do elevador (Displays, Sensores, Comissionamento, etc.)
-- Registar BOM, notas técnicas e decisões de hardware
-- Hub de trabalho durante desenvolvimento e apresentação
+Optional: **Face ID / Touch ID** after first password login (HTTPS required).
 
-## Sync com este repo
+## Local development
 
-Tasks exportadas da app ficam em [docs/TASKS_PAP_SYNC.md](../docs/TASKS_PAP_SYNC.md).
-
-> **Este código não vive no repo PAP.** O firmware do painel ESP32 (antigo projeto `ecra`) está em [logicas_extras/paineis_controlo/](../logicas_extras/paineis_controlo/).
-
-## Uso no Cursor
-
-### Opção A — Pasta irmã no workspace
-`File → Add Folder to Workspace` → clone de `geral-controll-app`
-
-### Opção B — Servidor local
 ```bash
-cd path/to/geral-controll-app
 python -m http.server 8080
 ```
-Abrir `http://localhost:8080` no Simple Browser do Cursor.
 
-## Na apresentação
+Open http://localhost:8080
 
-Referir como ferramenta de organização desenvolvida pelo autor — não faz parte do firmware do elevador, mas demonstra gestão profissional do projeto.
+## Devices
 
-## Deploy
+| Device | Width | Layout |
+|--------|-------|--------|
+| **Windows desktop** | ≥1025px | Full sidebar, multi-column grids |
+| **iPad** | 768–1024px | Narrow sidebar, 2–3 columns |
+| **iPhone 12 Pro** | 390px | Drawer menu ☰, single column |
 
-- GitHub Pages: `https://candeiassantiago393-spec.github.io/geral-controll-app/`
-- Render: `https://candeias-app.onrender.com/` (se configurado)
+## Deploy (GitHub Pages) — obrigatório para o site funcionar
 
-## Navegação
+O 404 aparece porque o **GitHub Pages ainda não está ativo**. Faz isto **uma vez**:
 
-| | |
-|--|--|
-| Índice repo | [../docs/INDICE_REPOSITORIO.md](../docs/INDICE_REPOSITORIO.md) |
-| Tasks sync | [../docs/TASKS_PAP_SYNC.md](../docs/TASKS_PAP_SYNC.md) |
-| Raiz PAP | [../README.md](../README.md) |
+### Opção A — GitHub Actions (recomendado)
+
+1. Abre https://github.com/candeiassantiago393-spec/geral-controll-app/settings/pages
+2. Em **Build and deployment → Source**, escolhe **GitHub Actions**
+3. Guarda. O workflow `.github/workflows/pages.yml` faz deploy a cada push em `main`
+4. Vai a **Actions** e confirma que o job "Deploy GitHub Pages" ficou verde ✅
+
+### Opção B — Branch manual
+
+1. Mesmo menu **Settings → Pages**
+2. **Source:** Deploy from a branch
+3. Branch: **main** · Folder: **/ (root)** → Save
+
+### URL correta
+
+https://candeiassantiago393-spec.github.io/geral-controll-app/
+
+(Não uses só `github.io` — tens de incluir `/geral-controll-app/`)
+
+Demora 1–3 minutos após ativar.
+
+## Security
+
+- Login is a **client-side gate** — not server-protected. Do not treat it like bank-level security.
+- Never put passwords in README or source code.
+- Vault data uses a separate master password with local encryption.
+
+## Stack
+
+Vanilla HTML/CSS/JS · localStorage · PWA · WebAuthn biometrics
