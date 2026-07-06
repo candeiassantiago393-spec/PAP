@@ -52,9 +52,25 @@ void loop() {
 
         digitalWrite(ledvermelho, LOW);
         digitalWrite(ledverde, HIGH);
-
-        Servo1_3.write(90);
         tone(buzzer, 1000, 200);
+
+        // abre suavemente (0 -> 90)
+        for (int pos = 0; pos <= 90; pos++) {
+          Servo1_3.write(pos);
+          delay(15);
+        }
+
+        // fica 8 segundos aberto
+        delay(8000);
+
+        // fecha suavemente (90 -> 0)
+        for (int pos = 90; pos >= 0; pos--) {
+          Servo1_3.write(pos);
+          delay(15);
+        }
+
+        digitalWrite(ledverde, LOW);
+
       } else {
         Serial.println("ACESSO NEGADO");
 
