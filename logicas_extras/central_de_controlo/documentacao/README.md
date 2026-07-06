@@ -4,6 +4,7 @@
 |----------|----------|
 | [funcionamento.md](funcionamento.md) | Ecrãs, alarmes, prioridades, estufa |
 | [pinagem.md](pinagem.md) | GPIO ESP32 completo |
+| [fluxogramas.md](fluxogramas.md) | Diagramas de fluxo — **por fazer** |
 
 ## Navegação
 
