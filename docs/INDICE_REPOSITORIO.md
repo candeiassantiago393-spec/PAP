@@ -104,15 +104,17 @@ cd logicas_extras/paineis_controlo/real/caixa_ecra && pio run
 
 ## interface/
 
-| Ficheiro | Conteúdo |
-|----------|----------|
-| [README.md](../interface/README.md) | Ligação ao **geral-controll-app** (repo externo) |
+App **Candeias Control App** (`me`) — HTML/CSS/JS + servidor Python.
 
-**Não incluído neste repo:** código da app `me` / Candeias Control App — apenas [TASKS_PAP_SYNC.md](TASKS_PAP_SYNC.md) como snapshot.
+| Ficheiro / pasta | Conteúdo |
+|------------------|----------|
+| [README.md](../interface/README.md) | Visão geral, deploy, segurança |
+| [index.html](../interface/index.html) | Entrada PWA |
+| [js/](../interface/js/) | Lógica da app |
+| [server/main.py](../interface/server/main.py) | API local / sync cloud |
+| [docs/](../interface/docs/) | Deploy Render, sync cloud |
 
-**Incluído (ecra):** projeto ecra → [paineis_controlo/](../logicas_extras/paineis_controlo/)
-
-Workspace opcional no Cursor: clone PAP + clone [geral-controll-app](https://github.com/candeiassantiago393-spec/geral-controll-app) como pasta irmã.
+Dados pessoais (`backups/*.json`, `data/cloud/*.json`) estão no `.gitignore` — não são versionados.
 
 ---
 

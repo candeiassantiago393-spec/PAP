@@ -92,7 +92,7 @@ Histórico de migração: [docs/CONTEXTO_PROJETO.md](docs/CONTEXTO_PROJETO.md#pl
 | Projeto local / nome | No PAP? | Onde |
 |----------------------|---------|------|
 | **ecra** (painel ESP32) | **Sim** — código migrado | [logicas_extras/paineis_controlo/](logicas_extras/paineis_controlo/) |
-| **me** (Candeias Control App) | **Não** — repo à parte | [interface/README.md](interface/README.md) → [geral-controll-app](https://github.com/candeiassantiago393-spec/geral-controll-app) |
+| **me** (Candeias Control App) | **Sim** | [interface/](interface/) |
 | Tasks da app | Snapshot apenas | [docs/TASKS_PAP_SYNC.md](docs/TASKS_PAP_SYNC.md) |
 
-> Um `git clone` deste repo traz elevador, cofre, painel ecra e documentação. A app de tarefas clona-se separadamente ou usa-se o export em `TASKS_PAP_SYNC.md`.
+> Um `git clone` deste repo traz elevador, cofre, painel ecra, app de organização (`interface/`) e documentação.

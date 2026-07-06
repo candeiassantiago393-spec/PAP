@@ -2,7 +2,9 @@
 
 Personal productivity app — tasks, projects, vault, calendar, clients (candeias.dev).
 
-**Live:** https://candeiassantiago393-spec.github.io/geral-controll-app/
+**Código fonte:** integrado neste repositório PAP em `interface/` (antes repo separado `geral-controll-app`).
+
+**Live (legado):** https://candeiassantiago393-spec.github.io/geral-controll-app/
 
 ## Login (private)
 
