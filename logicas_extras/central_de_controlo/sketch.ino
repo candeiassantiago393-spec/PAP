@@ -23,23 +23,23 @@
 
 // Sensor de gas (MQ-2/MQ-135) — saida analogica simulada por potenciometro
 #define PIN_GAS 35
-#define GAS_LIMIT 60           // % acima do qual dispara o alarme de gas
+#define GAS_LIMIT 50           // % acima do qual dispara o alarme de gas
 #define GAS_ALARM_BLINK_MS 250
 
 // Sensor de fogo/chama (KY-026 IR) — usa a saida analogica (intensidade),
 // simulada por potenciometro. O modulo real tem tambem saida digital (DO).
 #define PIN_FIRE 4
-#define FIRE_LIMIT 60          // % acima do qual dispara o alarme de fogo
+#define FIRE_LIMIT 50          // % acima do qual dispara o alarme de fogo
 #define FIRE_ALARM_BLINK_MS 150
 
 // Sensor de sismos/vibracao (SW-420) — intensidade sismica simulada por
 // potenciometro. O modulo real e digital (pulsos); converter em intensidade.
 #define PIN_QUAKE 13
-#define QUAKE_LIMIT 60         // % acima do qual dispara o alarme de sismo
+#define QUAKE_LIMIT 50         // % acima do qual dispara o alarme de sismo
 #define QUAKE_ALARM_BLINK_MS 120
 
-#define SOIL_LIMIT_LOW 35
-#define SOIL_LIMIT_HIGH 75
+#define SOIL_LIMIT_LOW 30
+#define SOIL_LIMIT_HIGH 70
 #define GREENHOUSE_INTERVAL_MS 1000
 #define GREEN_LED_BLINK_MS 300
 #define PUMP_MAX_ON_MS 10000
@@ -365,8 +365,10 @@ void drawPlantasScreen(int xOffset) {
 
   drawSoilBar(barX, barY, barW, barH, soilPercent);
 
-  drawTextCenteredAt(markLowX, barY + barH + 4, "35");
-  drawTextCenteredAt(markHighX, barY + barH + 4, "75");
+  snprintf(line, sizeof(line), "%d", SOIL_LIMIT_LOW);
+  drawTextCenteredAt(markLowX, barY + barH + 4, line);
+  snprintf(line, sizeof(line), "%d", SOIL_LIMIT_HIGH);
+  drawTextCenteredAt(markHighX, barY + barH + 4, line);
 
   display.setCursor(4 + xOffset, 38);
   display.print("Estado: ");

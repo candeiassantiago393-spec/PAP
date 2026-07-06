@@ -15,16 +15,16 @@ Projeto interativo para ESP32 com OLED, botões e vários subsistemas: ambiente,
 | **MOVIMENTO** | PIR, cooldown 30 s, ecrã de alerta de intruso |
 | **PLANTAS** | Humidade do solo, barra 0–100 %, LEDs, bomba com limite de tempo |
 | **GRAFICO** | Sparkline das últimas leituras de temperatura |
-| **GAS** | Nível de gás (0–100 %), barra com limite; alarme (buzzer + LED amarelo a piscar + ecrã "FUGA DE GAS!!") acima de 60 % |
-| **FOGO** | Intensidade de chama (0–100 %), barra com limite; alarme (buzzer + LED vermelho a piscar + ecrã "FOGO / INCENDIO") acima de 60 % |
-| **SISMO** | Intensidade sísmica (0–100 %), barra com limite; alarme (buzzer + LED verde a piscar + ecrã "SISMO / TERRAMOTO") acima de 60 % |
+| **GAS** | Nível de gás (0–100 %), barra com limite; alarme (buzzer + LED amarelo a piscar + ecrã "FUGA DE GAS!!") acima de 50 % |
+| **FOGO** | Intensidade de chama (0–100 %), barra com limite; alarme (buzzer + LED vermelho a piscar + ecrã "FOGO / INCENDIO") acima de 50 % |
+| **SISMO** | Intensidade sísmica (0–100 %), barra com limite; alarme (buzzer + LED verde a piscar + ecrã "SISMO / TERRAMOTO") acima de 50 % |
 | **Instagram** | QR code para o perfil (último ecrã) |
 
 **Prioridade dos alertas:** FOGO > SISMO > INTRUSO (PIR) > GÁS.
 
 **Extra:** transições laterais entre ecrãs, indicador de página (pontinhos), **modo feira** (rotação automática a cada 5 s; pausa ao carregar botões; volta após 2 min sem interação).
 
-Lógica da estufa baseada no [Projeto-Estufa v1.3](https://github.com/candeiassantiago393-spec/Projeto-Estufa) (solo &lt; 35 % SECO, 35–75 % IDEAL, &gt; 75 % MOLHADO).
+Lógica da estufa baseada no [Projeto-Estufa v1.3](https://github.com/candeiassantiago393-spec/Projeto-Estufa) (solo &lt; 30 % SECO, 30–70 % IDEAL, &gt; 70 % MOLHADO).
 
 ---
 
