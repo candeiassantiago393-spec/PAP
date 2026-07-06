@@ -26,6 +26,12 @@
 #define GAS_LIMIT 60           // % acima do qual dispara o alarme de gas
 #define GAS_ALARM_BLINK_MS 250
 
+// Sensor de fogo/chama (KY-026 IR) — usa a saida analogica (intensidade),
+// simulada por potenciometro. O modulo real tem tambem saida digital (DO).
+#define PIN_FIRE 4
+#define FIRE_LIMIT 60          // % acima do qual dispara o alarme de fogo
+#define FIRE_ALARM_BLINK_MS 150
+
 #define SOIL_LIMIT_LOW 35
 #define SOIL_LIMIT_HIGH 75
 #define GREENHOUSE_INTERVAL_MS 1000
@@ -71,9 +77,10 @@ enum ScreenId {
   SCREEN_MOTION = 2,
   SCREEN_PLANTAS = 3,
   SCREEN_GAS = 4,
-  SCREEN_GRAPH = 5,
-  SCREEN_INSTAGRAM = 6,
-  SCREEN_COUNT = 7
+  SCREEN_FIRE = 5,
+  SCREEN_GRAPH = 6,
+  SCREEN_INSTAGRAM = 7,
+  SCREEN_COUNT = 8
 };
 
 ScreenId currentScreen = SCREEN_HOME;
@@ -91,6 +98,11 @@ int gasPercent = 0;
 bool gasAlert = false;
 unsigned long lastGasBlinkMs = 0;
 bool gasBlinkState = false;
+
+int firePercent = 0;
+bool fireAlert = false;
+unsigned long lastFireBlinkMs = 0;
+bool fireBlinkState = false;
 
 float envTemp = NAN;
 float envHum = NAN;
@@ -399,6 +411,38 @@ void drawGasScreen(int xOffset) {
   display.print(gasPercent >= GAS_LIMIT ? "FUGA!" : "OK");
 }
 
+void drawFireScreen(int xOffset) {
+  char line[28];
+  const int barX = 4 + xOffset;
+  const int barY = 22;
+  const int barW = 120;
+  const int barH = 10;
+  const int innerW = barW - 2;
+  const int markX = barX + 1 + (innerW * FIRE_LIMIT) / 100;
+
+  drawHeader("FOGO", xOffset);
+
+  display.setTextSize(1);
+  display.setCursor(4 + xOffset, 14);
+  display.print("Intensidade");
+
+  display.drawRect(barX, barY, barW, barH, SSD1306_WHITE);
+  int fillW = map(constrain(firePercent, 0, 100), 0, 100, 0, innerW);
+  if (fillW > 0) display.fillRect(barX + 1, barY + 1, fillW, barH - 2, SSD1306_WHITE);
+  display.drawFastVLine(markX, barY + barH, 3, SSD1306_WHITE);
+
+  snprintf(line, sizeof(line), "%d%%", firePercent);
+  drawTextRight(xOffset, 40, line);
+
+  snprintf(line, sizeof(line), "Limite %d%%", FIRE_LIMIT);
+  display.setCursor(4 + xOffset, 40);
+  display.print(line);
+
+  display.setCursor(4 + xOffset, 52);
+  display.print("Estado: ");
+  display.print(firePercent >= FIRE_LIMIT ? "FOGO!" : "OK");
+}
+
 void drawScreenDots(ScreenId active) {
   const int y = 3;
   const int spacing = 5;
@@ -461,6 +505,28 @@ void drawGasAlert() {
   display.display();
 }
 
+void drawFireAlert() {
+  char line[20];
+  display.clearDisplay();
+  display.drawRect(2, 2, SCREEN_WIDTH - 4, SCREEN_HEIGHT - 4, SSD1306_WHITE);
+
+  drawCenteredText(6, "!! PERIGO !!", 1);
+  display.drawLine(8, 16, SCREEN_WIDTH - 8, 16, SSD1306_WHITE);
+
+  // Mensagem principal a piscar para chamar a atencao
+  if (fireBlinkState) {
+    drawCenteredText(22, "FOGO!!", 2);
+    drawCenteredText(40, "INCENDIO", 2);
+  } else {
+    drawCenteredText(31, "FOGO / INCENDIO", 1);
+  }
+
+  snprintf(line, sizeof(line), "Nivel: %d%%", firePercent);
+  drawCenteredText(54, line, 1);
+
+  display.display();
+}
+
 void drawScreen(ScreenId screen, int xOffset) {
   switch (screen) {
     case SCREEN_HOME:
@@ -480,6 +546,9 @@ void drawScreen(ScreenId screen, int xOffset) {
       break;
     case SCREEN_GAS:
       drawGasScreen(xOffset);
+      break;
+    case SCREEN_FIRE:
+      drawFireScreen(xOffset);
       break;
     case SCREEN_INSTAGRAM:
       drawInstagramScreen(xOffset);
@@ -543,7 +612,9 @@ void updateTransition() {
 }
 
 void updateAlarmBuzzer() {
-  if (alertActive) {
+  if (fireAlert) {
+    setBuzzer(true);
+  } else if (alertActive) {
     setBuzzer(true);
   } else if (gasAlert) {
     setBuzzer(true);
@@ -553,6 +624,11 @@ void updateAlarmBuzzer() {
 }
 
 void renderUI() {
+  if (fireAlert) {
+    drawFireAlert();
+    return;
+  }
+
   if (alertActive) {
     drawIntruderAlert();
     return;
@@ -621,7 +697,7 @@ void updateGas() {
 }
 
 void updateGasOutputs() {
-  if (alertActive || !gasAlert) return;
+  if (fireAlert || alertActive || !gasAlert) return;
   setAllPlantOutputsLow();
   soilBuzzerOn = false;
   unsigned long now = millis();
@@ -629,6 +705,29 @@ void updateGasOutputs() {
     lastGasBlinkMs = now;
     gasBlinkState = !gasBlinkState;
     digitalWrite(PIN_LED_YELLOW, gasBlinkState ? HIGH : LOW);
+  }
+}
+
+int readFirePercent() {
+  int raw = analogRead(PIN_FIRE);
+  int pct = map(raw, 0, 4095, 0, 100);
+  return constrain(pct, 0, 100);
+}
+
+void updateFire() {
+  firePercent = readFirePercent();
+  fireAlert = (firePercent >= FIRE_LIMIT);
+}
+
+void updateFireOutputs() {
+  if (!fireAlert) return;
+  setAllPlantOutputsLow();
+  soilBuzzerOn = false;
+  unsigned long now = millis();
+  if (now - lastFireBlinkMs >= FIRE_ALARM_BLINK_MS) {
+    lastFireBlinkMs = now;
+    fireBlinkState = !fireBlinkState;
+    digitalWrite(PIN_LED_RED, fireBlinkState ? HIGH : LOW);
   }
 }
 
@@ -671,6 +770,7 @@ void updatePumpControl(unsigned long now) {
 }
 
 void updateAlarmLed() {
+  if (fireAlert) return;
   if (!alertActive) return;
 
   setAllPlantOutputsLow();
@@ -684,7 +784,7 @@ void updateAlarmLed() {
 }
 
 void updateGreenhouseOutputs() {
-  if (alertActive || gasAlert) return;
+  if (fireAlert || alertActive || gasAlert) return;
 
   setAllPlantOutputsLow();
   soilBuzzerOn = false;
@@ -753,6 +853,7 @@ void setup() {
   pinMode(PIN_BUZZER, OUTPUT);
   pinMode(PIN_SOIL, INPUT);
   pinMode(PIN_GAS, INPUT);
+  pinMode(PIN_FIRE, INPUT);
   pinMode(PIN_LED_RED, OUTPUT);
   pinMode(PIN_LED_YELLOW, OUTPUT);
   pinMode(PIN_LED_GREEN, OUTPUT);
@@ -809,9 +910,11 @@ void loop() {
   updateEnvironmentData();
   updateGreenhouse();
   updateGas();
+  updateFire();
   checkMotionAlert();
   updateAlarmLed();
   updateGasOutputs();
+  updateFireOutputs();
   updateAlarmBuzzer();
   renderUI();
 

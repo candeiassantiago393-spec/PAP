@@ -84,6 +84,14 @@
       "left": -124.8,
       "attrs": { "text": "GAS (pot)" }
     },
+    { "type": "wokwi-potentiometer", "id": "potFogo", "top": 355.2, "left": -86.4, "attrs": {} },
+    {
+      "type": "wokwi-text",
+      "id": "text9",
+      "top": 345.6,
+      "left": -124.8,
+      "attrs": { "text": "FOGO (pot)" }
+    },
     { "type": "wokwi-led", "id": "ledVerm", "top": 134.4, "left": 220.8, "attrs": { "color": "red" } },
     { "type": "wokwi-led", "id": "ledVerde", "top": 163.2, "left": 220.8, "attrs": { "color": "limegreen" } },
     { "type": "wokwi-led", "id": "ledAmar", "top": 192, "left": 220.8, "attrs": { "color": "yellow" } },
@@ -134,6 +142,10 @@
     [ "potGas:SIG", "esp:35", "purple", [ "v0" ] ],
     [ "potGas:VCC", "esp:3V3", "red", [ "v0" ] ],
     [ "potGas:GND", "esp:GND.2", "black", [ "v0" ] ],
+
+    [ "potFogo:SIG", "esp:4", "orange", [ "v0" ] ],
+    [ "potFogo:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "potFogo:GND", "esp:GND.2", "black", [ "v0" ] ],
 
     [ "esp:16", "rVerm:1", "red", [ "v0" ] ],
     [ "rVerm:2", "ledVerm:A", "red", [ "v0" ] ],
