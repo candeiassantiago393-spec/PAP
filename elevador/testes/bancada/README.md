@@ -21,6 +21,21 @@ Cada pasta tem `src/main.ino` + `platformio.ini` + `README.md`. Ficheiros antigo
 
 ## Upload rápido
 
+```powershell
+cd elevador/testes/bancada
+
+# Compilar tudo
+.\build_all.ps1
+
+# Enviar para Arduino (detecta COM automaticamente)
+.\upload.ps1 motor
+.\upload.ps1 integrado
+.\upload.ps1 pedidos_exteriores
+.\upload.ps1 real
+```
+
+Ou manualmente:
+
 ```bash
 cd elevador/testes/bancada/<pasta>
 pio run -t upload --upload-port COM8
