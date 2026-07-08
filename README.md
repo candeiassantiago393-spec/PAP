@@ -9,7 +9,7 @@
 
 ## Visão do projeto
 
-Protótipo de **prédio inteligente** em maquete: **elevador 4 pisos** (subsistema principal) + **lógicas extras** (cofre, painel ESP32, RFID, porta, etc.).
+Protótipo de **prédio inteligente** em maquete: **elevador 4 pisos** (subsistema principal) + **lógicas extras** (código prédio, painel ESP32, RFID, porta, etc.).
 
 Este repositório concentra código, simulações Wokwi, testes, documentação, esquemas e registo da maquete — ambiente de trabalho no **Cursor**.
 
@@ -28,18 +28,19 @@ Este repositório concentra código, simulações Wokwi, testes, documentação,
 
 ---
 
-## Fase atual (junho 2026)
+## Fase atual (julho 2026)
 
 | Etapa | Estado |
 |-------|--------|
 | Simulação Wokwi v01–v06 | Concluída |
 | Testes bancada | Concluída |
-| **Montagem maquete (E08)** | **Em curso** |
+| **Montagem maquete (E08)** | **Em curso** — botões novos a integrar e testar |
 | Hall + motor + L298N | Próximo |
-| Lógicas extras Wokwi | Cofre + painel ecra |
+| Lógicas extras | Programadas (virtual + componentes em casa); montagem na maquete esta semana |
+| Decoração maquete | **Sábado 11 jul** — papel autocolante, bonecos e miniaturas interiores |
 
 **Montado:** botões/LEDs exteriores, OLEDs, estrutura madeira + cabine.  
-**A seguir:** sensores Hall, motor, driver.
+**A seguir:** testes lógica elevador, sensores Hall, motor, montagem extras, acabamento visual.
 
 ---
 
@@ -68,7 +69,7 @@ PAP/
 |--------|-------|------|
 | Simular elevador v06 | `elevador/simulacao/legacy/wokwi/v06_.../wokwi/` | Wokwi: Start Simulator |
 | Firmware Mega (maquete) | `elevador/real/l298n_sh1106_hall/` | `pio run` |
-| Cofre PIN | `logicas_extras/cofre/simulacao/wokwi/` | Wokwi |
+| Código prédio PIN | `logicas_extras/codigo_predio/simulacao/wokwi/` | Wokwi |
 | Painel ESP32 ecra | `logicas_extras/paineis_controlo/real/caixa_ecra/` | `pio run` → simular em `.../simulacao/wokwi/` |
 
 Extensões: **PlatformIO IDE**, **Wokwi Simulator**.
@@ -95,4 +96,4 @@ Histórico de migração: [docs/CONTEXTO_PROJETO.md](docs/CONTEXTO_PROJETO.md#pl
 | **me** (Candeias Control App) | **Sim** | [interface/](interface/) |
 | Tasks da app | Snapshot apenas | [docs/TASKS_PAP_SYNC.md](docs/TASKS_PAP_SYNC.md) |
 
-> Um `git clone` deste repo traz elevador, cofre, painel ecra, app de organização (`interface/`) e documentação.
+> Um `git clone` deste repo traz elevador, código prédio, painel ecra, app de organização (`interface/`) e documentação.

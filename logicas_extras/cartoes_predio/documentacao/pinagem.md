@@ -17,7 +17,7 @@ Ligação típica do módulo **RC522** ao **ESP32** via SPI.
 
 | Função | Pino | Notas |
 |--------|------|-------|
-| Relé / servo | A definir | Módulo relé do kit Mauser ou servo partilhado com cofre |
+| Relé / servo | A definir | Módulo relé do kit Mauser ou servo partilhado com codigo_predio |
 
 > **Nota:** Confirmar pinagem na montagem real — evitar conflito com OLED/I2C da central de controlo se partilharem o mesmo ESP32.
 

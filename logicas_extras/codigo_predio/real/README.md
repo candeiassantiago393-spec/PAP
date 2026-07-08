@@ -1,6 +1,6 @@
 # Implementação real — Código Porta Prédio
 
-Montagem do teclado + servo na porta/cofre da maquete.
+Montagem do teclado + servo na porta do prédio na maquete.
 
 ## Estado
 

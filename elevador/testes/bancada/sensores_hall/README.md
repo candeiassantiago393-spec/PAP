@@ -12,7 +12,7 @@ Validação dos 4 sensores de piso **A3144** (Hall digital TO-92) antes da integ
 |----------|-----------|
 | [src/main.ino](src/main.ino) | Firmware com saída CSV 0–100 % para gráfico |
 | [plot_hall.py](plot_hall.py) | Gráfico em tempo real (4 cores) |
-| [sensorhall.ino](sensorhall.ino) | Teste simples só Serial Monitor (legado) |
+| [legacy/sensorhall.ino](legacy/sensorhall.ino) | Teste simples só Serial Monitor (legado) |
 
 ## Lógica
 
@@ -70,7 +70,7 @@ python plot_hall.py --list
 
 ## Teste simples (sem gráfico)
 
-Abrir `sensorhall.ino` no Arduino IDE ou copiar lógica — mensagens de texto no Serial a 9600 baud.
+Abrir [legacy/sensorhall.ino](legacy/sensorhall.ino) no Arduino IDE — mensagens de texto no Serial a 9600 baud.
 
 ## Etapa
 

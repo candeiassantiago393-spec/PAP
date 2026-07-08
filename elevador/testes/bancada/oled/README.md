@@ -4,17 +4,26 @@ Validação dos 4 displays OLED via multiplexador I2C.
 
 | Ficheiro | Descrição |
 |----------|-----------|
-| [oledbecnch.ino](oledbecnch.ino) | Teste de refresh nos 4 canais do TCA9548A |
+| [src/main.ino](src/main.ino) | Diagnóstico I2C — ping TCA + 4 canais + texto "OLED OK" |
+| [legacy/oledbecnch.ino](legacy/oledbecnch.ino) | Versão anterior (Arduino IDE) |
 
 ## Hardware
 
-- Arduino Mega
+- Arduino Mega — SDA D20, SCL D21
 - TCA9548A (endereço `0x70`)
-- 4× OLED SH1106 1,3" (canais 0–3)
+- 4× OLED SH1106 1,3" (canais 0–3, endereço `0x3C`)
+
+## Upload
+
+```bash
+cd elevador/testes/bancada/oled
+pio run -t upload --upload-port COM8
+pio device monitor   # 9600 baud
+```
 
 ## Nota
 
-Este teste ajudou a identificar interferência I2C com o motor — resolvida no firmware real com refresh optimizado.
+Este teste ajudou a identificar interferência I2C com o motor — resolvida no firmware real com refresh optimizado (ver E07).
 
 ## Etapa
 

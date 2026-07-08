@@ -41,7 +41,7 @@ Cada cartão tem um UID único. O sistema valida se o cartão tem permissão par
 
 | Módulo | Ligação |
 |--------|---------|
-| Código porta prédio | [../cofre/](../cofre/) — acesso alternativo por PIN |
+| Código porta prédio | [../codigo_predio/](../codigo_predio/) — acesso alternativo por PIN |
 | Central de controlo | [../central_de_controlo/](../central_de_controlo/) — alarmes e ambiente |
 
 ---

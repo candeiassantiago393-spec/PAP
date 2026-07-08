@@ -7,7 +7,7 @@ Projecto Wokwi em [wokwi/](wokwi/).
 A extensão Wokwi **não compila** `.ino` — é preciso gerar o firmware:
 
 ```bash
-cd logicas_extras/cofre/simulacao/wokwi
+cd logicas_extras/codigo_predio/simulacao/wokwi
 python -m platformio run
 ```
 

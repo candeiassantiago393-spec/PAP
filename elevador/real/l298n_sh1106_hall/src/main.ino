@@ -1,5 +1,6 @@
 /*
-  ELEVADOR 4 PISOS — L298N + PORTA + PEDIDOS INTERIORES + 4 OLED SH1106
+  ELEVADOR 4 PISOS — L298N + PEDIDOS INTERIORES + 4 OLED SH1106
+  Firmware real maquete (sem permissiva de porta — ver simulação v06 se precisares dessa lógica)
   ----------------------------------------------------------------------
   OTIMIZAÇÃO DOS DISPLAYS:
   - só atualiza quando há mudança
@@ -14,11 +15,6 @@
   Arduino Mega:
   - SDA = 20
   - SCL = 21
-
-  PORTA:
-  - sensor Hall em D22
-  - LOW = magnetizado = porta fechada = permissiva válida
-  - HIGH = porta aberta = movimento bloqueado
 */
 
 #include <Arduino.h>
@@ -66,9 +62,6 @@ Adafruit_SH1106G oled4(OLED_W, OLED_H, &Wire, -1);
 #define pinSensor2 11
 #define pinSensor3 12
 #define pinSensor4 13
-
-// --- Sensor Hall da porta ---
-#define pinPortaPermissiva 22
 
 // --- Botões interiores ---
 #define pinBotaoInt1 23
@@ -172,11 +165,6 @@ bool resetRawAnt = HIGH;
 bool resetEstavel = HIGH;
 unsigned long resetUltMudancaMs = 0;
 
-// ================= DEBOUNCE PORTA =================
-bool portaRawAnt = HIGH;
-bool portaEstavel = HIGH;
-unsigned long portaUltMudancaMs = 0;
-
 // ================= OLED OTIMIZADO =================
 const unsigned long OLED_INTERVALO_MS = 300;
 unsigned long lastOledMs = 0;
@@ -185,7 +173,6 @@ bool oledCicloAtivo = false;
 
 enum OledModoEstado {
   OLED_EST_NORMAL = 0,
-  OLED_EST_PORTA,
   OLED_EST_PARAGEM,
   OLED_EST_ESTAB,
   OLED_EST_ERRO_MOV,
@@ -221,8 +208,6 @@ void iniciaEstabilizacao();
 void iniciaParagemPisoPedido();
 
 bool resetFoiPremido();
-void debouncePortaPermissiva();
-bool portaPermissivaValida();
 void debounceBotoesERegistaPedidos();
 
 void limpaPedidosEDesligaLEDs();
@@ -292,7 +277,7 @@ void desligaBobinasMotor() {
 void paraMotor() {
   stepRate = 0;
   motorDir = 0;
-  desligaBobinasMotor();
+  aplicaFaseMotor(faseMotor);
 }
 
 void motorService() {
@@ -377,24 +362,6 @@ bool resetFoiPremido() {
   }
 
   return false;
-}
-
-void debouncePortaPermissiva() {
-  unsigned long agora = millis();
-  bool raw = digitalRead(pinPortaPermissiva);
-
-  if (raw != portaRawAnt) {
-    portaRawAnt = raw;
-    portaUltMudancaMs = agora;
-  }
-
-  if ((agora - portaUltMudancaMs) >= DEBOUNCE_MS) {
-    portaEstavel = raw;
-  }
-}
-
-bool portaPermissivaValida() {
-  return (portaEstavel == LOW);
 }
 
 void debounceBotoesERegistaPedidos() {
@@ -603,7 +570,6 @@ char dirSetaOLED(int acao) {
 
 uint8_t calculaModoEstadoOLED() {
   if (estadoSistema == NORMAL) {
-    if (!portaPermissivaValida()) return OLED_EST_PORTA;
     if (paragemPisoAtiva) return OLED_EST_PARAGEM;
     if (estabilizando) return OLED_EST_ESTAB;
     return OLED_EST_NORMAL;
@@ -706,8 +672,7 @@ void renderFila(Adafruit_SH1106G &d, int xStart, int yStart, const OledSnapshot 
 }
 
 void renderEstadoOLED(Adafruit_SH1106G &d, uint8_t modoEstado) {
-  if (modoEstado == OLED_EST_PORTA) d.print("PORTA");
-  else if (modoEstado == OLED_EST_PARAGEM) d.print("PARAGEM");
+  if (modoEstado == OLED_EST_PARAGEM) d.print("PARAGEM");
   else if (modoEstado == OLED_EST_ESTAB) d.print("ESTAB");
   else if (modoEstado == OLED_EST_ERRO_MOV) d.print("ERRO_MOV");
   else if (modoEstado == OLED_EST_ERRO_PAR) d.print("ERRO_PAR");
@@ -826,9 +791,6 @@ void setup() {
     pinMode(sensoresHall[i], INPUT_PULLUP);
   }
 
-  // sensor Hall da porta
-  pinMode(pinPortaPermissiva, INPUT_PULLUP);
-
   // buzzer
   pinMode(pinBuzzer, OUTPUT);
   noTone(pinBuzzer);
@@ -917,11 +879,6 @@ void setup() {
   resetEstavel = resetRawAnt;
   resetUltMudancaMs = agora;
 
-  // init porta
-  portaRawAnt = digitalRead(pinPortaPermissiva);
-  portaEstavel = portaRawAnt;
-  portaUltMudancaMs = agora;
-
   // snapshot inicial
   oledUltimoCompleto = criaSnapshotAtual();
   oledAlvo = oledUltimoCompleto;
@@ -943,8 +900,6 @@ void loop() {
 
   if (millis() - lastLogicMs < 10) return;
   lastLogicMs = millis();
-
-  debouncePortaPermissiva();
 
   if (resetFoiPremido()) {
     iniciaRearme();
@@ -971,21 +926,20 @@ void loop() {
   }
 
   if (paragemPisoAtiva) {
-    if ((millis() >= paragemPisoAteMs) && portaPermissivaValida()) {
+    if (millis() >= paragemPisoAteMs) {
       paragemPisoAtiva = false;
       selecionaDestinoEAcao();
     }
   }
 
   if (estadoSistema == NORMAL) {
-    if (!estabilizando && !paragemPisoAtiva && stepRate == 0 && portaPermissivaValida()) {
+    if (!estabilizando && !paragemPisoAtiva && stepRate == 0) {
       selecionaDestinoEAcao();
     }
 
     bool movimentoCmd =
       (!estabilizando &&
        !paragemPisoAtiva &&
-       portaPermissivaValida() &&
        (acaoElevador == 1 || acaoElevador == 2));
 
     if (movimentoCmd && !movimentoAtivo) {
@@ -1056,7 +1010,7 @@ void loop() {
       }
     }
 
-  } else if (estabilizando || paragemPisoAtiva || !portaPermissivaValida()) {
+  } else if (estabilizando || paragemPisoAtiva) {
     paraMotor();
 
   } else {

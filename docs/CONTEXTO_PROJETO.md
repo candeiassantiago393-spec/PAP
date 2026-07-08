@@ -44,7 +44,7 @@ Subsistemas planeados ou em versão inicial — **foco secundário nesta fase**:
 | Painéis de controlo | Interfaces de supervisão | [Wokwi ESP32](../../logicas_extras/paineis_controlo/simulacao/wokwi/) |
 | Meteorologia | Sensores ambientais gerais | No painel ecra (DHT22) |
 | Porta do prédio | Código de acesso à entrada | Inicial |
-| Cofre / código secreto | Acesso por PIN (teclado + servo) | [Simulação Wokwi](../../logicas_extras/cofre/) |
+| Código prédio | Acesso por PIN (teclado + servo) | [Simulação Wokwi](../../logicas_extras/codigo_predio/) |
 | RFID | Cartões por andar (porta prédio + apartamento) | Inicial |
 | Toldo automático | Estendal por deteção de chuva | Inicial |
 

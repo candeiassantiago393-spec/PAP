@@ -1,6 +1,6 @@
 # Estado Atual da Maquete
 
-> Última atualização: 2026-06-22 (registo utilizador + evidências)
+> Última atualização: 2026-07-06
 
 ## Fase do projeto
 
@@ -15,6 +15,7 @@
 [ ] Motor + tambor na maquete
 [ ] Testes sistema completo
 [ ] Acabamentos (ventoinha L298N, porta/interiores se aplicável)
+[ ] Decoração e visual moderno (papel autocolante, miniaturas interiores)
 ```
 
 ---
@@ -51,6 +52,19 @@
 4. Corrigir **botão/LED 3.º andar** (testes de continuidade)
 5. Ventoinha no L298N (quando comprada)
 6. Decidir se porta e botões interiores ficam físicos ou só na simulação Wokwi
+7. **Sábado 2026-07-11:** comprar decorações — papel autocolante para revestimento exterior (visual moderno do prédio), bonecos e miniaturas para o interior dos apartamentos
+
+---
+
+## Decoração e acabamento visual (planeado)
+
+| Item | Objetivo | Quando |
+|------|----------|--------|
+| Papel autocolante | Fachada e paredes com aspeto moderno (substituir madeira à vista) | Compra **sábado 11 jul** |
+| Bonecos / figuras miniatura | Interior dos pisos — dar vida aos apartamentos na maquete | Compra **sábado 11 jul** |
+| Outras decorações | Detalhes de ambiente (mobiliário em miniatura, plantas, etc.) | Compra **sábado 11 jul** |
+
+> Aplicar decoração **após** cablagem e testes eléctricos principais, para não danificar acabamentos.
 
 ---
 
@@ -93,4 +107,6 @@ Pinagem completa: [documentacao/pinagem.md](../documentacao/pinagem.md)
 - 2026-06-22: I/O exterior + OLEDs integrados na estrutura madeira.
 - Cablagem organizada com **braçadeiras** e **argolas** (tipo berço) parafusadas à maquete.
 - Motor + tambor: conjunto mecânico pronto; alimentação 12 V validada **na bancada**, não no shaft.
-- Lógicas extras (cofre, ecra, toldo, RFID): **após elevador funcional** na maquete.
+- Lógicas extras (codigo_predio, ecra, toldo, RFID): **após elevador funcional** na maquete.
+- 2026-07-06: Botões novos chegaram; testes de lógica do elevador em curso.
+- 2026-07-11 (sábado): compra planead de papel autocolante, bonecos e decorações miniatura para acabamento visual da maquete.

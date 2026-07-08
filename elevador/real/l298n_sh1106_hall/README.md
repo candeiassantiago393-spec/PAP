@@ -13,11 +13,13 @@ Versão de **implementação física** da maquete. Base lógica alinhada com Wok
 | Driver motor | A4988 (STEP/DIR) | L298N (4 fios bobinas) |
 | Display | SSD1306 | SH1106G |
 | Sensor piso | Interruptor | Hall (LOW = activo) |
-| Porta | Interruptor D22 | Hall D22 |
+| Porta | Interruptor D22 | **Não usada** neste firmware — lógica em [v06](../../simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/) |
 
 ## Otimização I2C / motor
 
 O código actualiza **um OLED de cada vez** e só quando há mudança — reduz interferência no barramento I2C que causava gaguejar do motor (ver E07).
+
+Ao parar, o motor **mantém a fase activa** (retenção de posição) — não desliga as bobinas. Teste isolado: [motor](../../testes/bancada/motor/).
 
 ## Compilar no Cursor (PlatformIO)
 
@@ -41,9 +43,10 @@ pio device monitor
 
 | Ficheiro | Uso |
 |----------|-----|
-| `src/main.ino` | Firmware PlatformIO (fonte principal) |
-| `elevador_real_....ino` | Cópia com nome legado |
-| `platformio.ini` | Configuração Mega + bibliotecas |
+| `src/main.ino` | **Única fonte** do firmware real |
+| `platformio.ini` | Configuração Mega + bibliotecas Adafruit |
+
+> Versão **com porta** (permissiva D22): usar simulação [Wokwi v06](../../simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/) — não duplicar aqui.
 
 ## Simulação de referência
 

@@ -70,6 +70,8 @@ PAP/
 | Botões + LEDs | [pedidos_exteriores/](../elevador/testes/bancada/pedidos_exteriores/) |
 | OLED | [oled/](../elevador/testes/bancada/oled/) |
 | Hall | [sensores_hall/](../elevador/testes/bancada/sensores_hall/) |
+| Motor L298N | [motor/](../elevador/testes/bancada/motor/) |
+| Integrado | [integrado/](../elevador/testes/bancada/integrado/) |
 
 ### Firmware real
 
@@ -83,9 +85,9 @@ cd elevador/real/l298n_sh1106_hall && pio run
 
 | Módulo | Estado | Simulação |
 |--------|--------|-----------|
-| [cofre/](../logicas_extras/cofre/) | **Wokwi OK** | [wokwi/](../logicas_extras/cofre/simulacao/wokwi/) |
+| [codigo_predio/](../logicas_extras/codigo_predio/) | **Wokwi OK** | [wokwi/](../logicas_extras/codigo_predio/simulacao/wokwi/) |
 | [paineis_controlo/](../logicas_extras/paineis_controlo/) | **Wokwi OK** | [wokwi/](../logicas_extras/paineis_controlo/simulacao/wokwi/) |
-| [porta_predio/](../logicas_extras/porta_predio/) | Inicial | Relacionado com [cofre](../logicas_extras/cofre/) |
+| [porta_predio/](../logicas_extras/porta_predio/) | Inicial | Relacionado com [codigo_predio](../logicas_extras/codigo_predio/) |
 | [meteorologia/](../logicas_extras/meteorologia/) | **DHT22 — ecrãs AMBIENTE/GRÁFICO** | [paineis_controlo](../logicas_extras/paineis_controlo/) |
 | [seguranca/](../logicas_extras/seguranca/) | PIR no painel ecra | [paineis_controlo](../logicas_extras/paineis_controlo/) |
 | [rfid/](../logicas_extras/rfid/) | Inicial | RC522 comprado |
@@ -141,7 +143,7 @@ Dados pessoais (`backups/*.json`, `data/cloud/*.json`) estão no `.gitignore` �
 | Simular elevador v06 | `elevador/.../v06_.../wokwi/` → Wokwi Start |
 | Firmware Mega real | `pio run` em `elevador/real/l298n_sh1106_hall/` |
 | Painel ESP32 | `pio run` em `logicas_extras/paineis_controlo/real/caixa_ecra/` |
-| Cofre Wokwi | `logicas_extras/cofre/simulacao/wokwi/` |
+| Código prédio Wokwi | `logicas_extras/codigo_predio/simulacao/wokwi/` |
 
 ---
 

@@ -8,11 +8,9 @@ Subsistemas do prédio inteligente **além do elevador**.
 |-------|--------|--------|
 | [cartoes_predio/](cartoes_predio/) | Cartões RFID — acesso por andar | Inicial |
 | [central_de_controlo/](central_de_controlo/) | Caixa ESP32 OLED (ambiente, PIR, estufa, gás, fogo, sismo) | **Simulação Wokwi** |
-| [cofre/](cofre/) | Código PIN porta prédio (teclado + servo) | **Simulação Wokwi** |
+| [codigo_predio/](codigo_predio/) | Código PIN porta prédio (teclado + servo) | **Simulação Wokwi** |
 | [estendal_inteligente/](estendal_inteligente/) | Estendal por sensor de chuva | **Simulação Wokwi** |
 | [legacy/](legacy/) | Versões antigas | — |
-
-> `cofre/` será renomeado para `codigo_porta_predio` quando possível.
 
 ## Estrutura por módulo
 
@@ -30,7 +28,7 @@ Subsistemas do prédio inteligente **além do elevador**.
 | Módulo | Comando |
 |--------|---------|
 | Central de controlo | `cd central_de_controlo && pio run` → Wokwi |
-| Código porta prédio | `cd cofre/simulacao/wokwi && pio run` → Wokwi |
+| Código porta prédio | `cd codigo_predio/simulacao/wokwi && pio run` → Wokwi |
 | Estendal | `cd estendal_inteligente/simulacao/wokwi && pio run` → Wokwi |
 
 ## Prioridade

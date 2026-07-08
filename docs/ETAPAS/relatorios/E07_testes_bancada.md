@@ -3,7 +3,7 @@
 | Campo | Valor |
 |-------|-------|
 | **Estado** | Concluída |
-| **Período** | Fevereiro – Março 2026 |
+| **Período** | Fevereiro – Julho 2026 |
 | **Código** | [elevador/testes/bancada](../../../elevador/testes/bancada/) |
 
 ## Objetivo
@@ -23,12 +23,14 @@ O projecto **encerrou temporariamente** nesta fase porque a **fonte de alimenta�
 
 ## O que foi feito
 
-| Teste | Ficheiro | Validação |
-|-------|----------|-----------|
-| Pedidos exteriores botão + LED | `pedidos_exteriores/Test_01_...` | Latch de pedido |
-| Botões exteriores only | `pedidos_exteriores/Test_02_...` | INPUT_PULLUP |
-| OLED bench | `oled/oledbecnch.ino` | SH1106 / SSD1306 |
-| Sensor Hall | `sensores_hall/sensorhall.ino` | Deteção de piso |
+| Teste | Pasta / ficheiro | Validação |
+|-------|------------------|-----------|
+| Pedidos exteriores botão + LED | `pedidos_exteriores/src/main.ino` | Latch de pedido |
+| Botões exteriores only | `pedidos_exteriores/legacy/Test_02_...` | INPUT_PULLUP |
+| OLED diagnóstico I2C | `oled/src/main.ino` | TCA9548A + 4× SH1106 |
+| Sensor Hall | `sensores_hall/src/main.ino` + `plot_hall.py` | Deteção de piso (115200) |
+| Motor L298N | `motor/src/main.ino` | Passos, direcção, retenção |
+| Integrado (sem motor) | `integrado/src/main.ino` | Hall + OLED + pedidos ext. |
 | Integração completa | _(bancada fev–mar 2026)_ | Todos os módulos em conjunto |
 
 ## Decisões técnicas

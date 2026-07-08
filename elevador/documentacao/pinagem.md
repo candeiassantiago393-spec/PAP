@@ -13,7 +13,7 @@
 | Sensor piso 2 | D11 | Interruptor | Hall **A3144** | LOW |
 | Sensor piso 3 | D12 | Interruptor | Hall **A3144** | LOW |
 | Sensor piso 4 | D13 | Interruptor | Hall **A3144** | LOW |
-| Permissiva porta | D22 | Interruptor | Hall **A3144** | **Sim: HIGH fechada** · **Real: LOW fechada** · _montagem por decidir_ |
+| Permissiva porta | D22 | Interruptor | Hall **A3144** (opcional) | Só na **simulação v06** — firmware real actual **não usa** D22 |
 | Botão interior P1–P4 | D23–D26 | Botão | Botão | LOW |
 
 Todas as entradas: `INPUT_PULLUP` (real) ou `INPUT` com pull-up externo/simulado (v06 porta).
@@ -43,6 +43,11 @@ Todas as entradas: `INPUT_PULLUP` (real) ou `INPUT` com pull-up externo/simulado
 | DIR / IN2 | D10 | A4988 DIR | L298N IN2 → **D33** |
 | — | D31 | — | L298N IN3 |
 | — | D32 | — | L298N IN4 |
+
+- Driver: **L298N** — motor NEMA 17 bipolar, 4 fios (OUT1/OUT2 + OUT3/OUT4)
+- Alimentação motor: **12 V** fonte separada; GND comum Mega + L298N
+- Paragem: firmware mantém **bobinas activas** (retenção de posição)
+- Teste isolado: [motor](../testes/bancada/motor/)
 
 ## I2C
 

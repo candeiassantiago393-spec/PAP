@@ -85,7 +85,7 @@ elevador/simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/
 
 | Módulo | Pasta | Compilar antes (ESP32) |
 |--------|-------|------------------------|
-| Cofre PIN | `logicas_extras/cofre/simulacao/wokwi/` | — (sketch directo) |
+| Código prédio PIN | `logicas_extras/codigo_predio/simulacao/wokwi/` | — (sketch directo) |
 | Painel ecra ESP32 | `logicas_extras/paineis_controlo/simulacao/wokwi/` | `pio run` em `.../real/caixa_ecra/` |
 
 ---
@@ -145,7 +145,7 @@ Duração flexível (até ~3 h se necessário). Blocos previstos:
 | 3 | **Interface de organização** | [geral-controll-app](https://github.com/candeiassantiago393-spec/geral-controll-app) — Simple Browser |
 | 4 | **Simulador virtual v06** + resumo v01–v05 | Wokwi `v06_.../wokwi/` |
 | 5 | **Funções físicas da maquete** | Vídeos + demo ao vivo (I/O montado; motor/Hall quando prontos) |
-| 6 | **Lógicas extras** | Após elevador na maquete; até lá Wokwi (cofre, ecra) se houver tempo |
+| 6 | **Lógicas extras** | Após elevador na maquete; até lá Wokwi (codigo_predio, ecra) se houver tempo |
 
 **Nota:** Porta e botões interiores podem ficar **só na simulação** se não estiverem montados a tempo.
 
@@ -167,7 +167,7 @@ Plano: experiência estilo Prezi para explorar componentes da maquete.
 
 - [ ] Workspace `PAP` abre sem erros
 - [ ] PDF do relatório em `docs/relatorios/`
-- [x] Wokwi lógicas extras: cofre + painel ecra em `logicas_extras/`
+- [x] Wokwi lógicas extras: codigo_predio + painel ecra em `logicas_extras/`
 - [ ] PlatformIO compila firmware v06 ou real
 - [ ] Interface local arranca com um comando
 - [x] Vídeo/fotos da maquete na pasta `maquete/imagens/`
@@ -180,7 +180,7 @@ Plano: experiência estilo Prezi para explorar componentes da maquete.
 1. **30 s** — README raiz: visão prédio inteligente
 2. **1 min** — Explorer: topologia `elevador/` vs `logicas_extras/`
 3. **2 min** — Percorrer legacy v01→v06 (código + README)
-4. **2 min** — Wokwi v06 elevador + cofre + painel ecra (extensão)
+4. **2 min** — Wokwi v06 elevador + codigo_predio + painel ecra (extensão)
 5. **1 min** — `DIFICULDADES.md` — problemas reais resolvidos
 6. **1 min** — Vídeo maquete + `ESTADO_ATUAL.md`
 7. **1 min** — Interface organização no Simple Browser

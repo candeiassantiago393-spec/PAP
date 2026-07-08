@@ -1,8 +1,6 @@
-# Código Porta Prédio — Teclado + Servo
+# Código Prédio — Teclado + Servo
 
-Subsistema de **acesso por código numérico** à porta do prédio (ou cofre na maquete): teclado matricial 3×4, servo, LEDs e buzzer.
-
-> Pasta actual: `cofre/` — rename para `codigo_porta_predio` pendente.
+Subsistema de **acesso por código numérico** à porta do prédio na maquete: teclado matricial 3×4, servo, LEDs e buzzer.
 
 | Campo | Valor |
 |-------|-------|
@@ -40,7 +38,7 @@ Detalhes: [documentacao/funcionamento.md](documentacao/funcionamento.md)
 ## Simular no Cursor
 
 ```bash
-cd logicas_extras/cofre/simulacao/wokwi
+cd logicas_extras/codigo_predio/simulacao/wokwi
 python -m platformio run
 ```
 
