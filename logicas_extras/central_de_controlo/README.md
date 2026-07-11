@@ -1,6 +1,6 @@
-# Central de Controlo — Caixa ESP32 (candeias.dev)
+# Central de Controlo — ESP32 ou Mega (candeias.dev)
 
-Projeto interativo para ESP32 com OLED, botões e vários subsistemas: ambiente, segurança, estufa, gás, fogo, sismo e portfolio. Desenvolvido para simulação no [Wokwi](https://wokwi.com) e montagem numa caixa física (estilo MagSafe).
+Projeto interativo com OLED, botões e vários subsistemas: ambiente, segurança, estufa, gás, fogo, sismo e portfolio. Compila para **ESP32** (caixa final / Wokwi) ou **Arduino Mega 2560** (bancada, padrão elevador).
 
 **Autor / marca:** [candeias.dev](https://candeias.dev) · Instagram [@candeias.dev](https://www.instagram.com/candeias.dev)
 
@@ -11,7 +11,7 @@ Projeto interativo para ESP32 com OLED, botões e vários subsistemas: ambiente,
 | Sistema | Descrição |
 |--------|-----------|
 | **HOME** | Marca `candeias.dev` / `studio` |
-| **AMBIENTE** | Temperatura e humidade do ar (DHT22) |
+| **AMBIENTE** | Temperatura e humidade do ar (KY-015 / DHT11) |
 | **MOVIMENTO** | PIR, cooldown 30 s, ecrã de alerta de intruso |
 | **PLANTAS** | Humidade do solo, barra 0–100 %, LEDs, bomba com limite de tempo |
 | **GRAFICO** | Sparkline das últimas leituras de temperatura |
@@ -28,7 +28,11 @@ Lógica da estufa baseada no [Projeto-Estufa v1.3](https://github.com/candeiassa
 
 ---
 
-## Hardware (GPIO ESP32)
+## Hardware
+
+Pinagem completa em [`documentacao/pinagem.md`](documentacao/pinagem.md) e [`pins.h`](pins.h).
+
+### ESP32 (caixa final)
 
 | Função | GPIO |
 |--------|------|
@@ -36,7 +40,7 @@ Lógica da estufa baseada no [Projeto-Estufa v1.3](https://github.com/candeiassa
 | Botão NEXT / OK | 32 / 33 |
 | PIR | 27 |
 | Buzzer | 25 |
-| DHT22 | 26 |
+| KY-015 (DHT11) | 26 |
 | Solo (potenciómetro / analógico) | 34 |
 | Gás (MQ-2/MQ-135 real; potenciómetro na simulação) | 35 |
 | Fogo/chama (KY-026 real, saída analógica; potenciómetro na simulação) | 4 |
@@ -44,13 +48,40 @@ Lógica da estufa baseada no [Projeto-Estufa v1.3](https://github.com/candeiassa
 | LED vermelho / amarelo / verde | 16 / 17 / 18 |
 | Bomba (LED na simulação) | 19 |
 
+### Arduino Mega 2560 (bancada)
+
+| Função | Pin |
+|--------|-----|
+| OLED SDA / SCL | 20 / 21 |
+| KY-015 (DHT11) | 2 |
+| Botão NEXT / OK | 3 / 4 |
+| PIR / Buzzer | 5 / 6 |
+| LED vermelho / amarelo / verde | 7 / 8 / 9 |
+| Bomba | 10 |
+| Solo / Gás / Fogo / Sismo | A0 / A1 / A2 / A3 |
+
+---
+
+## Compilar e upload
+
+```powershell
+cd logicas_extras/central_de_controlo
+
+# ESP32 (caixa / Wokwi)
+pio run -e esp32dev -t upload --upload-port COMx
+
+# Arduino Mega 2560 (bancada)
+pio run -e megaatmega2560 -t upload --upload-port COMx
+```
+
 ---
 
 ## Estrutura do projeto
 
 ```
 central_de_controlo/
-├── sketch.ino          # Sketch Arduino (Wokwi)
+├── pins.h              # Pinagem ESP32 vs Mega
+├── sketch.ino          # Sketch Arduino (Wokwi ESP32)
 ├── src/main.cpp        # Cópia PlatformIO (manter em sync)
 ├── diagram.json        # Circuito Wokwi
 ├── wokwi.toml          # Firmware compilado
@@ -115,7 +146,7 @@ Ideias para evolução do projeto (hardware, software e integração). Itens já
 |----|--------|----------------|
 | A1 | Qualidade do ar (CO₂ / VOC) | MH-Z19, SGP30 ou CCS811 |
 | A2 | Pressão atmosférica / “vai chover?” | BMP280 ou BME280 |
-| A3 | Índice de conforto (heat index) | Só software (DHT22) |
+| A3 | Índice de conforto (heat index) | Só software (KY-015) |
 | A4 | Alertas de limiar de temperatura | Só software |
 | A5 | Estação mini (chuva, vento, luz) | LDR, sensor chuva, anemómetro |
 

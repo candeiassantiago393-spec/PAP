@@ -59,7 +59,7 @@
       "id": "text3",
       "top": 76.8,
       "left": 86.4,
-      "attrs": { "text": "TEMPERATURA" }
+      "attrs": { "text": "KY-015" }
     },
     {
       "type": "wokwi-text",

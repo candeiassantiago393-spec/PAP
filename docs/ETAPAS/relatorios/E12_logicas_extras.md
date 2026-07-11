@@ -16,7 +16,7 @@ Subsistemas do prédio além do elevador: segurança, RFID, meteorologia, porta,
 | **Código prédio** | Simulação Wokwi — [logicas_extras/codigo_predio/](../../logicas_extras/codigo_predio/) |
 | Segurança | Inicial |
 | Painéis controlo | **Simulação Wokwi** — [paineis_controlo/caixa_ecra](../../logicas_extras/paineis_controlo/simulacao/wokwi/) |
-| Meteorologia | **Funcional no painel ecra** — [meteorologia](../../logicas_extras/meteorologia/) (DHT22, ecrãs AMBIENTE/GRÁFICO) |
+| Meteorologia | **Funcional no painel ecra** — [meteorologia](../../logicas_extras/meteorologia/) (KY-015, ecrãs AMBIENTE/GRÁFICO) |
 | Porta prédio + código | Inicial (relacionado com codigo_predio) |
 | RFID por andar | Inicial |
 | Toldo automático (chuva) | Inicial |
@@ -38,7 +38,7 @@ Relacionado com a porta do prédio (mesma lógica de acesso por código).
 
 ### Painel ESP32 — caixa ecra (Wokwi)
 
-- ESP32 + OLED SSD1306 — 6 ecrãs: HOME, ambiente (DHT22), movimento (PIR), plantas/estufa, gráfico temp, QR Instagram
+- ESP32 + OLED SSD1306 — 6 ecrãs: HOME, ambiente (KY-015), movimento (PIR), plantas/estufa, gráfico temp, QR Instagram
 - Modo feira (rotação auto), alertas Telegram opcionais
 - Export: `logicas_extras/paineis_controlo/simulacao/wokwi/`
 - PlatformIO: `logicas_extras/paineis_controlo/real/caixa_ecra/`

@@ -7,7 +7,7 @@ Caixa ESP32 com OLED 128×64, botões NEXT/OK e vários subsistemas. Marca: **ca
 | # | Ecrã | Conteúdo |
 |---|------|----------|
 | 0 | HOME | Logo candeias.dev / studio |
-| 1 | AMBIENTE | Temperatura e humidade (DHT22) |
+| 1 | AMBIENTE | Temperatura e humidade (KY-015 / DHT11) |
 | 2 | MOVIMENTO | Estado PIR, cooldown 30 s |
 | 3 | PLANTAS | Humidade solo, barra, bomba, LEDs |
 | 4 | GAS | Nível gás, barra, limite 50 % |
@@ -55,7 +55,7 @@ Quando um limiar é ultrapassado, o ecrã normal é substituído por um **alerta
 | Gás | Potenciómetro GPIO 35 | MQ-2 / MQ-135 (saída analógica) |
 | Fogo | Potenciómetro GPIO 4 | KY-026 (saída analógica AO) |
 | Sismo | Potenciómetro GPIO 13 | SW-420 vibração (digital → converter pulsos) |
-| Ambiente | DHT22 nativo Wokwi | DHT22 GPIO 26 |
+| Ambiente | KY-015 (DHT11) — Wokwi usa `wokwi-dht22` com firmware DHT11 | GPIO 26 |
 | Movimento | PIR nativo Wokwi | PIR GPIO 27 |
 
 ## Compilar e simular

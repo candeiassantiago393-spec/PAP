@@ -88,7 +88,7 @@ cd elevador/real/l298n_sh1106_hall && pio run
 | [codigo_predio/](../logicas_extras/codigo_predio/) | **Wokwi OK** | [wokwi/](../logicas_extras/codigo_predio/simulacao/wokwi/) |
 | [paineis_controlo/](../logicas_extras/paineis_controlo/) | **Wokwi OK** | [wokwi/](../logicas_extras/paineis_controlo/simulacao/wokwi/) |
 | [porta_predio/](../logicas_extras/porta_predio/) | Inicial | Relacionado com [codigo_predio](../logicas_extras/codigo_predio/) |
-| [meteorologia/](../logicas_extras/meteorologia/) | **DHT22 — ecrãs AMBIENTE/GRÁFICO** | [paineis_controlo](../logicas_extras/paineis_controlo/) |
+| [meteorologia/](../logicas_extras/meteorologia/) | **KY-015 — ecrãs AMBIENTE/GRÁFICO** | [paineis_controlo](../logicas_extras/paineis_controlo/) |
 | [seguranca/](../logicas_extras/seguranca/) | PIR no painel ecra | [paineis_controlo](../logicas_extras/paineis_controlo/) |
 | [rfid/](../logicas_extras/rfid/) | Inicial | RC522 comprado |
 | [toldo_automatico/](../logicas_extras/toldo_automatico/) | Planeado | — |

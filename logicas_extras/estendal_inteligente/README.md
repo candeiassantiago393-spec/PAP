@@ -64,7 +64,7 @@ Abrir `sketch.ino` → Wokwi Start → mudar **slide switch** (simula chuva).
 
 | Módulo | Ligação |
 |--------|---------|
-| Central de controlo | [../central_de_controlo/](../central_de_controlo/) — ambiente interior (DHT22) |
+| Central de controlo | [../central_de_controlo/](../central_de_controlo/) — ambiente interior (KY-015) |
 
 ## Navegação
 

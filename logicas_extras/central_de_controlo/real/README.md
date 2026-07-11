@@ -30,7 +30,7 @@ real/
 ## Por fazer
 
 - [ ] Montar ESP32 + OLED SSD1306 na caixa
-- [ ] Ligar DHT22, PIR, buzzer, 3× LED, bomba/relé
+- [ ] Ligar KY-015, PIR, buzzer, 3× LED, bomba/relé
 - [ ] Substituir potenciómetros da simulação por sensores reais:
   - [ ] Solo → sensor capacitivo
   - [ ] Gás → MQ-2 ou MQ-135

@@ -1,40 +1,29 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <DHTesp.h>
 #include <Wire.h>
+#include "pins.h"
+
+#if defined(ARDUINO_AVR_MEGA2560)
+#include <DHT.h>
+#define DHTTYPE DHT11
+#else
+#include <DHTesp.h>
+#endif
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 #define OLED_ADDR 0x3C
 #define OLED_RESET -1
 
-#define PIN_BTN_NEXT 32
-#define PIN_BTN_OK 33
-#define PIN_PIR 27
-#define PIN_BUZZER 25
-#define PIN_DHT 26
-
-// Estufa v1.3 (adaptado para ESP32)
-#define PIN_SOIL 34
-#define PIN_LED_RED 16
-#define PIN_LED_YELLOW 17
-#define PIN_LED_GREEN 18
-#define PIN_PUMP 19
-
-// Sensor de gas (MQ-2/MQ-135) — saida analogica simulada por potenciometro
-#define PIN_GAS 35
+// Estufa v1.3
 #define GAS_LIMIT 50           // % acima do qual dispara o alarme de gas
 #define GAS_ALARM_BLINK_MS 250
 
-// Sensor de fogo/chama (KY-026 IR) — usa a saida analogica (intensidade),
-// simulada por potenciometro. O modulo real tem tambem saida digital (DO).
-#define PIN_FIRE 4
+// Sensor de gas (MQ-2/MQ-135) — saida analogica simulada por potenciometro
 #define FIRE_LIMIT 50          // % acima do qual dispara o alarme de fogo
 #define FIRE_ALARM_BLINK_MS 150
 
-// Sensor de sismos/vibracao (SW-420) — intensidade sismica simulada por
-// potenciometro. O modulo real e digital (pulsos); converter em intensidade.
-#define PIN_QUAKE 13
+// Sensor de fogo/chama (KY-026 IR) — saida analogica (intensidade)
 #define QUAKE_LIMIT 50         // % acima do qual dispara o alarme de sismo
 #define QUAKE_ALARM_BLINK_MS 120
 
@@ -75,7 +64,11 @@ const uint8_t PROGMEM instagramQr[] = {
 };
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#if defined(ARDUINO_AVR_MEGA2560)
+DHT dhtSensor(PIN_DHT, DHTTYPE);
+#else
 DHTesp dhtSensor;
+#endif
 
 enum ScreenId {
   SCREEN_HOME = 0,
@@ -163,6 +156,25 @@ void setBuzzer(bool on) {
   }
 }
 
+// AVR (Mega): libc nao inclui %f no printf — dtostrf evita "?" no OLED
+void floatToStr(char *out, size_t outLen, float value, uint8_t decimals) {
+  if (outLen == 0) return;
+#if defined(ARDUINO_AVR_MEGA2560)
+  char tmp[16];
+  dtostrf(value, 0, decimals, tmp);
+  const char *p = tmp;
+  while (*p == ' ') p++;
+  strncpy(out, p, outLen - 1);
+  out[outLen - 1] = '\0';
+#else
+  if (decimals == 0) {
+    snprintf(out, outLen, "%.0f", (double)value);
+  } else {
+    snprintf(out, outLen, "%.1f", (double)value);
+  }
+#endif
+}
+
 void drawHeader(const char *title, int xOffset) {
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
@@ -187,17 +199,21 @@ void drawEnvScreen(int xOffset) {
 
   if (isnan(envTemp) || isnan(envHum)) {
     display.setCursor(4 + xOffset, 24);
-    display.print("A ler DHT22...");
+    display.print("A ler KY-015...");
     display.setCursor(4 + xOffset, 38);
     display.print("Aguarde 2s");
     return;
   }
 
-  snprintf(line, sizeof(line), "Temperatura: %.1f C", envTemp);
+  char tStr[8];
+  char hStr[8];
+  floatToStr(tStr, sizeof(tStr), envTemp, 1);
+  floatToStr(hStr, sizeof(hStr), envHum, 1);
+  snprintf(line, sizeof(line), "Temperatura: %s C", tStr);
   display.setCursor(4 + xOffset, 20);
   display.print(line);
 
-  snprintf(line, sizeof(line), "Humidade:    %.1f %%", envHum);
+  snprintf(line, sizeof(line), "Humidade:    %s %%", hStr);
   display.setCursor(4 + xOffset, 34);
   display.print(line);
 }
@@ -285,7 +301,9 @@ void drawGraphScreen(int xOffset) {
     display.setCursor(gx + 18, gy + 16);
     display.print("A recolher...");
     if (!isnan(envTemp)) {
-      snprintf(line, sizeof(line), "Atual: %.1f C", envTemp);
+      char tStr[8];
+      floatToStr(tStr, sizeof(tStr), envTemp, 1);
+      snprintf(line, sizeof(line), "Atual: %s C", tStr);
       display.setCursor(gx + 18, gy + 28);
       display.print(line);
     }
@@ -327,12 +345,18 @@ void drawGraphScreen(int xOffset) {
     prevPy = py;
   }
 
-  snprintf(line, sizeof(line), "Min:%.0f Max:%.0f", minT, maxT);
+  char minStr[8];
+  char maxStr[8];
+  floatToStr(minStr, sizeof(minStr), minT, 0);
+  floatToStr(maxStr, sizeof(maxStr), maxT, 0);
+  snprintf(line, sizeof(line), "Min:%s Max:%s", minStr, maxStr);
   display.setCursor(gx + 2, gy + SPARK_H + 2);
   display.print(line);
 
   if (!isnan(envTemp)) {
-    snprintf(line, sizeof(line), "%.1f C", envTemp);
+    char tStr[8];
+    floatToStr(tStr, sizeof(tStr), envTemp, 1);
+    snprintf(line, sizeof(line), "%s C", tStr);
     drawTextRight(xOffset, gy + SPARK_H + 2, line);
   }
 }
@@ -749,15 +773,24 @@ void updateEnvironmentData() {
   if (now - lastEnvTick < 2000) return;
   lastEnvTick = now;
 
+#if !defined(ARDUINO_AVR_MEGA2560)
   TempAndHumidity data = dhtSensor.getTempAndHumidity();
   envTemp = data.temperature;
   envHum = data.humidity;
+#else
+  for (uint8_t attempt = 0; attempt < 3; attempt++) {
+    envHum = dhtSensor.readHumidity();
+    envTemp = dhtSensor.readTemperature();
+    if (!isnan(envTemp) && !isnan(envHum)) break;
+    delay(250);
+  }
+#endif
   pushTempSample(envTemp);
 }
 
 int readSoilPercent() {
   int raw = analogRead(PIN_SOIL);
-  int pct = map(raw, 0, 4095, 0, 100);
+  int pct = map(raw, 0, ADC_MAX, 0, 100);
   return constrain(pct, 0, 100);
 }
 
@@ -765,7 +798,7 @@ void setAllPlantOutputsLow();
 
 int readGasPercent() {
   int raw = analogRead(PIN_GAS);
-  int pct = map(raw, 0, 4095, 0, 100);
+  int pct = map(raw, 0, ADC_MAX, 0, 100);
   return constrain(pct, 0, 100);
 }
 
@@ -788,7 +821,7 @@ void updateGasOutputs() {
 
 int readFirePercent() {
   int raw = analogRead(PIN_FIRE);
-  int pct = map(raw, 0, 4095, 0, 100);
+  int pct = map(raw, 0, ADC_MAX, 0, 100);
   return constrain(pct, 0, 100);
 }
 
@@ -811,7 +844,7 @@ void updateFireOutputs() {
 
 int readQuakePercent() {
   int raw = analogRead(PIN_QUAKE);
-  int pct = map(raw, 0, 4095, 0, 100);
+  int pct = map(raw, 0, ADC_MAX, 0, 100);
   return constrain(pct, 0, 100);
 }
 
@@ -963,13 +996,18 @@ void setup() {
 
   setBuzzer(false);
   setAllPlantOutputsLow();
-  dhtSensor.setup(PIN_DHT, DHTesp::DHT22);
+#if defined(ARDUINO_AVR_MEGA2560)
+  dhtSensor.begin();
+#else
+  dhtSensor.setup(PIN_DHT, DHTesp::DHT11);
+#endif
+  delay(2000);  // KY-015 (DHT11) estabiliza ~2s apos ligar
 
   for (uint8_t i = 0; i < SPARK_LEN; i++) {
     tempHistory[i] = NAN;
   }
 
-  Serial.begin(115200);
+  Serial.begin(SERIAL_BAUD);
 
   if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR)) {
     Serial.println("Falha OLED");

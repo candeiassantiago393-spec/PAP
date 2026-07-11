@@ -20,8 +20,17 @@ Subsistemas do prédio inteligente **além do elevador**.
 ├── documentacao/       → funcionamento.md, pinagem.md, fluxogramas.md
 ├── simulacao/          → wokwi/ quando aplicável
 ├── real/               → montagem física: pinagem.md, notas, fotos/, código PlatformIO
-└── testes/             → registo de testes (preencher na bancada)
+└── testes/             → registo + código de bancada (PlatformIO)
+    └── bancada/        → testes isolados por componente (quando aplicável)
 ```
+
+## Testes de bancada
+
+Cada módulo com hardware tem `testes/` com registo e, à medida que se monta, pastas `testes/bancada/<componente>/` (padrão igual ao elevador).
+
+| Módulo | Primeiro teste |
+|--------|----------------|
+| Central de controlo | [central_de_controlo/testes/bancada/dht_oled/](central_de_controlo/testes/bancada/dht_oled/) — KY-015 + OLED (Mega) |
 
 ## Compilar / simular
 
