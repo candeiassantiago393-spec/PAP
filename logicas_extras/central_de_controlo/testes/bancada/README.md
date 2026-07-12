@@ -23,7 +23,7 @@ pio device monitor
 1. `dht_oled` — I2C OLED + leituras KY-015 + ecrãs de demonstração (Mega)
 2. Firmware completo — `../../` Mega (`pio run -e megaatmega2560`) ou ESP32 (`esp32dev`)
 
-Ver [REGISTO_2026-07-11.md](REGISTO_2026-07-11.md) — dificuldades (COM7, botão 4 pinos, `?` no OLED) e processo do dia.
+Ver [REGISTO_2026-07-11.md](REGISTO_2026-07-11.md) (primeira validação) e [REGISTO_2026-07-12.md](REGISTO_2026-07-12.md) (soldadura, cablagem, gráficos temp/hum separados).
 
 ## Referência simulação
 

@@ -20,17 +20,19 @@ pio device monitor   # 9600 baud
 
 ## Estado
 
-**Em curso** — bancada Mega validada para T1 (OLED) e T2 (KY-015). Registo detalhado: [bancada/REGISTO_2026-07-11.md](bancada/REGISTO_2026-07-11.md).
+**Em curso** — KY-015 soldado e testado com gráficos separados (temp + hum). Registos: [bancada/REGISTO_2026-07-11.md](bancada/REGISTO_2026-07-11.md) · [bancada/REGISTO_2026-07-12.md](bancada/REGISTO_2026-07-12.md).
 
 ## Testes planeados
 
 | ID | Teste | Código | Resultado | Data |
 |----|-------|--------|-----------|------|
 | T1 | OLED + branding HOME | [bancada/dht_oled/](bancada/dht_oled/) | **OK** | 2026-07-11 |
-| T2 | KY-015 leitura temp/hum | [bancada/dht_oled/](bancada/dht_oled/) + firmware Mega | **OK** | 2026-07-11 |
+| T2 | KY-015 leitura temp/hum | [bancada/dht_oled/](bancada/dht_oled/) | **OK** | 2026-07-11 |
+| T2b | Gráfico temperatura (ecrã dedicado) | [bancada/dht_oled/](bancada/dht_oled/) | **OK** | 2026-07-12 |
+| T2c | Gráfico humidade + lógica histórico | [bancada/dht_oled/](bancada/dht_oled/) | **OK** | 2026-07-12 |
 | T3 | PIR dispara alerta intruso | — | — | — |
 | T4 | Sensor solo + bomba | — | — | — |
-| T5 | MQ gás dispara FUGA DE GAS | — | — | — |
+| T5 | MQ gás dispara FUGA DE GAS | — | **Próximo** | — |
 | T6 | KY-026 fogo dispara alarme | — | — | — |
 | T7 | SW-420 sismo dispara alarme | — | — | — |
 | T8 | Prioridade fogo &gt; sismo &gt; intruso &gt; gás | — | — | — |

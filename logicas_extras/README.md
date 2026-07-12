@@ -24,6 +24,13 @@ Subsistemas do prédio inteligente **além do elevador**.
     └── bancada/        → testes isolados por componente (quando aplicável)
 ```
 
+## Registo diário (bancada)
+
+| Data | Ficheiro |
+|------|----------|
+| 2026-07-11 | [central_de_controlo/testes/bancada/REGISTO_2026-07-11.md](central_de_controlo/testes/bancada/REGISTO_2026-07-11.md) |
+| 2026-07-12 | [central_de_controlo/testes/bancada/REGISTO_2026-07-12.md](central_de_controlo/testes/bancada/REGISTO_2026-07-12.md) |
+
 ## Testes de bancada
 
 Cada módulo com hardware tem `testes/` com registo e, à medida que se monta, pastas `testes/bancada/<componente>/` (padrão igual ao elevador).

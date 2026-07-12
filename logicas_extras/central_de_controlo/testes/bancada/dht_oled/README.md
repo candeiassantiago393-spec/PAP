@@ -71,4 +71,6 @@ pio device monitor
 
 ## Registo
 
+Registos diários: [REGISTO_2026-07-11.md](../REGISTO_2026-07-11.md) · [REGISTO_2026-07-12.md](../REGISTO_2026-07-12.md)
+
 Preencher resultado em [../../README.md](../../README.md) — testes T1 (OLED) e T2 (KY-015).

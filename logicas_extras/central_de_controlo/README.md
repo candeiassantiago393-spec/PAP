@@ -207,7 +207,7 @@ Ideias para evolução do projeto (hardware, software e integração). Itens já
 | U1 | Ícones por ecrã (termómetro, folha, escudo…) |
 | U2 | Animação “studio” a piscar no HOME |
 | U3 | Contador de deteções PIR no ecrã MOVIMENTO |
-| U4 | Gráfico de humidade do solo (como o de temp) |
+| U4 | Gráfico de humidade do ar (ecrã dedicado) — **OK bancada 12 jul** |
 | U5 | Easter egg (combinação de botões) |
 | U6 | Guardar limites 35 % / 75 % na EEPROM |
 
@@ -217,7 +217,8 @@ Ideias para evolução do projeto (hardware, software e integração). Itens já
 2. **S1** — reed na tampa/porta
 3. **A2** — BME280 (ambiente completo)
 4. **W2** — Telegram
-5. **U4** — gráfico do solo (zero hardware)
+5. **T5** — sensor de gás MQ na bancada (próximo passo, ver [REGISTO_2026-07-12.md](testes/bancada/REGISTO_2026-07-12.md))
+6. **U4** — gráfico humidade ar — concluído na bancada
 
 ### Não planeado (decisão anterior)
 
