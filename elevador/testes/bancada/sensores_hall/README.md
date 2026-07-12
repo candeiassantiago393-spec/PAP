@@ -24,10 +24,10 @@ Validação dos 4 sensores de piso **A3144** (Hall digital TO-92) antes da integ
 
 | Sensor | Pino |
 |--------|------|
-| Piso 1 | D8 |
-| Piso 2 | D11 |
-| Piso 3 | D12 |
-| Piso 4 | D13 |
+| Piso 1 | **D7** |
+| Piso 2 | **D8** |
+| Piso 3 | **D11** |
+| Piso 4 | **D12** |
 
 ## Gráfico Python (recomendado)
 
@@ -63,10 +63,10 @@ python plot_hall.py --list
 
 | Piso | Cor |
 |------|-----|
-| 1 (D8) | Vermelho |
-| 2 (D11) | Azul escuro |
-| 3 (D12) | Verde |
-| 4 (D13) | Amarelo |
+| 1 (D7) | Vermelho |
+| 2 (D8) | Azul escuro |
+| 3 (D11) | Verde |
+| 4 (D12) | Amarelo |
 
 ## Teste simples (sem gráfico)
 
@@ -82,4 +82,4 @@ Abrir [legacy/sensorhall.ino](legacy/sensorhall.ino) no Arduino IDE — mensagen
 |--|--|
 | Bancada | [../README.md](../README.md) |
 | Pinagem completa | [../../../documentacao/pinagem.md](../../../documentacao/pinagem.md) |
-| Firmware real | [../../../real/l298n_sh1106_hall/](../../../real/l298n_sh1106_hall/) |
+| Firmware real | [../../../real/codigo_final_3_0_maquete/](../../../real/codigo_final_3_0_maquete/) |

@@ -69,14 +69,15 @@ PAP/
 |-------|-------|
 | Botões + LEDs | [pedidos_exteriores/](../elevador/testes/bancada/pedidos_exteriores/) |
 | OLED | [oled/](../elevador/testes/bancada/oled/) |
-| Hall | [sensores_hall/](../elevador/testes/bancada/sensores_hall/) |
+| Hall | [sensores_hall/](../elevador/testes/bancada/sensores_hall/) · [hall_diag/](../elevador/testes/bancada/hall_diag/) |
 | Motor L298N | [motor/](../elevador/testes/bancada/motor/) |
-| Integrado | [integrado/](../elevador/testes/bancada/integrado/) |
+| Integração | [motor_hall_pedidos/](../elevador/testes/bancada/motor_hall_pedidos/) |
 
 ### Firmware real
 
 ```bash
-cd elevador/real/l298n_sh1106_hall && pio run
+cd elevador/real/codigo_final_3_0_maquete && pio run    # maquete activa
+cd elevador/real/codigo_final_3_0 && pio run            # completo (congelado)
 ```
 
 ---
@@ -141,7 +142,8 @@ Dados pessoais (`backups/*.json`, `data/cloud/*.json`) estão no `.gitignore` �
 | Tarefa | Comando / pasta |
 |--------|-----------------|
 | Simular elevador v06 | `elevador/.../v06_.../wokwi/` → Wokwi Start |
-| Firmware Mega real | `pio run` em `elevador/real/l298n_sh1106_hall/` |
+| Firmware Mega maquete | `pio run` em `elevador/real/codigo_final_3_0_maquete/` |
+| Firmware completo | `pio run` em `elevador/real/codigo_final_3_0/` |
 | Painel ESP32 | `pio run` em `logicas_extras/paineis_controlo/real/caixa_ecra/` |
 | Código prédio Wokwi | `logicas_extras/codigo_predio/simulacao/wokwi/` |
 

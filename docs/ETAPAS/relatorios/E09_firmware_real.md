@@ -3,7 +3,8 @@
 | Campo | Valor |
 |-------|-------|
 | **Estado** | Em desenvolvimento / testes na maquete |
-| **Código** | [elevador/real/l298n_sh1106_hall](../../../elevador/real/l298n_sh1106_hall/) |
+| **Código completo (congelado)** | [codigo_final_3_0](../../../elevador/real/codigo_final_3_0/) |
+| **Código maquete (activo)** | [codigo_final_3_0_maquete](../../../elevador/real/codigo_final_3_0_maquete/) |
 | **Compilar** | `pio run` nesta pasta (PlatformIO) |
 | **Referência sim** | [Wokwi v06](../../simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/) |
 
@@ -50,8 +51,8 @@ Firmware da **maquete física** — mesma lógica da v06, hardware real.
 
 ## Evidências
 
-- [Firmware](../../../elevador/real/l298n_sh1106_hall/src/main.ino)
-- [platformio.ini](../../../elevador/real/l298n_sh1106_hall/platformio.ini)
+- [Firmware completo](../../../elevador/real/codigo_final_3_0/src/main.ino)
+- [Firmware maquete](../../../elevador/real/codigo_final_3_0_maquete/src/main.ino)
 
 ## Compras relacionadas
 

@@ -1,24 +1,34 @@
-# Upload automatico — testes bancada elevador
-# Uso: .\upload.ps1 motor
-#      .\upload.ps1 integrado
-#      .\upload.ps1 pedidos_exteriores
+# Upload automatico — testes bancada + firmware real
+# Uso: .\upload.ps1 hall_sequencia
+#      .\upload.ps1 maquete
 
 param(
     [Parameter(Mandatory = $true, Position = 0)]
-    [ValidateSet("pedidos_exteriores", "oled", "sensores_hall", "motor", "integrado", "real")]
+    [ValidateSet(
+        "pedidos_exteriores", "oled", "sensores_hall",
+        "hall_porta", "hall_diag", "hall_sequencia", "reset_d10",
+        "motor", "motor_hall_pedidos",
+        "maquete", "completo"
+    )]
     [string]$Teste
 )
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$realRoot = Join-Path (Split-Path -Parent (Split-Path -Parent $root)) "real"
 
 $map = @{
     pedidos_exteriores = Join-Path $root "pedidos_exteriores"
     oled               = Join-Path $root "oled"
     sensores_hall      = Join-Path $root "sensores_hall"
+    hall_porta         = Join-Path $root "hall_porta"
+    hall_diag          = Join-Path $root "hall_diag"
+    hall_sequencia     = Join-Path $root "hall_sequencia"
+    reset_d10          = Join-Path $root "reset_d10"
     motor              = Join-Path $root "motor"
-    integrado          = Join-Path $root "integrado"
-    real               = (Join-Path (Split-Path -Parent (Split-Path -Parent $root)) "real\l298n_sh1106_hall")
+    motor_hall_pedidos = Join-Path $root "motor_hall_pedidos"
+    maquete            = Join-Path $realRoot "codigo_final_3_0_maquete"
+    completo           = Join-Path $realRoot "codigo_final_3_0"
 }
 
 $proj = $map[$Teste]

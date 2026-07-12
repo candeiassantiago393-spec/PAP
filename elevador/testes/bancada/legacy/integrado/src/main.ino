@@ -3,7 +3,7 @@
   Sem motor L298N, sem porta D22, sem botões interiores.
 
   Pinagem Mega:
-    Hall pisos: D8, D11, D12, D13  (LOW = íman detetado)
+    Hall pisos: D7, D8, D11, D12  (LOW = íman detetado)
     Botões ext: D2, D3, D4, D5
     LEDs ext:   A0, A1, A2, A3
     I2C:        SDA=20, SCL=21  (TCA9548A 0x70, OLED 0x3C nos canais 0-3)
@@ -31,10 +31,10 @@
 #define pinLedExt3 A2
 #define pinLedExt4 A3
 
-#define pinSensor1 8
-#define pinSensor2 11
-#define pinSensor3 12
-#define pinSensor4 13
+#define pinSensor1 7
+#define pinSensor2 8
+#define pinSensor3 11
+#define pinSensor4 12
 
 Adafruit_SH1106G oled1(OLED_W, OLED_H, &Wire, -1);
 Adafruit_SH1106G oled2(OLED_W, OLED_H, &Wire, -1);
@@ -198,7 +198,7 @@ void setup() {
 
   Serial.println();
   Serial.println("=== TESTE INTEGRADO BANCADA ===");
-  Serial.println("Hall D8,D11,D12,D13 | Botoes D2-D5 | LEDs A0-A3");
+  Serial.println("Hall D7,D8,D11,D12 | Botoes D2-D5 | LEDs A0-A3");
   Serial.println("OLEDs via TCA 0x70 canais 0-3 | Sem motor/porta");
   Serial.println("--------------------------------------");
 

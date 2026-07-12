@@ -37,17 +37,18 @@
 |------------|--------|
 | Motor NEMA 17 + tambor/polia + correia | Montagem mecânica feita; **testado na bancada** com 12 V; por integrar no shaft |
 | Driver L298N | Testado na bancada (cedido tutor Manuel Queiroz) |
-| Sensores Hall **A3144** ×4 | Por soldar/testar — íman na cabine **ainda não** |
+| Sensores Hall **A3144** ×4 | Montados — D7, D8, D11, D12 |
+| Firmware maquete | [codigo_final_3_0_maquete](../real/codigo_final_3_0_maquete/) |
 | Ventoinha 40 mm L298N | **Não comprada** |
 | Botões/LEDs interiores | **Por decidir** — possível só apresentação virtual |
-| Permissiva porta (D22) | **Por decidir** — possível só virtual |
+| Permissiva porta (D22) | **Chave deslizante** montada |
 
 ---
 
 ## Próximos passos (ordem)
 
-1. **Testar Hall A3144** em casa (`testes/bancada/sensores_hall/` + gráfico Python)
-2. Soldar/montar Hall nos 4 pisos + fixar **ímã na cabine**
+1. **Testar Hall A3144** — `testes/bancada/hall_diag/` e `hall_sequencia/`
+2. Confirmar cabos **OUT** dos sensores piso 1 e 2 (D7, D8)
 3. Integrar **motor + tambor** no topo/shaft da maquete
 4. Corrigir **botão/LED 3.º andar** (testes de continuidade)
 5. Ventoinha no L298N (quando comprada)
@@ -72,7 +73,7 @@
 
 | Nome na maquete | Piso lógico firmware |
 |-----------------|----------------------|
-| **Rés-do-chão / 1.º andar** | Piso 1 (D8 Hall, botão D2, etc.) |
+| **Rés-do-chão / 1.º andar** | Piso 1 (Hall **D7**, botão D2, etc.) |
 | 2.º–4.º andar | Pisos 2–4 |
 
 ---

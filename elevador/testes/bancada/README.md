@@ -1,64 +1,55 @@
 # Testes de Bancada
 
-Validação de hardware real antes da maquete. Ver [E07 — Testes de bancada](../../../docs/ETAPAS/relatorios/E07_testes_bancada.md).
+Validação de hardware real antes/durante montagem na maquete. Ver [E07 — Testes de bancada](../../../docs/ETAPAS/relatorios/E07_testes_bancada.md).
 
-## Metodologia
+## Testes activos
 
-1. Cada componente testado **isoladamente** (breadboard + Mega)
-2. Depois **integração parcial** (`integrado/`) e **firmware completo** (`../../real/l298n_sh1106_hall/`)
-
-## Estrutura (PlatformIO)
-
-Cada pasta tem `src/main.ino` + `platformio.ini` + `README.md`. Ficheiros antigos da Arduino IDE estão em `legacy/`.
-
-| Pasta | Teste | Serial |
-|-------|-------|--------|
-| [pedidos_exteriores/](pedidos_exteriores/) | Botões D2–D5 + LEDs A0–A3 (pedido latched) | 9600 |
-| [oled/](oled/) | Diagnóstico I2C — TCA9548A + 4× SH1106 | 9600 |
-| [sensores_hall/](sensores_hall/) | 4× Hall A3144 + gráfico Python | 115200 |
-| [motor/](motor/) | NEMA 17 via L298N — comandos por tecla | 9600 |
-| [integrado/](integrado/) | Hall + OLED + botões/LEDs ext. (sem motor/porta) | 9600 |
+| Pasta | O que testa | Serial |
+|-------|-------------|--------|
+| [pedidos_exteriores/](pedidos_exteriores/) | Botões D2–D5 + LEDs A0–A3 | 9600 |
+| [sensores_hall/](sensores_hall/) | 4× Hall + gráfico Python | **115200** |
+| [hall_diag/](hall_diag/) | Leitura bruta D7, D8, D11, D12 | 9600 |
+| [hall_sequencia/](hall_sequencia/) | Motor sobe/desce + detecção pisos | 9600 |
+| [hall_porta/](hall_porta/) | Chave porta D22 | 9600 |
+| [reset_d10/](reset_d10/) | Botão reset D10 | 9600 |
+| [motor/](motor/) | L298N isolado | 9600 |
+| [motor_hall_pedidos/](motor_hall_pedidos/) | Pedidos ext. + Hall + motor | 9600 |
+| [oled/](oled/) | TCA9548A + 4× SH1106 (versão completa) | 9600 |
 
 ## Upload rápido
 
 ```powershell
 cd elevador/testes/bancada
-
-# Compilar tudo
-.\build_all.ps1
-
-# Enviar para Arduino (detecta COM automaticamente)
-.\upload.ps1 motor
-.\upload.ps1 integrado
-.\upload.ps1 pedidos_exteriores
-.\upload.ps1 real
+.\upload.ps1 hall_diag
+.\upload.ps1 hall_sequencia
+.\upload.ps1 motor_hall_pedidos
+.\upload.ps1 maquete          # firmware maquete completo
 ```
 
-Ou manualmente:
-
-```bash
-cd elevador/testes/bancada/<pasta>
-pio run -t upload --upload-port COM8
-pio device monitor
-```
-
-## Ordem recomendada na bancada
+## Ordem recomendada
 
 1. `pedidos_exteriores` — botões e LEDs
-2. `oled` — barramento I2C e displays
-3. `sensores_hall` — sensores de piso (+ `plot_hall.py`)
-4. `motor` — L298N e retenção de posição
-5. `integrado` — tudo excepto motor
-6. Firmware real — `elevador/real/l298n_sh1106_hall/`
+2. `hall_diag` — confirmar D7/D8/D11/D12
+3. `hall_sequencia` — motor + sensores
+4. `hall_porta` + `reset_d10` — porta e reset
+5. `motor_hall_pedidos` — integração pedidos + movimento
+6. **`maquete`** — [codigo_final_3_0_maquete](../../real/codigo_final_3_0_maquete/)
 
-## Imagens
+## Pinagem maquete
 
-| Ficheiro | Descrição |
-|----------|-----------|
-| [bancada_integracao_fev_mar_2026.png](imagens/bancada_integracao_fev_mar_2026.png) | Integração completa — fev/mar 2026 |
+| Piso | Hall |
+|------|------|
+| 1 | D7 |
+| 2 | D8 |
+| 3 | D11 |
+| 4 | D12 |
+
+Porta: D22 · Reset: D10 · Ver [pinagem.md](../../documentacao/pinagem.md)
+
+## Legacy
+
+Testes obsoletos: [legacy/](legacy/)
 
 ## Período
 
-**Fevereiro – Julho 2026**
-
-**Nota:** testes com carga real atrasados pela entrega da fonte de alimentação — ver E07.
+Fevereiro – Julho 2026

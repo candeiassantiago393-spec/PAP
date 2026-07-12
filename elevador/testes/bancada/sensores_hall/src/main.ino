@@ -1,12 +1,12 @@
 /*
   PAP — Teste Hall ×4 com saída para gráfico Python
-  Pinos: D8, D11, D12, D13  |  LOW = íman detetado
+  Pinos: D7, D8, D11, D12  |  LOW = íman detetado
   Serial 115200: linhas "p1,p2,p3,p4" (0–100) a cada 50 ms
 */
 
 #include <Arduino.h>
 
-const int PINS[4] = {8, 11, 12, 13};
+const int PINS[4] = {7, 8, 11, 12};
 const int SAMPLES_BURST = 12;
 const float ALPHA_UP = 0.45f;
 const float ALPHA_DOWN = 0.10f;

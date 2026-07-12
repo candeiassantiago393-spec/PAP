@@ -55,13 +55,13 @@ Adafruit_SH1106G oled4(OLED_W, OLED_H, &Wire, -1);
 #define pinBuzzer 6
 
 // --- Reset ---
-#define pinReset 7
+#define pinReset 10
 
 // --- Sensores Hall dos pisos (ativos a LOW) ---
-#define pinSensor1 8
-#define pinSensor2 11
-#define pinSensor3 12
-#define pinSensor4 13
+#define pinSensor1 7
+#define pinSensor2 8
+#define pinSensor3 11
+#define pinSensor4 12
 
 // --- Botões interiores ---
 #define pinBotaoInt1 23

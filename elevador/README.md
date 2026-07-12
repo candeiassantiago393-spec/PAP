@@ -7,22 +7,23 @@ Elevador didático de 4 pisos. Arduino Mega, fila de pedidos, OLEDs, segurança 
 | Pasta | Conteúdo |
 |-------|----------|
 | [simulacao/](simulacao/) | Versões Tinkercad e Wokwi (legacy + exports) |
-| [real/](real/) | Firmware e docs da implementação física (L298N, Hall, SH1106) |
-| [testes/](testes/) | Bancada e testes virtuais isolados |
-| [maquete/](maquete/) | Montagem física, fotos, vídeos, estado atual |
-| [documentacao/](documentacao/) | Notas técnicas — [pinagem](documentacao/pinagem.md), [estados](documentacao/estados_sistema.md) |
-| [hardware/](hardware/) | [Esquema sim v06](hardware/esquemas/elevador_v06_forca_comando.svg) · [Esquema real](hardware/esquemas/elevador_real_forca_comando.svg) · [BOM](hardware/bom/componentes.md) |
+| [real/](real/) | Firmware maquete — [completo](real/codigo_final_3_0/) + [maquete](real/codigo_final_3_0_maquete/) |
+| [testes/](testes/) | Bancada — validação isolada de hardware |
+| [maquete/](maquete/) | Montagem física, fotos, estado actual |
+| [documentacao/](documentacao/) | [pinagem](documentacao/pinagem.md) · [estados](documentacao/estados_sistema.md) |
+| [hardware/](hardware/) | Esquemas · BOM |
 
-## Versão de referência
+## Firmware de referência
 
 | Ambiente | Pasta |
 |----------|-------|
 | Simulação | [simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/](simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/) |
-| Real | [real/l298n_sh1106_hall/](real/l298n_sh1106_hall/) |
+| Maquete (activo) | [real/codigo_final_3_0_maquete/](real/codigo_final_3_0_maquete/) |
+| Completo (congelado) | [real/codigo_final_3_0/](real/codigo_final_3_0/) |
 
-## Fase atual
+## Fase actual
 
-Montagem na maquete — ver [maquete/ESTADO_ATUAL.md](maquete/ESTADO_ATUAL.md).
+Montagem na maquete — [maquete/ESTADO_ATUAL.md](maquete/ESTADO_ATUAL.md)
 
 ## Navegação
 
@@ -31,5 +32,3 @@ Montagem na maquete — ver [maquete/ESTADO_ATUAL.md](maquete/ESTADO_ATUAL.md).
 | Índice repo | [../docs/INDICE_REPOSITORIO.md](../docs/INDICE_REPOSITORIO.md) |
 | Contexto | [../docs/CONTEXTO_PROJETO.md](../docs/CONTEXTO_PROJETO.md) |
 | Etapas | [../docs/ETAPAS/README.md](../docs/ETAPAS/README.md) |
-| Lógicas extras | [../logicas_extras/README.md](../logicas_extras/README.md) |
-| Raiz PAP | [../README.md](../README.md) |

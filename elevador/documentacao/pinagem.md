@@ -5,16 +5,16 @@
 
 ## Entradas digitais
 
-| Função | Pino | Sim (v06) | Real (maquete) | Lógica activa |
-|--------|------|-----------|----------------|---------------|
-| Botão exterior P1–P4 | D2–D5 | Botão | Botão | LOW |
-| Reset / rearme | D7 | Botão | Botão | LOW |
-| Sensor piso 1 | D8 | Interruptor | Hall **A3144** | LOW |
-| Sensor piso 2 | D11 | Interruptor | Hall **A3144** | LOW |
-| Sensor piso 3 | D12 | Interruptor | Hall **A3144** | LOW |
-| Sensor piso 4 | D13 | Interruptor | Hall **A3144** | LOW |
-| Permissiva porta | D22 | Interruptor | Hall **A3144** (opcional) | Só na **simulação v06** — firmware real actual **não usa** D22 |
-| Botão interior P1–P4 | D23–D26 | Botão | Botão | LOW |
+| Função | Sim (v06) | Maquete | Lógica activa |
+|--------|-----------|---------|---------------|
+| Botão exterior P1–P4 | D2–D5 | D2–D5 | LOW |
+| Reset / rearme | D7 | **D10** | LOW |
+| Sensor Hall piso 1 | D8 | **D7** | LOW |
+| Sensor Hall piso 2 | D11 | **D8** | LOW |
+| Sensor Hall piso 3 | D12 | **D11** | LOW |
+| Sensor Hall piso 4 | D13 | **D12** | LOW |
+| Permissiva porta | D22 | **D22** (chave deslizante) | LOW = fechada |
+| Botão interior P1–P4 | D23–D26 | D23–D26 | LOW |
 
 Todas as entradas: `INPUT_PULLUP` (real) ou `INPUT` com pull-up externo/simulado (v06 porta).
 
@@ -26,6 +26,15 @@ Todas as entradas: `INPUT_PULLUP` (real) ou `INPUT` com pull-up externo/simulado
 | Lógica | **LOW** = íman presente (cabine no piso) |
 | Alimentação | 5 V + GND; saída → GPIO com pull-up interno |
 | Íman | Na **cabine** — montagem pendente |
+
+### Porta — chave deslizante D22
+
+| Campo | Valor |
+|-------|-------|
+| Tipo | Chave deslizante (contacto seco) |
+| Pino | **D22** |
+| Lógica | **LOW** = porta **fechada** (permissiva OK) · **HIGH** = aberta |
+| Cablagem | Um terminal → **GND**; outro → **D22** (`INPUT_PULLUP`) — fechada liga D22 a GND |
 
 ## Saídas digitais
 
@@ -64,4 +73,5 @@ Todas as entradas: `INPUT_PULLUP` (real) ou `INPUT` com pull-up externo/simulado
 | Variante | Ficheiro |
 |----------|----------|
 | Simulação v06 | `elevador/simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/sketch.ino` |
-| Maquete real | `elevador/real/l298n_sh1106_hall/src/main.ino` |
+| Maquete (activo) | `elevador/real/codigo_final_3_0_maquete/src/main.ino` |
+| Completo (congelado) | `elevador/real/codigo_final_3_0/src/main.ino` |

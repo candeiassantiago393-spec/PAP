@@ -29,10 +29,10 @@ MAX_POINTS = int(HISTORY_SEC * 1000 / INTERVAL_MS) + 10
 MAG_THRESHOLD = 55
 
 SENSORS = [
-    {"name": "Piso 1", "pin": "D8", "color": "#E63946"},
-    {"name": "Piso 2", "pin": "D11", "color": "#1D3557"},
-    {"name": "Piso 3", "pin": "D12", "color": "#2A9D8F"},
-    {"name": "Piso 4", "pin": "D13", "color": "#E9C46A"},
+    {"name": "Piso 1", "pin": "D7", "color": "#E63946"},
+    {"name": "Piso 2", "pin": "D8", "color": "#1D3557"},
+    {"name": "Piso 3", "pin": "D11", "color": "#2A9D8F"},
+    {"name": "Piso 4", "pin": "D12", "color": "#E9C46A"},
 ]
 
 LINE_RE = re.compile(r"^(\d{1,3}),(\d{1,3}),(\d{1,3}),(\d{1,3})\s*$")

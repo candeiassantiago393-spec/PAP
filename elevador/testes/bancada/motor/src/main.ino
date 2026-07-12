@@ -1,6 +1,6 @@
 /*
   Teste bancada — motor passo bipolar NEMA 17 via L298N
-  Mesma pinagem e sequencia do firmware real (elevador/real/l298n_sh1106_hall).
+  Mesma pinagem e sequencia do firmware real (elevador/real/codigo_final_3_0/).
 
   Ligações L298N <-> Mega:
     IN1 -> D9

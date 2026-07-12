@@ -9,7 +9,7 @@
 #include <Arduino.h>
 
 // Pinos dos sensores conforme o teu projeto
-const int pinosSensores[4] = {8, 11, 12, 13};
+const int pinosSensores[4] = {7, 8, 11, 12};
 
 unsigned long tempoAnterior = 0;
 const unsigned long intervaloPrint = 500; // Atualiza o Serial Monitor a cada 500ms

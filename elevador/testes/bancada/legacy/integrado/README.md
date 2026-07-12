@@ -6,7 +6,7 @@ Combina sensores Hall, 4 OLEDs via TCA9548A e botões/LEDs exteriores. **Sem mot
 
 | Função | Pinos |
 |--------|-------|
-| Hall pisos 1–4 | D8, D11, D12, D13 (LOW = íman) |
+| Hall pisos 1–4 | D7, D8, D11, D12 (LOW = íman) |
 | Botões exteriores | D2–D5 |
 | LEDs exteriores | A0–A3 |
 | I2C (TCA + OLED) | SDA D20, SCL D21 |

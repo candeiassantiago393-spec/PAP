@@ -1,30 +1,28 @@
 # Testes — Elevador
 
-Validação isolada de hardware e lógica antes da integração.
+Validação isolada de hardware antes da integração na maquete.
 
-## Bancada (`bancada/`)
+## Bancada ([bancada/](bancada/))
 
-Testes físicos com Arduino Mega e pinagem final.
+| Pasta | Componente |
+|-------|------------|
+| pedidos_exteriores | Botões + LEDs exteriores |
+| sensores_hall | Hall A3144 + gráfico Python |
+| hall_diag / hall_sequencia | Diagnóstico e sequência motor+Hall |
+| hall_porta / reset_d10 | Porta D22 e reset D10 |
+| motor_hall_pedidos | Integração pedidos + motor |
+| oled | Displays (versão completa) |
 
-| Pasta | Componente testado |
-|-------|-------------------|
-| [pedidos_exteriores/](bancada/pedidos_exteriores/) | Botões + LEDs exteriores |
-| [oled/](bancada/oled/) | Displays SH1106 / TCA9548A |
-| [sensores_hall/](bancada/sensores_hall/) | Sensores de piso Hall |
+Upload: `cd elevador/testes/bancada && .\upload.ps1 <nome>`
 
-## Virtual (`virtual/`)
+## Virtual ([virtual/](virtual/))
 
-Testes de lógica sem hardware (futuro).
-
-## Migração
-
-Origem: `Elevador-Projeto-Final-Curso-PAP-/Test Bench PAP/`
+Reservado para testes sem hardware.
 
 ## Navegação
 
 | | |
 |--|--|
 | Elevador | [../README.md](../README.md) |
-| Maquete | [../maquete/ESTADO_ATUAL.md](../maquete/ESTADO_ATUAL.md) |
-| Etapa E07 | [../../docs/ETAPAS/relatorios/E07_testes_bancada.md](../../docs/ETAPAS/relatorios/E07_testes_bancada.md) |
-| Índice repo | [../../docs/INDICE_REPOSITORIO.md](../../docs/INDICE_REPOSITORIO.md) |
+| Firmware maquete | [../real/codigo_final_3_0_maquete/](../real/codigo_final_3_0_maquete/) |
+| E07 | [../../docs/ETAPAS/relatorios/E07_testes_bancada.md](../../docs/ETAPAS/relatorios/E07_testes_bancada.md) |

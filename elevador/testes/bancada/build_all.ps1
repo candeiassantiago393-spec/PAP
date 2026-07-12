@@ -1,15 +1,20 @@
-# Compila todos os testes de bancada + firmware real
+# Compila testes bancada activos + firmware real
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$real = Join-Path (Split-Path -Parent (Split-Path -Parent $root)) "real\l298n_sh1106_hall"
+$realRoot = Join-Path (Split-Path -Parent (Split-Path -Parent $root)) "real"
 
 $projects = @(
     "pedidos_exteriores",
     "oled",
     "sensores_hall",
+    "hall_porta",
+    "hall_diag",
+    "hall_sequencia",
+    "reset_d10",
     "motor",
-    "integrado",
-    $real
+    "motor_hall_pedidos",
+    (Join-Path $realRoot "codigo_final_3_0_maquete"),
+    (Join-Path $realRoot "codigo_final_3_0")
 )
 
 $fail = 0

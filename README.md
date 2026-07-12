@@ -68,7 +68,8 @@ PAP/
 | Tarefa | Pasta | Ação |
 |--------|-------|------|
 | Simular elevador v06 | `elevador/simulacao/legacy/wokwi/v06_.../wokwi/` | Wokwi: Start Simulator |
-| Firmware Mega (maquete) | `elevador/real/l298n_sh1106_hall/` | `pio run` |
+| Firmware Mega (maquete) | `elevador/real/codigo_final_3_0_maquete/` | `pio run` |
+| Firmware completo (congelado) | `elevador/real/codigo_final_3_0/` | `pio run` |
 | Código prédio PIN | `logicas_extras/codigo_predio/simulacao/wokwi/` | Wokwi |
 | Painel ESP32 ecra | `logicas_extras/paineis_controlo/real/caixa_ecra/` | `pio run` → simular em `.../simulacao/wokwi/` |
 
