@@ -1,4 +1,4 @@
-﻿# Lógicas Extras — Prédio Inteligente
+# Lógicas Extras — Prédio Inteligente
 
 Subsistemas do prédio inteligente **além do elevador**.
 
@@ -37,7 +37,7 @@ Cada módulo com hardware tem `testes/` com registo e, à medida que se monta, p
 
 | Módulo | Primeiro teste |
 |--------|----------------|
-| Central de controlo | [central_de_controlo/testes/bancada/dht_oled/](central_de_controlo/testes/bancada/dht_oled/) — KY-015 + OLED (Mega) |
+| Central de controlo | [central_de_controlo/testes/bancada/dht_oled/](central_de_controlo/testes/bancada/dht_oled/) — KY-015 · [fire_oled/](central_de_controlo/testes/bancada/fire_oled/) — KY-026 |
 
 ## Compilar / simular
 

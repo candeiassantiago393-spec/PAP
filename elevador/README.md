@@ -7,7 +7,7 @@ Elevador didático de 4 pisos. Arduino Mega, fila de pedidos, OLEDs, segurança 
 | Pasta | Conteúdo |
 |-------|----------|
 | [simulacao/](simulacao/) | Versões Tinkercad e Wokwi (legacy + exports) |
-| [real/](real/) | Firmware maquete — [completo](real/codigo_final_3_0/) + [maquete](real/codigo_final_3_0_maquete/) |
+| [real/](real/) | Firmware maquete — [completo](real/codigo_final_3_0/) + [maquete/ext_porta](real/codigo_final_3_0_maquete/ext_porta/) |
 | [testes/](testes/) | Bancada — validação isolada de hardware |
 | [maquete/](maquete/) | Montagem física, fotos, estado actual |
 | [documentacao/](documentacao/) | [pinagem](documentacao/pinagem.md) · [estados](documentacao/estados_sistema.md) |
@@ -18,7 +18,7 @@ Elevador didático de 4 pisos. Arduino Mega, fila de pedidos, OLEDs, segurança 
 | Ambiente | Pasta |
 |----------|-------|
 | Simulação | [simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/](simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/) |
-| Maquete (activo) | [real/codigo_final_3_0_maquete/](real/codigo_final_3_0_maquete/) |
+| Maquete (activo) | [real/codigo_final_3_0_maquete/ext_porta/](real/codigo_final_3_0_maquete/ext_porta/) |
 | Completo (congelado) | [real/codigo_final_3_0/](real/codigo_final_3_0/) |
 
 ## Fase actual

@@ -23,5 +23,5 @@ NORMAL ──pedido/piso──► movimento ──► ESTAB ──► PORTA (10 
 ## Referência de código
 
 - Simulação: `simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/sketch.ino`
-- Maquete: `real/codigo_final_3_0_maquete/src/main.ino`
+- Maquete: `real/codigo_final_3_0_maquete/ext_porta/src/main.ino`
 - Completo: `real/codigo_final_3_0/src/main.ino`

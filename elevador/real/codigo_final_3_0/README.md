@@ -30,7 +30,7 @@ pio device monitor -b 115200
 
 Para a maquete **sem OLED**, **sem botões interiores**, **com porta D22**:
 
-→ [codigo_final_3_0_maquete/](../codigo_final_3_0_maquete/)
+→ [codigo_final_3_0_maquete/ext_porta/](../codigo_final_3_0_maquete/ext_porta/)
 
 ## Nota sobre origem
 

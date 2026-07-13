@@ -34,9 +34,9 @@ void setup() {
   ultMudancaMs = millis();
 
   Serial.println();
-  Serial.println(F("=== TESTE HALL PORTA D22 ==="));
-  Serial.println(F("LOW  = PORTA FECHADA"));
-  Serial.println(F("HIGH = PORTA ABERTA"));
+  Serial.println(F("=== TESTE CHAVE PORTA D22 ==="));
+  Serial.println(F("LOW  = PORTA FECHADA (chave ON / D22->GND)"));
+  Serial.println(F("HIGH = PORTA ABERTA  (chave OFF)"));
   Serial.println(F("LED D13 aceso = porta FECHADA"));
   Serial.println(F("--------------------------------------"));
 
@@ -71,10 +71,10 @@ void loop() {
     Serial.println();
     if (fechada) {
       Serial.println(F(">>> PORTA FECHADA <<<"));
-      Serial.println(F("    (D22 = LOW — iman detectado)"));
+      Serial.println(F("    (D22 = LOW — chave fechada)"));
     } else {
       Serial.println(F(">>> PORTA ABERTA <<<"));
-      Serial.println(F("    (D22 = HIGH — sem iman)"));
+      Serial.println(F("    (D22 = HIGH — chave aberta)"));
     }
   }
 

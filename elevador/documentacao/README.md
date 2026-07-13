@@ -10,7 +10,7 @@
 | Variante | Pasta |
 |----------|-------|
 | Simulação v06 | [simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/](../simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/) |
-| **Maquete (activo)** | [real/codigo_final_3_0_maquete/](../real/codigo_final_3_0_maquete/) |
+| **Maquete (activo)** | [real/codigo_final_3_0_maquete/ext_porta/](../real/codigo_final_3_0_maquete/ext_porta/) |
 | Completo (congelado) | [real/codigo_final_3_0/](../real/codigo_final_3_0/) |
 
 ## Esquemas

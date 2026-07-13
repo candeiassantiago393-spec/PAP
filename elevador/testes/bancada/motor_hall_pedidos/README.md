@@ -1,7 +1,7 @@
 # Teste bancada — Motor + Hall + pedidos exteriores
 
 Elevador simplificado: **só** botões/LEDs exteriores, sensores Hall e motor L298N.  
-Lógica de fila e paragem nos pisos extraída do [firmware maquete](../../../real/codigo_final_3_0_maquete/) — sem OLED, botões interiores, buzzer, reset ou rearme.
+Lógica de fila e paragem nos pisos extraída do [firmware maquete](../../../real/codigo_final_3_0_maquete/ext_porta/) — sem OLED, botões interiores, buzzer, reset ou rearme.
 
 ## Pinagem Mega
 

@@ -38,7 +38,7 @@
 | Motor NEMA 17 + tambor/polia + correia | Montagem mecânica feita; **testado na bancada** com 12 V; por integrar no shaft |
 | Driver L298N | Testado na bancada (cedido tutor Manuel Queiroz) |
 | Sensores Hall **A3144** ×4 | Montados — D7, D8, D11, D12 |
-| Firmware maquete | [codigo_final_3_0_maquete](../real/codigo_final_3_0_maquete/) |
+| Firmware maquete | [codigo_final_3_0_maquete/ext_porta](../real/codigo_final_3_0_maquete/ext_porta/) |
 | Ventoinha 40 mm L298N | **Não comprada** |
 | Botões/LEDs interiores | **Por decidir** — possível só apresentação virtual |
 | Permissiva porta (D22) | **Chave deslizante** montada |

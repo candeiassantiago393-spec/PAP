@@ -82,4 +82,4 @@ Abrir [legacy/sensorhall.ino](legacy/sensorhall.ino) no Arduino IDE — mensagen
 |--|--|
 | Bancada | [../README.md](../README.md) |
 | Pinagem completa | [../../../documentacao/pinagem.md](../../../documentacao/pinagem.md) |
-| Firmware real | [../../../real/codigo_final_3_0_maquete/](../../../real/codigo_final_3_0_maquete/) |
+| Firmware real | [../../../real/codigo_final_3_0_maquete/ext_porta/](../../../real/codigo_final_3_0_maquete/ext_porta/) |

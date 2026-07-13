@@ -9,6 +9,7 @@ Testes isolados em PlatformIO — ver [bancada/](bancada/):
 | Pasta | Componentes | Liga a |
 |-------|-------------|--------|
 | [bancada/dht_oled/](bancada/dht_oled/) | KY-015 + OLED SSD1306 | T1, T2 |
+| [bancada/fire_oled/](bancada/fire_oled/) | KY-026 + OLED SSD1306 | T6 |
 
 Plataforma bancada: **Arduino Mega 2560** (SDA 20, SCL 21, KY-015 S pin 2).
 
@@ -33,7 +34,7 @@ pio device monitor   # 9600 baud
 | T3 | PIR dispara alerta intruso | — | — | — |
 | T4 | Sensor solo + bomba | — | — | — |
 | T5 | MQ gás dispara FUGA DE GAS | — | **Próximo** | — |
-| T6 | KY-026 fogo dispara alarme | — | — | — |
+| T6 | KY-026 fogo dispara alarme | [bancada/fire_oled/](bancada/fire_oled/) | Pendente | — |
 | T7 | SW-420 sismo dispara alarme | — | — | — |
 | T8 | Prioridade fogo &gt; sismo &gt; intruso &gt; gás | — | — | — |
 

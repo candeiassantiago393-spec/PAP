@@ -1,59 +1,48 @@
-# Código Final 3.0 — variant maquete
+# Código Final 3.0 — maquete
 
-Firmware **activo** para a maquete física: derivação do Código Final 3.0 adaptada ao hardware montado.
+Pasta-mãe dos firmwares da **maquete física**. Cada subpasta é uma variante independente (PlatformIO + `src/main.ino` + README próprio).
 
-## Diferenças face à versão completa
+## Variantes
 
-| Aspeto | [codigo_final_3_0](../codigo_final_3_0/) | Esta variant |
-|--------|------------------------------------------|--------------|
-| OLED SH1106 / TCA9548A | Sim | **Removido** |
-| Botões/LEDs interiores | Sim | **Removido** |
-| Pedidos exteriores | Sim | Sim |
-| Permissiva porta D22 | Não | **Sim** (chave deslizante) |
-| Pinagem Hall maquete | D7, D8, D11, D12 | D7, D8, D11, D12 |
-| Reset | D10 | D10 |
+| Pasta | Estado | Descrição |
+|-------|--------|-----------|
+| [ext_porta/](ext_porta/) | **Activo / testado** | Pedidos exteriores, porta D22, sem OLED/int. |
+| _(futuro)_ | — | Ex.: `com_oled`, `com_pedidos_internos`, … |
 
-## Pinagem
+Para adicionar uma variante nova:
 
-```
-Botões ext:  D2–D5    LEDs ext: A0–A3
-Hall pisos:  D7, D8, D11, D12  (LOW = íman)
-Porta:       D22  (LOW = fechada)
-Reset:       D10
-Buzzer:      D6
-L298N:       D9, D33, D31, D32
-```
+1. Criar subpasta `nome_variant/`
+2. Copiar `platformio.ini` de `ext_porta/`
+3. Colocar firmware em `nome_variant/src/main.ino`
+4. Escrever `nome_variant/README.md` com pinagem, estado de testes e upload
+5. Registar a linha na tabela acima
 
-## Comportamento
-
-- Fila SCAN, paragem 10 s no piso pedido
-- Motor só move com porta **fechada** (D22 LOW)
-- Reset → sequência rearme (alarme → piso 1)
-- Timeout movimento 15 s → erro
-
-## Compilar / upload
+## Upload rápido (variante actual)
 
 ```powershell
-cd elevador/real/codigo_final_3_0_maquete
+cd elevador/real/codigo_final_3_0_maquete/ext_porta
 pio run -t upload
 pio device monitor -b 9600
 ```
-
-Ou a partir da bancada:
 
 ```powershell
 cd elevador/testes/bancada
 .\upload.ps1 maquete
 ```
 
-## Origem
+## Diferenças face à versão completa
 
-Copiado de `Codigo_Final_3_0/codigo_final_3.0_semdisplays_sempedidosijnternos.ino` (Desktop).
+| Aspeto | [codigo_final_3_0](../codigo_final_3_0/) | Maquete (variantes aqui) |
+|--------|------------------------------------------|---------------------------|
+| OLED SH1106 / TCA9548A | Sim | Por variante (ext_porta: não) |
+| Botões/LEDs interiores | Sim | Por variante (ext_porta: não) |
+| Permissiva porta D22 | Não | ext_porta: sim |
 
 ## Navegação
 
 | | |
 |--|--|
-| Versão completa (congelada) | [../codigo_final_3_0/](../codigo_final_3_0/) |
-| Pinagem | [../../documentacao/pinagem.md](../../documentacao/pinagem.md) |
+| Real (índice) | [../README.md](../README.md) |
+| Versão completa congelada | [../codigo_final_3_0/](../codigo_final_3_0/) |
 | Testes bancada | [../../testes/bancada/](../../testes/bancada/) |
+| Pinagem | [../../documentacao/pinagem.md](../../documentacao/pinagem.md) |

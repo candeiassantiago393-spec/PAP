@@ -7,7 +7,7 @@ Firmware da maquete física (Arduino Mega + L298N + Hall).
 | Pasta | Uso | Alterar? |
 |-------|-----|----------|
 | [codigo_final_3_0/](codigo_final_3_0/) | Versão **completa** — OLED, pedidos int/ext, buzzer, rearme | **Não** (arquivo congelado) |
-| [codigo_final_3_0_maquete/](codigo_final_3_0_maquete/) | Versão **maquete** — só pedidos ext., porta D22, pinagem actual | Sim (evolução activa) |
+| [codigo_final_3_0_maquete/](codigo_final_3_0_maquete/) | Variantes **maquete** — ver [ext_porta/](codigo_final_3_0_maquete/ext_porta/) (activo) | Sim (evolução activa) |
 
 ## Diferenças face à simulação v06
 
@@ -22,7 +22,7 @@ Firmware da maquete física (Arduino Mega + L298N + Hall).
 
 ```powershell
 # Maquete (recomendado)
-cd elevador/real/codigo_final_3_0_maquete
+cd elevador/real/codigo_final_3_0_maquete/ext_porta
 pio run -t upload
 pio device monitor -b 9600
 

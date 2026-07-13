@@ -24,5 +24,5 @@ Reservado para testes sem hardware.
 | | |
 |--|--|
 | Elevador | [../README.md](../README.md) |
-| Firmware maquete | [../real/codigo_final_3_0_maquete/](../real/codigo_final_3_0_maquete/) |
+| Firmware maquete | [../real/codigo_final_3_0_maquete/ext_porta/](../real/codigo_final_3_0_maquete/ext_porta/) |
 | E07 | [../../docs/ETAPAS/relatorios/E07_testes_bancada.md](../../docs/ETAPAS/relatorios/E07_testes_bancada.md) |

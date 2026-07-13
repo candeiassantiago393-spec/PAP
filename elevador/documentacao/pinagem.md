@@ -73,5 +73,5 @@ Todas as entradas: `INPUT_PULLUP` (real) ou `INPUT` com pull-up externo/simulado
 | Variante | Ficheiro |
 |----------|----------|
 | Simulação v06 | `elevador/simulacao/legacy/wokwi/v06_atual_pedidos_internos_porta/wokwi/sketch.ino` |
-| Maquete (activo) | `elevador/real/codigo_final_3_0_maquete/src/main.ino` |
+| Maquete (activo) | `elevador/real/codigo_final_3_0_maquete/ext_porta/src/main.ino` |
 | Completo (congelado) | `elevador/real/codigo_final_3_0/src/main.ino` |

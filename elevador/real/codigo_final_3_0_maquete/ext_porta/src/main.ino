@@ -47,15 +47,20 @@ const int botoesExt[4] = {pinBotaoExt1, pinBotaoExt2, pinBotaoExt3, pinBotaoExt4
 
 #define NUM_BOTOES 4
 #define DEBOUNCE_MS 50UL
+#define HALL_CONFIRMA_MS 120UL
 #define TEMPO_ESTABILIZA_MS 300UL
 #define TEMPO_PARAGEM_PISO_MS 10000UL
-#define TIMEOUT_MOV_MS 15000UL
+#define TEMPO_REARME_ESPERA_MS 3000UL   // teste (produção: 10000)
+#define TIMEOUT_MOV_MS 45000UL
 
 #define MOTOR_INVERTIDO 1
 
 bool pedidos[4] = {false, false, false, false};
 bool estadoSensor[4];
-bool estadoSensorAnt[4];
+bool hallConfirmado[4];
+bool hallConfirmadoAnt[4];
+bool pisoHallProcessado[4];
+unsigned long hallAtivoDesdeMs[4];
 
 int acaoElevador = 0;
 int andar = -1;
@@ -151,7 +156,9 @@ void desligaBobinasMotor() {
 void paraMotor() {
   stepRate = 0;
   motorDir = 0;
-  desligaBobinasMotor();
+  // Piso 1: tábua de apoio — bobinas desligadas (motor "relaxado")
+  if (andar == 1) desligaBobinasMotor();
+  else aplicaFaseMotor(faseMotor);
 }
 
 void arrancaMotorLogico(int dirLogico) {
@@ -321,9 +328,9 @@ void selecionaDestinoEAcao() {
   }
   if (dest == -1) dest = andar;
   andarDestino = dest;
-  if (andarDestino == andar) acaoElevador = 0;
-  else if (andarDestino > andar) { acaoElevador = 1; sentidoAtual = 1; }
-  else { acaoElevador = 2; sentidoAtual = -1; }
+  if (andarDestino > andar) { acaoElevador = 1; sentidoAtual = 1; }
+  else if (andarDestino < andar) { acaoElevador = 2; sentidoAtual = -1; }
+  else if (!movimentoAtivo) acaoElevador = 0;
 }
 
 void atendePedidoNoPisoAtualSeExistir() {
@@ -375,6 +382,9 @@ void iniciaRearme() {
 
 void processaChegadaPiso(int piso, int idxPedido) {
   andar = piso;
+  movimentoAtivo = false;
+  inicioMovMs = millis();
+
   if (estadoSistema == REARME_ATIVO) {
     if (faseRearme == REARME_ATE_PISO_VALIDO) {
       paraMotor(); acaoElevador = 0;
@@ -383,7 +393,7 @@ void processaChegadaPiso(int piso, int idxPedido) {
     }
     if (faseRearme == REARME_IR_PISO1 && piso == 1) {
       paraMotor(); acaoElevador = 0;
-      faseRearme = REARME_ESPERA_10S; faseAteMs = millis() + 10000UL;
+      faseRearme = REARME_ESPERA_10S; faseAteMs = millis() + TEMPO_REARME_ESPERA_MS;
       return;
     }
     return;
@@ -398,7 +408,62 @@ void processaChegadaPiso(int piso, int idxPedido) {
 }
 
 void lerSensoresPiso() {
-  for (int i = 0; i < 4; i++) estadoSensor[i] = (digitalRead(sensoresHall[i]) == LOW);
+  unsigned long agora = millis();
+  for (int i = 0; i < 4; i++) {
+    bool raw = (digitalRead(sensoresHall[i]) == LOW);
+    estadoSensor[i] = raw;
+    if (raw) {
+      if (hallAtivoDesdeMs[i] == 0) hallAtivoDesdeMs[i] = agora;
+      hallConfirmado[i] = ((agora - hallAtivoDesdeMs[i]) >= HALL_CONFIRMA_MS);
+    } else {
+      hallAtivoDesdeMs[i] = 0;
+      hallConfirmado[i] = false;
+    }
+  }
+}
+
+void verificaHallPiso() {
+  for (int i = 0; i < 4; i++) {
+    if (!hallConfirmado[i]) {
+      pisoHallProcessado[i] = false;
+      continue;
+    }
+    if (pisoHallProcessado[i]) continue;
+
+    int piso = i + 1;
+    bool borda = hallConfirmado[i] && !hallConfirmadoAnt[i];
+
+    if (estadoSistema == REARME_ATIVO || estadoSistema == ERRO_MOVENDO) {
+      if (borda) {
+        pisoHallProcessado[i] = true;
+        processaChegadaPiso(piso, i);
+      }
+      continue;
+    }
+
+    if (estadoSistema != NORMAL) continue;
+
+    if (acaoElevador != 0) {
+      bool tinhaPedido = pedidos[i];
+      bool ehDestino = (piso == andarDestino);
+      if (tinhaPedido || ehDestino) {
+        pisoHallProcessado[i] = true;
+        processaChegadaPiso(piso, i);
+        continue;
+      }
+      if (borda && andar != piso) {
+        andar = piso;
+        inicioMovMs = millis();
+        Serial.print(F(">> Passagem piso "));
+        Serial.println(piso);
+      }
+    } else if (borda) {
+      pisoHallProcessado[i] = true;
+      processaChegadaPiso(piso, i);
+    }
+  }
+
+  for (int i = 0; i < 4; i++) hallConfirmadoAnt[i] = hallConfirmado[i];
 }
 
 void setup() {
@@ -428,8 +493,10 @@ void setup() {
   Serial.println(F("Hall: D7,D8,D11,D12 | Porta: D22 | Reset: D10"));
 
   lerSensoresPiso();
+  delay(HALL_CONFIRMA_MS + 20);
+  lerSensoresPiso();
   andar = -1;
-  for (int i = 0; i < 4; i++) if (estadoSensor[i]) andar = i + 1;
+  for (int i = 0; i < 4; i++) if (hallConfirmado[i]) andar = i + 1;
 
   if (andar == -1) {
     Serial.println(F("Referencia: desce ate detetar piso..."));
@@ -440,10 +507,10 @@ void setup() {
       buzzerService();
       debouncePortaPermissiva();
       lerSensoresPiso();
-      if (estadoSensor[0]) andar = 1;
-      else if (estadoSensor[1]) andar = 2;
-      else if (estadoSensor[2]) andar = 3;
-      else if (estadoSensor[3]) andar = 4;
+      if (hallConfirmado[0]) andar = 1;
+      else if (hallConfirmado[1]) andar = 2;
+      else if (hallConfirmado[2]) andar = 3;
+      else if (hallConfirmado[3]) andar = 4;
     }
     paraMotor();
     if (andar == -1) {
@@ -460,7 +527,11 @@ void setup() {
   andarDestino = andar;
   acaoElevador = 0;
   sentidoAtual = 0;
-  for (int i = 0; i < 4; i++) estadoSensorAnt[i] = estadoSensor[i];
+  for (int i = 0; i < 4; i++) {
+    hallAtivoDesdeMs[i] = 0;
+    pisoHallProcessado[i] = false;
+    hallConfirmadoAnt[i] = hallConfirmado[i];
+  }
 
   unsigned long agora = millis();
   for (int i = 0; i < NUM_BOTOES; i++) {
@@ -488,10 +559,7 @@ void loop() {
   lerSensoresPiso();
   if (estadoSistema == NORMAL) debounceBotoesERegistaPedidos();
 
-  if (estadoSensor[0] && !estadoSensorAnt[0]) processaChegadaPiso(1, 0);
-  if (estadoSensor[1] && !estadoSensorAnt[1]) processaChegadaPiso(2, 1);
-  if (estadoSensor[2] && !estadoSensorAnt[2]) processaChegadaPiso(3, 2);
-  if (estadoSensor[3] && !estadoSensorAnt[3]) processaChegadaPiso(4, 3);
+  verificaHallPiso();
 
   atendePedidoNoPisoAtualSeExistir();
 
@@ -538,7 +606,7 @@ void loop() {
     if (faseRearme == REARME_PAUSA_2S && millis() >= faseAteMs) {
       if (andar == 1) {
         faseRearme = REARME_ESPERA_10S;
-        faseAteMs = millis() + 10000UL;
+        faseAteMs = millis() + TEMPO_REARME_ESPERA_MS;
       } else {
         faseRearme = REARME_IR_PISO1;
         rearmeMoveStartMs = millis();
@@ -588,5 +656,4 @@ void loop() {
     for (int i = 0; i < 4; i++) digitalWrite(ledsExt[i], LOW);
   }
 
-  for (int i = 0; i < 4; i++) estadoSensorAnt[i] = estadoSensor[i];
 }

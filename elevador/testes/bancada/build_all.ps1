@@ -13,7 +13,7 @@ $projects = @(
     "reset_d10",
     "motor",
     "motor_hall_pedidos",
-    (Join-Path $realRoot "codigo_final_3_0_maquete"),
+    (Join-Path $realRoot "codigo_final_3_0_maquete\ext_porta"),
     (Join-Path $realRoot "codigo_final_3_0")
 )
 

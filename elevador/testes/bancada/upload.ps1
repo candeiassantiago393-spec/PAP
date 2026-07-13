@@ -27,7 +27,7 @@ $map = @{
     reset_d10          = Join-Path $root "reset_d10"
     motor              = Join-Path $root "motor"
     motor_hall_pedidos = Join-Path $root "motor_hall_pedidos"
-    maquete            = Join-Path $realRoot "codigo_final_3_0_maquete"
+    maquete            = Join-Path $realRoot "codigo_final_3_0_maquete\ext_porta"
     completo           = Join-Path $realRoot "codigo_final_3_0"
 }
 

@@ -33,7 +33,7 @@ cd elevador/testes/bancada
 3. `hall_sequencia` — motor + sensores
 4. `hall_porta` + `reset_d10` — porta e reset
 5. `motor_hall_pedidos` — integração pedidos + movimento
-6. **`maquete`** — [codigo_final_3_0_maquete](../../real/codigo_final_3_0_maquete/)
+6. **`maquete`** — [codigo_final_3_0_maquete/ext_porta](../../real/codigo_final_3_0_maquete/ext_porta/)
 
 ## Pinagem maquete
 
