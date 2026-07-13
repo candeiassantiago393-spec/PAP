@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central de Controlo — candeias.dev</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">candeias<span>.dev</span> · Central</div>
+    <div class="status-pill">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">A ligar…</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid">
+      <div class="card">
+        <div class="card-label">Temperatura</div>
+        <div class="card-value" id="valTemp">—</div>
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" id="barTemp"></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Humidade</div>
+        <div class="card-value" id="valHum">—</div>
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" id="barHum"></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Gás</div>
+        <div class="card-value" id="valGas">—</div>
+        <div class="bar-wrap">
+          <div class="bar-track"><div class="bar-fill" id="barGas"></div></div>
+        </div>
+        <div class="card-label" style="margin-top:10px" id="metaRaw">—</div>
+      </div>
+      <div class="card" id="alarmCard">
+        <div class="card-label">Alarme</div>
+        <div class="card-value" style="font-size:1.1rem" id="alarmText">—</div>
+      </div>
+    </div>
+
+    <div class="charts">
+      <div class="chart-card">
+        <h3>Gráfico temperatura</h3>
+        <div class="chart-box"><canvas id="chartTemp"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Gráfico humidade</h3>
+        <div class="chart-box"><canvas id="chartHum"></canvas></div>
+      </div>
+      <div class="chart-card" style="grid-column: 1 / -1">
+        <h3>Gráfico gás (limite 50%)</h3>
+        <div class="chart-box"><canvas id="chartGas"></canvas></div>
+      </div>
+    </div>
+
+    <p class="footer">PAP · Central de Controlo · dados via Serial COM7</p>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

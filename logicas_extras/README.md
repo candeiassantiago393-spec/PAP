@@ -37,13 +37,14 @@ Cada módulo com hardware tem `testes/` com registo e, à medida que se monta, p
 
 | Módulo | Primeiro teste |
 |--------|----------------|
-| Central de controlo | [central_de_controlo/testes/bancada/dht_oled/](central_de_controlo/testes/bancada/dht_oled/) — KY-015 · [fire_oled/](central_de_controlo/testes/bancada/fire_oled/) — KY-026 |
+| Central de controlo | [central_de_controlo/testes/bancada/dht_oled/](central_de_controlo/testes/bancada/dht_oled/) — KY-015 · [dht_gas_oled_next_buzzer/](central_de_controlo/testes/bancada/dht_gas_oled_next_buzzer/) — junção · [fire_oled/](central_de_controlo/testes/bancada/fire_oled/) — KY-026 |
 
 ## Compilar / simular
 
 | Módulo | Comando |
 |--------|---------|
 | Central de controlo | `cd central_de_controlo && pio run` → Wokwi |
+| Dashboard bancada | [central_de_controlo/scripts/run_dashboard.ps1](central_de_controlo/scripts/run_dashboard.ps1) |
 | Código porta prédio | `cd codigo_predio/simulacao/wokwi && pio run` → Wokwi |
 | Estendal | `cd estendal_inteligente/simulacao/wokwi && pio run` → Wokwi |
 
