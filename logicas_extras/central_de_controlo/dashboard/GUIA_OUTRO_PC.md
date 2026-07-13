@@ -40,58 +40,87 @@ Copia a pasta `PAP` (USB, OneDrive, etc.) para o outro PC.
 
 ---
 
-## 2. Ligar hardware e descobrir a porta COM
+## 2. Ligar hardware
 
 1. Liga a **Mega** por USB.
-2. No terminal do Cursor:
+2. **Fecha** Serial Monitor / Arduino IDE (libertar a COM).
+
+O script **deteta a porta COM sozinho** — nao precisas de a descobrir manualmente.
+
+Se quiseres ver as portas à mão:
 
 ```powershell
-[System.IO.Ports.SerialPort]::GetPortNames()
+pio device list
 ```
-
-Anota a porta — ex.: `COM3`, `COM7`. **Muda consoante o PC.**
-
-Também podes ver em **Gestor de dispositivos → Portas (COM e LPT) → Arduino Mega 2560**.
 
 ---
 
 ## 3. Comando principal (upload + dashboard)
 
+Na pasta raiz do projeto (`PAP\`):
+
 ```powershell
-cd logicas_extras\central_de_controlo\scripts
-.\run_dashboard.ps1 -Port COMx
+.\run_dashboard.cmd
 ```
 
-Substitui **COMx** pela tua porta (ex.: `-Port COM7`).
+**É só isto.** Funciona em qualquer PC com tudo instalado.
 
 O script:
-1. Compila e faz upload do firmware
-2. Instala dependências Python (se faltarem)
-3. Abre o browser em **http://127.0.0.1:8765**
-4. Mantém o servidor a correr (fecha com `Ctrl+C`)
+1. **Procura** a Arduino Mega ligada por USB
+2. Compila e faz upload do firmware
+3. Instala dependências Python (se faltarem)
+4. Abre o browser em **http://127.0.0.1:8765**
+5. Mantém o servidor a correr (fecha com `Ctrl+C`)
 
----
-
-## 4. Variantes úteis
+### Variantes
 
 | Situação | Comando |
 |----------|---------|
-| Firmware já carregado | `.\run_dashboard.ps1 -SkipUpload -Port COMx` |
-| Só compilar/upload | `cd ..\testes\bancada\dht_gas_oled_next_buzzer` → `pio run -t upload --upload-port COMx` |
-| Só dashboard manual | `cd ..\dashboard` → `$env:CENTRAL_COM='COMx'` → `py -3 server.py` |
+| Firmware já carregado | `.\run_dashboard.cmd -SkipUpload` |
+| Porta manual (raro) | `.\run_dashboard.cmd -Port COM9` |
+
+---
+
+## 4. Variantes avançadas
+
+| Situação | Comando |
+|----------|---------|
+| Só compilar/upload | `cd logicas_extras\central_de_controlo\testes\bancada\dht_gas_oled_next_buzzer` → `pio run -t upload` |
+| Só dashboard manual | `cd logicas_extras\central_de_controlo\dashboard` → `py -3 server.py` (porta via `CENTRAL_COM` ou auto) |
 
 ---
 
 ## 5. Primeira utilização (~1 min)
 
 1. **Fecha** Serial Monitor / Arduino IDE (libertar a COM).
-2. Corre `.\run_dashboard.ps1 -Port COMx`.
+2. Corre `.\run_dashboard.cmd`.
 3. Espera **~30 s** — aquecimento do sensor MQ (normal).
 4. No browser: ponto verde = Mega ligada; gráficos enchem aos poucos.
 
 ---
 
 ## Problemas comuns
+
+### `PSSecurityException` / "running scripts is disabled"
+
+Usa o ficheiro **`.cmd`** na raiz — não precisa de alterar políticas:
+
+```powershell
+.\run_dashboard.cmd
+```
+
+Se correres o `.ps1` directamente, usa:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File logicas_extras\central_de_controlo\scripts\run_dashboard.ps1
+```
+
+### Nenhuma Arduino Mega encontrada
+
+- Liga a Mega por USB (cabo de dados, não só carregamento).
+- Fecha Serial Monitor, Arduino IDE e outros programas que usem a COM.
+- Desliga/religa o cabo USB.
+- Verifica no Gestor de dispositivos: **Portas (COM e LPT) → Arduino Mega 2560**.
 
 ### `Acesso negado` / upload falha na COM
 
@@ -110,9 +139,9 @@ py -3 -m pip install -r logicas_extras\central_de_controlo\dashboard\requirement
 
 ### Dashboard abre mas "Mega desligada"
 
-- Porta COM errada → usa `-Port COMx` correcto.
 - Outro programa ocupa a COM → fecha tudo excepto o dashboard.
 - Cabo USB mau contacto.
+- Mega desligada ou porta errada → corre de novo `.\run_dashboard.cmd`.
 
 ### `pio` não reconhecido
 
@@ -152,8 +181,10 @@ Firmware: `testes/bancada/dht_gas_oled_next_buzzer/`
 ## Estrutura de ficheiros
 
 ```text
+PAP/
+├── run_dashboard.cmd            ← comando one-click (raiz do projeto)
 logicas_extras/central_de_controlo/
-├── scripts/run_dashboard.ps1    ← comando one-click
+├── scripts/run_dashboard.ps1    ← script principal
 ├── dashboard/
 │   ├── server.py
 │   ├── static/                  ← UI web
@@ -166,7 +197,7 @@ logicas_extras/central_de_controlo/
 ## Apresentação PAP (dica)
 
 1. Liga Mega + sensores **antes** de abrir o dashboard.
-2. Corre `.\run_dashboard.ps1 -Port COMx` com o portátil na projeção.
+2. Corre `.\run_dashboard.cmd` com o portátil na projeção.
 3. Browser em ecrã completo (F11).
 4. Aproxima gás ao MQ para demonstrar alarme + buzzer + gráfico a subir.
 
