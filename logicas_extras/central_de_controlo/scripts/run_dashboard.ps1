@@ -9,7 +9,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
-$Firmware = Join-Path $Root "testes\bancada\dht_gas_oled_next_buzzer"
+$Firmware = Join-Path $Root "real\atual"
 $Dashboard = Join-Path $Root "dashboard"
 
 function Find-MegaComPort {
@@ -61,7 +61,7 @@ if (-not $Port) {
   }
 }
 
-Write-Host "=== Central de Controlo - Dashboard ===" -ForegroundColor Cyan
+Write-Host "=== Smart Home Lab - Dashboard ===" -ForegroundColor Cyan
 Write-Host "Porta: $Port" -ForegroundColor Cyan
 
 if (-not $SkipUpload) {

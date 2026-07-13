@@ -10,11 +10,12 @@
 
 | Versão | Data | Notas |
 |--------|------|-------|
-| [v1](v1/) | 2026-07-13 | Primeira junção combinada — HOME, AMBIENTE, GAS, GRAF GAS, alarme buzzer |
+| [v2](v2/) | 2026-07-13 | Telemetria JSON (dashboard), refresh OLED otimizado, warmup MQ no ecrã |
+| [v1](v1/) | 2026-07-13 | Primeira junção combinada — HOME, GRAFICOS, BARRAS, GAS, alarme buzzer |
 
 ## Actual
 
-**v1** está em [`../../atual/`](../../atual/) — versão real mais recente aprovada.
+**v2** está em [`../../atual/`](../../atual/) — versão real mais recente aprovada.
 
 ## Origem
 

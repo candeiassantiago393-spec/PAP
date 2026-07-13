@@ -16,7 +16,7 @@ Cada **junção** (combinação de componentes) guarda snapshots em `versoes/<ju
 
 | Junção | Componentes | Versões | Actual |
 |--------|-------------|---------|--------|
-| [dht_gas_oled_next_buzzer](versoes/dht_gas_oled_next_buzzer/) | KY-015 + MQ (AO) + OLED + NEXT + buzzer | **v1** | **sim** → [`atual/`](atual/) |
+| [dht_gas_oled_next_buzzer](versoes/dht_gas_oled_next_buzzer/) | KY-015 + MQ (AO) + OLED + NEXT + buzzer | **v2** | **sim** → [`atual/`](atual/) |
 
 ## Estrutura
 

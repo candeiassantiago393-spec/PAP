@@ -1,6 +1,6 @@
 # actual — versão real mais recente
 
-Cópia de **dht_gas_oled_next_buzzer v1** (2026-07-13).
+Cópia de **dht_gas_oled_next_buzzer v2** (2026-07-13).
 
 Quando disseres **«este é o real mais recente»**, esta pasta é actualizada a partir da versão indicada em `versoes/`.
 
@@ -20,10 +20,12 @@ pio device monitor -b 9600
 | BTN NEXT | 3 |
 | Buzzer | 6 |
 | MQ AOUT | A1 |
+| KY-002 S (vibração) | A3 |
 | OLED SDA / SCL | 20 / 21 |
 
 ## Histórico
 
 | Data | Versão origem |
 |------|---------------|
-| 2026-07-13 | `versoes/dht_gas_oled_next_buzzer/v1` |
+| 2026-07-13 | `versoes/dht_gas_oled_next_buzzer/v2` — telemetria JSON + dashboard |
+| 2026-07-13 | `versoes/dht_gas_oled_next_buzzer/v1` — primeira junção combinada |

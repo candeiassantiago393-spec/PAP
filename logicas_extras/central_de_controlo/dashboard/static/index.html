@@ -3,65 +3,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Central de Controlo — candeias.dev</title>
+  <title>Smart Home Lab</title>
   <link rel="stylesheet" href="/static/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <header class="header">
-    <div class="brand">candeias<span>.dev</span> · Central</div>
-    <div class="status-pill">
-      <span class="status-dot" id="statusDot"></span>
-      <span id="statusText">A ligar…</span>
+    <div class="brand">Smart Home <span>Lab</span></div>
+    <div class="header-right">
+      <div class="status-pill">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">A ligar…</span>
+      </div>
+      <button type="button" class="btn-export" id="btnExportCsv" title="Exportar histórico">Exportar CSV</button>
+      <div class="status-pill subtle" id="lastUpdate">—</div>
     </div>
   </header>
 
   <main>
-    <div class="grid">
-      <div class="card">
-        <div class="card-label">Temperatura</div>
-        <div class="card-value" id="valTemp">—</div>
-        <div class="bar-wrap">
-          <div class="bar-track"><div class="bar-fill" id="barTemp"></div></div>
+    <section class="panel system-panel">
+      <div class="panel-title">Estado do sistema</div>
+      <div class="system-grid">
+        <div class="sys-item">
+          <span class="sys-label">Ecrã OLED (Mega)</span>
+          <span class="sys-value" id="oledScreen">—</span>
+        </div>
+        <div class="sys-item">
+          <span class="sys-label">Buzzer D6</span>
+          <span class="sys-value" id="buzzerState">—</span>
+        </div>
+        <div class="sys-item">
+          <span class="sys-label">Porta Serial</span>
+          <span class="sys-value" id="serialPort">—</span>
+        </div>
+        <div class="sys-item">
+          <span class="sys-label">Uptime Mega</span>
+          <span class="sys-value" id="uptime">—</span>
         </div>
       </div>
-      <div class="card">
-        <div class="card-label">Humidade</div>
-        <div class="card-value" id="valHum">—</div>
-        <div class="bar-wrap">
-          <div class="bar-track"><div class="bar-fill" id="barHum"></div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-label">Gás</div>
-        <div class="card-value" id="valGas">—</div>
-        <div class="bar-wrap">
-          <div class="bar-track"><div class="bar-fill" id="barGas"></div></div>
-        </div>
-        <div class="card-label" style="margin-top:10px" id="metaRaw">—</div>
-      </div>
-      <div class="card" id="alarmCard">
-        <div class="card-label">Alarme</div>
-        <div class="card-value" style="font-size:1.1rem" id="alarmText">—</div>
-      </div>
-    </div>
+    </section>
 
-    <div class="charts">
+    <section class="panel">
+      <div class="panel-title">Ambiente · KY-015</div>
+      <div class="grid">
+        <div class="card" id="tempCard">
+          <div class="card-top">
+            <div class="card-label">Temperatura</div>
+            <span class="badge" id="badgeTemp">—</span>
+          </div>
+          <div class="card-value" id="valTemp">—</div>
+          <div class="bar-wrap">
+            <div class="bar-track"><div class="bar-fill temp-fill" id="barTemp"></div></div>
+          </div>
+        </div>
+        <div class="card" id="humCard">
+          <div class="card-top">
+            <div class="card-label">Humidade</div>
+            <span class="badge" id="badgeHum">—</span>
+          </div>
+          <div class="card-value" id="valHum">—</div>
+          <div class="bar-wrap">
+            <div class="bar-track"><div class="bar-fill hum-fill" id="barHum"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-title">Segurança · alarmes buzzer</div>
+      <div class="grid">
+        <div class="card" id="gasCard">
+          <div class="card-top">
+            <div class="card-label">Gás MQ · A1</div>
+            <span class="badge" id="badgeGas">—</span>
+          </div>
+          <div class="card-value" id="valGas">—</div>
+          <div class="bar-wrap">
+            <div class="bar-track"><div class="bar-fill" id="barGas"></div></div>
+          </div>
+          <div class="card-meta" id="metaRaw">—</div>
+        </div>
+        <div class="card" id="quakeCard">
+          <div class="card-top">
+            <div class="card-label">Vibração KY-002 · A3</div>
+            <span class="badge" id="badgeQuake">—</span>
+          </div>
+          <div class="card-value" id="valQuake">—</div>
+          <div class="bar-wrap">
+            <div class="bar-track"><div class="bar-fill" id="barQuake"></div></div>
+          </div>
+          <div class="card-meta" id="metaQuake">—</div>
+        </div>
+        <div class="card span-2" id="alarmCard">
+          <div class="card-top">
+            <div class="card-label">Alarme global</div>
+            <span class="badge" id="badgeAlarm">—</span>
+          </div>
+          <div class="card-value alarm-text" id="alarmText">—</div>
+          <p class="alarm-hint">Buzzer activo quando gás ≥ 50% ou vibração detetada</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="charts">
       <div class="chart-card">
-        <h3>Gráfico temperatura</h3>
+        <h3>Temperatura ao vivo</h3>
         <div class="chart-box"><canvas id="chartTemp"></canvas></div>
       </div>
       <div class="chart-card">
-        <h3>Gráfico humidade</h3>
+        <h3>Humidade ao vivo</h3>
         <div class="chart-box"><canvas id="chartHum"></canvas></div>
       </div>
-      <div class="chart-card" style="grid-column: 1 / -1">
-        <h3>Gráfico gás (limite 50%)</h3>
+      <div class="chart-card span-2">
+        <h3>Gás · limite 50%</h3>
         <div class="chart-box"><canvas id="chartGas"></canvas></div>
       </div>
-    </div>
+      <div class="chart-card span-2">
+        <h3>Vibração / sismo · limite 50%</h3>
+        <div class="chart-box"><canvas id="chartQuake"></canvas></div>
+      </div>
+    </section>
 
-    <p class="footer">PAP · Central de Controlo · dados via Serial COM7</p>
+    <section class="panel pin-panel">
+      <div class="panel-title">Pinagem bancada (Mega)</div>
+      <div class="pin-grid">
+        <span>KY-015 → D2</span>
+        <span>NEXT → D3</span>
+        <span>Buzzer → D6</span>
+        <span>MQ → A1</span>
+        <span>KY-002 → A3</span>
+        <span>OLED → 20/21</span>
+      </div>
+    </section>
+
+    <p class="footer">PAP · Smart Home Lab · firmware real/atual</p>
   </main>
 
   <script src="/static/app.js"></script>

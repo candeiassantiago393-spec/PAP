@@ -35,4 +35,4 @@ pio device monitor -b 9600
 
 ## Versão real
 
-Quando aprovado: copiado para [../../real/versoes/dht_gas_oled_next_buzzer/v1/](../../real/versoes/dht_gas_oled_next_buzzer/v1/) e [../../real/atual/](../../real/atual/).
+Aprovado em 2026-07-13: [../../real/versoes/dht_gas_oled_next_buzzer/v2/](../../real/versoes/dht_gas_oled_next_buzzer/v2/) → [../../real/atual/](../../real/atual/).

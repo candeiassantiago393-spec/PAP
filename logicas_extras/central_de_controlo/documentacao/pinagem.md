@@ -40,7 +40,7 @@ O firmware (`src/main.cpp`) compila para **ESP32** ou **Arduino Mega 2560** — 
 | Solo | A0 | ADC | Potenciómetro / sensor capacitivo |
 | Gás | A1 | ADC | MQ-2/MQ-135 |
 | Fogo | A2 | ADC | KY-026 (AO) |
-| Sismo | A3 | ADC | SW-420 (simulado / analógico) |
+| Sismo / vibração | A3 | INPUT | **KY-002** — S→A3, +→5V, -→GND; calibra repouso no arranque |
 
 ## Limites (firmware actual)
 

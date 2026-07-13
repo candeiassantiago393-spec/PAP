@@ -13,6 +13,7 @@ Cada pasta tem `src/main.ino` + `platformio.ini` + `README.md`.
 | [gas_oled/](gas_oled/) | MQ gás + OLED — HOME, barra gás, gráfico, alarme (NEXT/PREV) | 9600 |
 | [fire_oled/](fire_oled/) | KY-026 + OLED — HOME, barra fogo, gráfico, alarme | 9600 |
 | [fire_serial/](fire_serial/) | KY-026 — **só Serial Monitor** (diagnóstico) | 9600 |
+| [pir_serial/](pir_serial/) | PIR HC-SR501 — **só Serial Monitor** (movimento) | 9600 |
 
 ## Upload rápido
 
