@@ -13,12 +13,10 @@
 Tecla numérica ──► concatena em input
 Tecla * ──► input = "" (reset)
 Tecla # ──► compara input com codigoCorreto
-              ├─ igual  → LED verde, bip 1 kHz
-              │           servo 0→90° (suave, delay 15 ms/passo)
+              ├─ igual  → servo 0→90° (suave, delay 15 ms/passo)
               │           espera 8 s
               │           servo 90→0° (suave)
-              │           LED verde OFF
-              └─ diferente → LED vermelho, bip 200 Hz
+              └─ diferente → servo não move
             input = ""
 ```
 
@@ -33,7 +31,7 @@ Tecla # ──► compara input com codigoCorreto
 
 - Cada tecla pressionada
 - `Codigo atual: ...` durante introdução
-- `ACESSO OKAY` ou `ACESSO NEGADO`
+- `ACESSO OK` ou `ACESSO NEGADO`
 - `RESET` ao carregar `*`
 
 ## Melhorias futuras

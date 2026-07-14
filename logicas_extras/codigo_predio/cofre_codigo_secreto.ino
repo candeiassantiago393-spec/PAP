@@ -1,14 +1,14 @@
+/*
+  Código Prédio — teclado 096-4642 + servo
+  Arduino Uno | PIN 1904 + # | Sem buzzer, sem LEDs
+*/
+
 #include <Servo.h>
 #include <Keypad.h>
 
-Servo Servo1_3;
+Servo tranca;
 
-#define ledvermelho 11
-#define ledverde 12
-#define buzzer 13
-
-String input = "";
-String codigoCorreto = "1904";
+const char *CODIGO_CORRETO = "1904";
 
 const uint8_t ROWS = 4;
 const uint8_t COLS = 3;
@@ -25,57 +25,48 @@ uint8_t colPins[COLS] = {8, 7, 6};
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
+String input = "";
+
+void abrirTranca() {
+  for (int pos = 0; pos <= 90; pos++) {
+    tranca.write(pos);
+    delay(15);
+  }
+  delay(8000);
+  for (int pos = 90; pos >= 0; pos--) {
+    tranca.write(pos);
+    delay(15);
+  }
+}
+
 void setup() {
   Serial.begin(9600);
-
-  Servo1_3.attach(9, 500, 2500);
-
-  pinMode(ledvermelho, OUTPUT);
-  pinMode(ledverde, OUTPUT);
-  pinMode(buzzer, OUTPUT);
-
-  digitalWrite(ledvermelho, LOW);
-  digitalWrite(ledverde, LOW);
-
-  Servo1_3.write(0);
+  tranca.attach(9, 500, 2500);
+  tranca.write(0);
+  Serial.println(F("Codigo predio — teclado 096-4642"));
 }
 
 void loop() {
   char key = keypad.getKey();
 
-  if (key) {
-    Serial.println(key);
+  if (!key) return;
 
-    if (key == '#') {
-      if (input == codigoCorreto) {
-        Serial.println("ACESSO OKAY");
+  Serial.println(key);
 
-        digitalWrite(ledvermelho, LOW);
-        digitalWrite(ledverde, HIGH);
-
-        Servo1_3.write(90);
-        tone(buzzer, 1000, 200);
-      } else {
-        Serial.println("ACESSO NEGADO");
-
-        digitalWrite(ledvermelho, HIGH);
-        digitalWrite(ledverde, LOW);
-
-        tone(buzzer, 200, 500);
-      }
-
-      input = "";
+  if (key == '#') {
+    if (input == CODIGO_CORRETO) {
+      Serial.println(F("ACESSO OK"));
+      abrirTranca();
+    } else {
+      Serial.println(F("ACESSO NEGADO"));
     }
-
-    else if (key == '*') {
-      input = "";
-      Serial.println("RESET");
-    }
-
-    else {
-      input += key;
-      Serial.print("Codigo atual: ");
-      Serial.println(input);
-    }
+    input = "";
+  } else if (key == '*') {
+    input = "";
+    Serial.println(F("RESET"));
+  } else {
+    input += key;
+    Serial.print(F("Codigo: "));
+    Serial.println(input);
   }
 }

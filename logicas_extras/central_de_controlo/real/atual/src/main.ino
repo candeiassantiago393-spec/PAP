@@ -22,6 +22,7 @@
 
 #define PIN_DHT 2
 #define PIN_BTN_NEXT 3
+#define PIN_BTN_PREV 4
 #define PIN_BUZZER 6
 #define PIN_GAS A1
 #define PIN_QUAKE A3
@@ -40,6 +41,7 @@
 #define READ_QUAKE_MS 100
 #define QUAKE_HOLD_MS 2000
 #define DEBOUNCE_MS 35
+#define BTN_COOLDOWN_MS 180
 #define MQ_WARMUP_MS 30000
 #define OLED_MIN_REFRESH_MS 1000
 #define ADC_MAX 1023
@@ -91,6 +93,11 @@ unsigned long mqReadyAtMs = 0;
 bool btnNextLastRaw = HIGH;
 bool btnNextStable = HIGH;
 unsigned long btnNextLastChangeMs = 0;
+unsigned long btnNextCooldownMs = 0;
+bool btnPrevLastRaw = HIGH;
+bool btnPrevStable = HIGH;
+unsigned long btnPrevLastChangeMs = 0;
+unsigned long btnPrevCooldownMs = 0;
 unsigned long lastTelemetryMs = 0;
 
 int lastDrawnGasPercent = -1;
@@ -101,6 +108,7 @@ bool lastDrawnQuakeAlert = false;
 const char *screenNames[] = {"HOME", "GRAFICOS", "BARRAS", "GAS", "SISMO"};
 
 void nextScreen();
+void prevScreen();
 void renderScreen();
 
 void floatToStr(char *out, size_t outLen, float value, uint8_t decimals) {
@@ -126,24 +134,37 @@ bool anySensorAlarm() {
   return gasAlert || quakeAlert;
 }
 
-bool readNextPressed() {
-  bool raw = digitalRead(PIN_BTN_NEXT);
+bool readDebouncedButtonPressed(int pin, bool &lastRaw, bool &stable,
+                                unsigned long &lastChangeMs,
+                                unsigned long &cooldownMs) {
+  bool raw = digitalRead(pin);
   unsigned long now = millis();
-  if (raw != btnNextLastRaw) {
-    btnNextLastRaw = raw;
-    btnNextLastChangeMs = now;
+  if (raw != lastRaw) {
+    lastRaw = raw;
+    lastChangeMs = now;
   }
-  if ((now - btnNextLastChangeMs) > DEBOUNCE_MS && raw != btnNextStable) {
-    btnNextStable = raw;
-    if (btnNextStable == LOW) return true;
+  if ((now - lastChangeMs) > DEBOUNCE_MS && raw != stable) {
+    stable = raw;
+    if (stable == LOW && (now - cooldownMs) > BTN_COOLDOWN_MS) {
+      cooldownMs = now;
+      return true;
+    }
   }
   return false;
 }
 
-void handleNextButton() {
-  if (!readNextPressed()) return;
-  Serial.println(F("BTN NEXT premido"));
-  nextScreen();
+void handleButtons() {
+  if (readDebouncedButtonPressed(PIN_BTN_NEXT, btnNextLastRaw, btnNextStable,
+                                 btnNextLastChangeMs, btnNextCooldownMs)) {
+    Serial.println(F("BTN NEXT premido"));
+    nextScreen();
+    return;
+  }
+  if (readDebouncedButtonPressed(PIN_BTN_PREV, btnPrevLastRaw, btnPrevStable,
+                                 btnPrevLastChangeMs, btnPrevCooldownMs)) {
+    Serial.println(F("BTN PREV premido"));
+    prevScreen();
+  }
 }
 
 void calibrateGasBaseline() {
@@ -314,6 +335,7 @@ void drawMiniSparkline(int gx, int gy, int gw, int gh, const float *buf) {
 }
 
 void drawHorizontalBar(int x, int y, int w, int h, int pct, const char *label) {
+  display.setTextSize(1);
   display.setCursor(x, y - 8);
   display.print(label);
   display.drawRect(x, y, w, h, SSD1306_WHITE);
@@ -323,9 +345,12 @@ void drawHorizontalBar(int x, int y, int w, int h, int pct, const char *label) {
 
 void drawWarmupScreen() {
   display.clearDisplay();
-  drawHeader("SMART HOME");
-  drawCenteredText(22, "Lab", 2);
-  drawCenteredText(44, "Aquecer MQ...", 1);
+  drawHeader("CENTRAL");
+  drawCenteredText(22, "Smart Home", 1);
+  drawCenteredText(36, "Lab", 2);
+  display.setTextSize(1);
+  display.setCursor(4, 54);
+  display.print(F("Aquecer MQ..."));
   display.display();
 }
 
@@ -333,14 +358,15 @@ void drawHomeScreen() {
   display.clearDisplay();
   drawHeader("HOME");
   drawCenteredText(16, "Smart Home", 1);
-  drawCenteredText(30, "Lab", 2);
-  display.setCursor(4, 46);
-  display.print(F("NEXT -> ecras"));
+  drawCenteredText(32, "Lab", 2);
+  display.setTextSize(1);
+  display.setCursor(4, 50);
+  display.print(F("NEXT/PREV ecras"));
   if (quakeAlert) {
-    display.setCursor(4, 56);
+    display.setCursor(4, 58);
     display.print(F("!! SISMO !!"));
   } else if (gasAlert) {
-    display.setCursor(4, 56);
+    display.setCursor(4, 58);
     display.print(F("!! GAS !!"));
   }
   drawScreenDots();
@@ -387,18 +413,19 @@ void drawGasScreen() {
   char line[24];
   display.clearDisplay();
   drawHeader(gasAlert && gasBlinkState ? "!! GAS !!" : "GAS");
+  display.setTextSize(1);
   display.setCursor(4, 14);
-  display.print(F("Nivel (A1)"));
-  display.drawRect(4, 28, 120, 12, SSD1306_WHITE);
-  int fillW = map(constrain(gasPercent, 0, 100), 0, 100, 0, 118);
-  if (fillW > 0) display.fillRect(5, 29, fillW, 10, SSD1306_WHITE);
-  display.drawFastVLine(4 + 1 + (118 * GAS_LIMIT) / 100, 28, 16, SSD1306_WHITE);
+  display.print(F("Gas A1"));
   snprintf(line, sizeof(line), "%d%%", gasPercent);
   drawTextRight(14, line);
-  display.setCursor(4, 46);
+  display.drawRect(4, 26, 120, 10, SSD1306_WHITE);
+  int fillW = map(constrain(gasPercent, 0, 100), 0, 100, 0, 118);
+  if (fillW > 0) display.fillRect(5, 27, fillW, 8, SSD1306_WHITE);
+  display.drawFastVLine(4 + 1 + (118 * GAS_LIMIT) / 100, 26, 12, SSD1306_WHITE);
+  display.setCursor(4, 42);
   snprintf(line, sizeof(line), "Limite %d%%", GAS_LIMIT);
   display.print(line);
-  display.setCursor(4, 56);
+  display.setCursor(4, 54);
   display.print(gasAlert ? F("FUGA! BUZZER ON") : F("OK"));
   drawScreenDots();
   display.display();
@@ -408,18 +435,19 @@ void drawQuakeScreen() {
   char line[24];
   display.clearDisplay();
   drawHeader(quakeAlert && quakeBlinkState ? "!! SISMO !!" : "SISMO");
+  display.setTextSize(1);
   display.setCursor(4, 14);
-  display.print(F("Vibracao (A3)"));
-  display.drawRect(4, 28, 120, 12, SSD1306_WHITE);
-  int fillW = map(constrain(quakePercent, 0, 100), 0, 100, 0, 118);
-  if (fillW > 0) display.fillRect(5, 29, fillW, 10, SSD1306_WHITE);
-  display.drawFastVLine(4 + 1 + (118 * QUAKE_LIMIT) / 100, 28, 16, SSD1306_WHITE);
+  display.print(F("Vibr A3"));
   snprintf(line, sizeof(line), "%d%%", quakePercent);
   drawTextRight(14, line);
-  display.setCursor(4, 46);
+  display.drawRect(4, 26, 120, 10, SSD1306_WHITE);
+  int fillW = map(constrain(quakePercent, 0, 100), 0, 100, 0, 118);
+  if (fillW > 0) display.fillRect(5, 27, fillW, 8, SSD1306_WHITE);
+  display.drawFastVLine(4 + 1 + (118 * QUAKE_LIMIT) / 100, 26, 12, SSD1306_WHITE);
+  display.setCursor(4, 42);
   snprintf(line, sizeof(line), "Limite %d%%", QUAKE_LIMIT);
   display.print(line);
-  display.setCursor(4, 56);
+  display.setCursor(4, 54);
   display.print(quakeAlert ? F("SISMO! BUZZER ON") : F("OK"));
   drawScreenDots();
   display.display();
@@ -450,13 +478,21 @@ void renderScreenIfNeeded(bool force) {
 }
 
 void nextScreen() {
-  int next = ((int)currentScreen + 1) % SCREEN_COUNT;
-  currentScreen = (ScreenId)next;
-  displayDirty = false;
-  lastOledDrawMs = 0;
+  currentScreen = (ScreenId)(((int)currentScreen + 1) % SCREEN_COUNT);
   Serial.print(F("Ecra: "));
   Serial.println(screenNames[currentScreen]);
-  renderScreen();
+  displayDirty = true;
+  renderScreenIfNeeded(true);
+}
+
+void prevScreen() {
+  int prev = (int)currentScreen - 1;
+  if (prev < 0) prev = SCREEN_COUNT - 1;
+  currentScreen = (ScreenId)prev;
+  Serial.print(F("Ecra: "));
+  Serial.println(screenNames[currentScreen]);
+  displayDirty = true;
+  renderScreenIfNeeded(true);
 }
 
 void updateAlarms() {
@@ -500,6 +536,7 @@ void updateAlarms() {
 void setup() {
   Serial.begin(9600);
   pinMode(PIN_BTN_NEXT, INPUT_PULLUP);
+  pinMode(PIN_BTN_PREV, INPUT_PULLUP);
   pinMode(PIN_BUZZER, OUTPUT);
   pinMode(PIN_QUAKE, INPUT);
   setBuzzer(false);
@@ -516,7 +553,7 @@ void setup() {
   delay(2000);
 
   Serial.println(F("===== SMART HOME LAB ====="));
-  Serial.println(F("NEXT pin 3 | Buzzer D6 | gas>=50% OU sismo"));
+  Serial.println(F("NEXT pin 3 | PREV pin 4 | Buzzer D6 | gas>=50% OU sismo"));
   mqReadyAtMs = millis() + MQ_WARMUP_MS;
   drawWarmupScreen();
 
@@ -537,7 +574,7 @@ void finishMqWarmup() {
 }
 
 void loop() {
-  handleNextButton();
+  handleButtons();
 
   if (!mqReady) {
     if (millis() >= mqReadyAtMs) {
@@ -587,6 +624,5 @@ void loop() {
 
   renderScreenIfNeeded(false);
   updateAlarms();
-  handleNextButton();
   delay(10);
 }

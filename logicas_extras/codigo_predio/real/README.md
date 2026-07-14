@@ -4,7 +4,7 @@ Montagem do teclado + servo na porta do prédio na maquete.
 
 ## Estado
 
-**Por fazer** — simulação Wokwi funcional; teclado Mauser e servo físicos por montar.
+**Firmware pronto** — simulação Wokwi funcional; montagem física do teclado Mauser e servo na maquete por fazer.
 
 ---
 
@@ -14,7 +14,7 @@ Montagem do teclado + servo na porta do prédio na maquete.
 real/
 ├── README.md
 ├── platformio.ini         ← Arduino Uno ou ESP32
-├── src/main.cpp           ← firmware real (adaptado da simulação)
+├── src/main.ino           ← firmware real (teclado + servo, sem buzzer/LEDs)
 ├── pinagem.md             ← pinagem DEFINITIVA do teclado físico
 ├── notas_montagem.md
 └── fotos/
@@ -31,8 +31,7 @@ real/
 - [ ] Ligar teclado matricial 3×4 ([096-4642](../../../docs/compras/faturas_mauser/2026EC1403323.md))
 - [ ] Confirmar se pinagem do teclado real = simulação (filas/colunas)
 - [ ] Montar servo na fechadura da porta
-- [ ] Ligar LEDs vermelho/verde + buzzer (220 Ω nos LEDs)
-- [ ] Copiar firmware de [../simulacao/wokwi/sketch.ino](../simulacao/wokwi/sketch.ino) → `src/main.cpp`
+- [x] Firmware em `src/main.ino` (teclado 096-4642 + servo, sem buzzer/LEDs)
 - [ ] Gravar **pinagem definitiva** em `pinagem.md`
 - [ ] Testar código `1904#` na bancada
 - [ ] Integrar na maquete do prédio
@@ -71,7 +70,9 @@ Plano simulação: [../documentacao/pinagem.md](../documentacao/pinagem.md)
 | Ficheiro | Estado | Origem |
 |----------|--------|--------|
 | `../simulacao/wokwi/sketch.ino` | ✓ Simulação | Wokwi validado |
-| `real/platformio.ini` | Por criar | Copiar de simulação |
-| `real/src/main.cpp` | Por criar | Adaptar sketch.ino |
+| `real/platformio.ini` | ✓ | Arduino Uno + Keypad + Servo |
+| `real/src/main.ino` | ✓ | Teclado + servo, PIN `1904` |
+
+Comando upload: `cd real && pio run -t upload --upload-port COMx`
 
 Comando simulação: `cd ../simulacao/wokwi && pio run`

@@ -1,4 +1,6 @@
-# Pinagem — Cofre (Arduino Uno)
+# Pinagem — Código Prédio (Arduino Uno)
+
+Teclado Mauser **096-4642** (3×4) — fatura [2026EC1403323](../../../docs/compras/faturas_mauser/2026EC1403323.md).
 
 | Função | Pino |
 |--------|------|
@@ -10,9 +12,6 @@
 | Teclado — coluna 2 (C2) | D7 |
 | Teclado — coluna 3 (C3) | D6 |
 | Servo (PWM) | D9 |
-| LED vermelho | D11 |
-| LED verde | D12 |
-| Buzzer | D13 |
 
 ## Layout do teclado
 

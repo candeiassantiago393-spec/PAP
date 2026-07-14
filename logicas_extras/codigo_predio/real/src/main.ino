@@ -1,6 +1,8 @@
 /*
-  Código Prédio — teclado 096-4642 + servo (Wokwi)
-  PIN 1904 + # | * limpa | Sem buzzer, sem LEDs
+  Código Prédio — teclado 096-4642 + servo
+  Arduino Uno | Teclado 3×4 | Servo D9 | PIN 1904 + #
+
+  Sem buzzer, sem LEDs — só validação de código e abertura da tranca.
 */
 
 #include <Servo.h>

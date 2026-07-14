@@ -1,6 +1,6 @@
 # Código Prédio — Teclado + Servo
 
-Subsistema de **acesso por código numérico** à porta do prédio na maquete: teclado matricial 3×4, servo, LEDs e buzzer.
+Subsistema de **acesso por código numérico** à porta do prédio na maquete: teclado matricial 3×4 (096-4642) e servo.
 
 | Campo | Valor |
 |-------|-------|
@@ -15,8 +15,8 @@ Subsistema de **acesso por código numérico** à porta do prédio na maquete: t
 
 1. Introduzir dígitos no teclado 3×4
 2. `#` confirma o código
-3. **Correcto** (`1904`): LED verde, bip curto, servo abre suavemente (0°→90°), **fica 8 s aberto**, fecha suavemente (90°→0°)
-4. **Incorrecto**: LED vermelho, bip grave, servo não move
+3. **Correcto** (`1904`): servo abre suavemente (0°→90°), **fica 8 s aberto**, fecha suavemente (90°→0°)
+4. **Incorrecto**: servo não move
 5. `*` limpa a entrada
 
 Detalhes: [documentacao/funcionamento.md](documentacao/funcionamento.md)
@@ -29,11 +29,18 @@ Detalhes: [documentacao/funcionamento.md](documentacao/funcionamento.md)
 |-------|----------|
 | [simulacao/wokwi/](simulacao/wokwi/) | **Simular aqui** — Wokwi + PlatformIO |
 | [documentacao/](documentacao/) | Pinagem e fluxo |
-| [real/](real/) | Montagem física — **pendente** |
+| [real/](real/) | Firmware físico (`pio run -t upload`) |
 | [testes/](testes/) | Testes bancada — **pendente** |
 | [tranca_keypad_arduino/](tranca_keypad_arduino/) | Repo original + vídeo demo |
 
 ---
+
+## Upload na bancada
+
+```bash
+cd logicas_extras/codigo_predio/real
+pio run -t upload --upload-port COMx
+```
 
 ## Simular no Cursor
 
@@ -58,7 +65,6 @@ python -m platformio run
 | Arduino Uno | ✓ | ✓ |
 | Teclado 3×4 | Membrane keypad Wokwi | [096-4642](../../docs/compras/faturas_mauser/2026EC1403323.md) |
 | Servo | ✓ | Micro servo |
-| LEDs + buzzer | ✓ | 220 Ω nos LEDs |
 
 Pinagem: [documentacao/pinagem.md](documentacao/pinagem.md)
 

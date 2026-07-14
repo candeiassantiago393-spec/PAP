@@ -1,5 +1,7 @@
 # Tranca de Cofre com Keypad e Arduino
 
+> **Versão PAP (2026):** firmware simplificado em [../real/src/main.ino](../real/src/main.ino) — só teclado 096-4642 + servo, sem LEDs nem buzzer. O texto abaixo descreve o projeto original de referência.
+
 ## Descrição
 
 Este projeto consiste numa tranca de cofre controlada por Arduino, utilizando um teclado matricial 4x3, um servomotor, dois LEDs e um buzzer. O sistema permite abrir a tranca apenas quando é introduzida a senha correta.
