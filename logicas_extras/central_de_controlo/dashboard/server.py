@@ -38,7 +38,9 @@ latest: dict[str, Any] = {
     "fr": 0,
     "fbl": 0,
     "fd": 0,
+    "fdo": 0,
     "fa": 0,
+    "fw": None,
     "qk": 0,
     "qr": 0,
     "qa": 0,
@@ -121,7 +123,10 @@ app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 @app.get("/")
 async def index() -> FileResponse:
-    return FileResponse(STATIC / "index.html")
+    return FileResponse(
+        STATIC / "index.html",
+        headers={"Cache-Control": "no-store"},
+    )
 
 
 @app.get("/api/state")

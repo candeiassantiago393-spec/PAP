@@ -304,6 +304,8 @@ void emitTelemetryJson() {
   Serial.print(fireBaseline);
   Serial.print(F(",\"fd\":"));
   Serial.print(fireDrop);
+  Serial.print(F(",\"fdo\":"));
+  Serial.print(fireDoActive ? 1 : 0);
   Serial.print(F(",\"fa\":"));
   Serial.print(fireAlert ? 1 : 0);
   Serial.print(F(",\"qk\":"));
@@ -314,6 +316,8 @@ void emitTelemetryJson() {
   Serial.print(quakeAlert ? 1 : 0);
   Serial.print(F(",\"scr\":"));
   Serial.print((int)currentScreen);
+  Serial.print(F(",\"fw\":"));
+  Serial.print(F("3"));
   Serial.print(F(",\"ms\":"));
   Serial.print(millis());
   Serial.println(F("}"));

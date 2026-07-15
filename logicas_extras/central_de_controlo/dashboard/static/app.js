@@ -20,6 +20,26 @@ const quakeData = [];
 const labels = [];
 
 let chartTemp, chartHum, chartGas, chartFire, chartQuake;
+let fireTelemetrySupported = null;
+
+function hasFireTelemetry(data) {
+  return data && Object.prototype.hasOwnProperty.call(data, "fa") &&
+    Object.prototype.hasOwnProperty.call(data, "fire");
+}
+
+function detectFireSupport(data) {
+  if (!data.connected) {
+    fireTelemetrySupported = null;
+    return;
+  }
+  if (hasFireTelemetry(data)) {
+    fireTelemetrySupported = true;
+    return;
+  }
+  if (data.gas !== undefined || data.qk !== undefined || data.t !== undefined) {
+    fireTelemetrySupported = false;
+  }
+}
 
 function fmt(v, suffix = "") {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
@@ -167,12 +187,22 @@ function envStatus(temp, hum) {
   };
 }
 
+function primaryAlarm(data) {
+  if (!!data.fa) return { key: "fire", label: "FOGO", pct: Number(data.fire) || 0 };
+  if (!!data.qa) return { key: "quake", label: "SISMO", pct: Number(data.qk) || 0 };
+  if (!!data.alarm) return { key: "gas", label: "GÁS", pct: Number(data.gas) || 0 };
+  return null;
+}
+
 function updateUI(data) {
+  detectFireSupport(data);
+
   const connected = !!data.connected;
   const gasAlarm = !!data.alarm;
-  const fireAlarm = !!data.fa;
+  const fireAlarm = hasFireTelemetry(data) ? !!data.fa : false;
   const quakeAlarm = !!data.qa;
   const anyAlarm = fireAlarm || quakeAlarm || gasAlarm;
+  const primary = primaryAlarm(data);
 
   const dot = document.getElementById("statusDot");
   const statusText = document.getElementById("statusText");
@@ -191,6 +221,37 @@ function updateUI(data) {
   document.getElementById("serialPort").textContent = connected ? (data.port || "COM?") : "—";
   document.getElementById("uptime").textContent = connected ? fmtUptime(data.ms) : "—";
 
+  const fwWarn = document.getElementById("fwFireWarn");
+  const fwVerEl = document.getElementById("firmwareVer");
+  const fireStateEl = document.getElementById("fireSensorState");
+
+  if (!connected) {
+    fwWarn.classList.add("hidden");
+    fwVerEl.textContent = "—";
+    fireStateEl.textContent = "—";
+    fireStateEl.className = "sys-value";
+  } else if (fireTelemetrySupported === false) {
+    fwWarn.classList.remove("hidden");
+    fwVerEl.textContent = "antigo (sem fogo)";
+    fwVerEl.className = "sys-value warn";
+    fireStateEl.textContent = "Upload pendente";
+    fireStateEl.className = "sys-value warn";
+  } else {
+    fwWarn.classList.add("hidden");
+    fwVerEl.textContent = data.fw ? `v${data.fw}` : "real/atual";
+    fwVerEl.className = "sys-value";
+    if (fireAlarm) {
+      fireStateEl.textContent = `ALARME ${data.fire ?? 0}%`;
+      fireStateEl.className = "sys-value buzzer-on";
+    } else if (Number(data.fdo)) {
+      fireStateEl.textContent = `DO chama · ${data.fire ?? 0}%`;
+      fireStateEl.className = "sys-value warn";
+    } else {
+      fireStateEl.textContent = `OK · ${data.fire ?? 0}%`;
+      fireStateEl.className = "sys-value";
+    }
+  }
+
   if (data.ts) {
     const d = new Date(data.ts * 1000);
     document.getElementById("lastUpdate").textContent =
@@ -203,8 +264,9 @@ function updateUI(data) {
     `${fmt(data.h)}<span class="card-unit"> %</span>`;
   document.getElementById("valGas").innerHTML =
     `${data.gas ?? 0}<span class="card-unit"> %</span>`;
-  document.getElementById("valFire").innerHTML =
-    `${data.fire ?? 0}<span class="card-unit"> %</span>`;
+  document.getElementById("valFire").innerHTML = fireTelemetrySupported === false
+    ? `—<span class="card-unit"> %</span>`
+    : `${data.fire ?? 0}<span class="card-unit"> %</span>`;
   document.getElementById("valQuake").innerHTML =
     `${data.qk ?? 0}<span class="card-unit"> %</span>`;
 
@@ -233,27 +295,35 @@ function updateUI(data) {
 
   document.getElementById("gasCard").classList.toggle("alarm", gasAlarm);
   document.getElementById("fireCard").classList.toggle("alarm", fireAlarm);
+  document.getElementById("fireCard").classList.toggle("fw-missing", fireTelemetrySupported === false);
   document.getElementById("quakeCard").classList.toggle("quake-alarm", quakeAlarm);
   document.getElementById("alarmCard").classList.toggle("alarm", anyAlarm);
 
   let alarmText = "Sistema OK — todos os sensores normais";
-  if (fireAlarm && quakeAlarm && gasAlarm) alarmText = "⚠ FOGO + SISMO + GÁS — buzzer activo";
-  else if (fireAlarm && quakeAlarm) alarmText = "⚠ FOGO + SISMO — buzzer activo";
-  else if (fireAlarm && gasAlarm) alarmText = "⚠ FOGO + GÁS — buzzer activo";
-  else if (quakeAlarm && gasAlarm) alarmText = "⚠ SISMO + GÁS — buzzer activo";
-  else if (fireAlarm) alarmText = "⚠ CHAMA DETETADA — buzzer activo";
-  else if (quakeAlarm) alarmText = "⚠ VIBRAÇÃO DETETADA — buzzer activo";
-  else if (gasAlarm) alarmText = "⚠ FUGA DE GÁS — buzzer activo";
+  if (fireTelemetrySupported === false && connected) {
+    alarmText = "⚠ Mega com firmware antigo — sensor fogo não reporta (faz upload real/atual)";
+  } else if (primary) {
+    alarmText = `⚠ ${primary.label} ${primary.pct}% — prioridade buzzer (fogo > sismo > gás)`;
+    if (anyAlarm && (gasAlarm + fireAlarm + quakeAlarm) > 1) {
+      const parts = [];
+      if (fireAlarm) parts.push("fogo");
+      if (quakeAlarm) parts.push("sismo");
+      if (gasAlarm) parts.push("gás");
+      alarmText = `⚠ ${parts.join(" + ").toUpperCase()} — buzzer activo · prioridade: ${primary.label}`;
+    }
+  }
   document.getElementById("alarmText").textContent = alarmText;
 
   document.getElementById("metaRaw").textContent =
     `raw ${data.gr ?? "—"} · base ${data.gb ?? "—"} · limite ${GAS_LIMIT}%`;
-  document.getElementById("metaFire").textContent =
-    `AO ${data.fr ?? "—"} · base ${data.fbl ?? "—"} · drop ${data.fd ?? "—"} · limite ${FIRE_LIMIT}%`;
+  document.getElementById("metaFire").textContent = fireTelemetrySupported === false
+    ? "Telemetria indisponível — upload real/atual com KY-026"
+    : `AO ${data.fr ?? "—"} · base ${data.fbl ?? "—"} · drop ${data.fd ?? "—"} · DO ${data.fdo ? "CHAMA" : "—"} · limite ${FIRE_LIMIT}%`;
   document.getElementById("metaQuake").textContent =
     `sinal ${data.qr ?? "—"} · limite ${QUAKE_LIMIT}% · pin A3`;
 
-  if (connected && (data.t != null || data.h != null || data.gas != null || data.fire != null || data.qk != null)) {
+  if (connected && fireTelemetrySupported !== false &&
+      (data.t != null || data.h != null || data.gas != null || data.fire != null || data.qk != null)) {
     pushLabel();
     pushHistory(tempData, data.t);
     pushHistory(humData, data.h);

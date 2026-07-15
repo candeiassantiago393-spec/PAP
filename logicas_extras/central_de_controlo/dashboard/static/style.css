@@ -123,6 +123,28 @@ main { padding: 20px 24px 32px; max-width: 1200px; margin: 0 auto; }
   color: var(--danger);
 }
 
+.sys-value.warn {
+  color: var(--warning);
+}
+
+.fw-warn {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--warning);
+  background: rgba(212, 160, 23, 0.1);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.fw-warn code {
+  color: var(--warning);
+}
+
+.hidden {
+  display: none !important;
+}
+
 .btn-export {
   font-size: 0.78rem;
   font-weight: 600;
@@ -163,6 +185,15 @@ main { padding: 20px 24px 32px; max-width: 1200px; margin: 0 auto; }
 .card.quake-alarm {
   border-color: var(--warning);
   background: rgba(212, 160, 23, 0.08);
+}
+
+.card.fw-missing {
+  border-color: var(--text-muted);
+  opacity: 0.85;
+}
+
+.card.fw-missing .card-value {
+  color: var(--text-muted);
 }
 
 .card-top {

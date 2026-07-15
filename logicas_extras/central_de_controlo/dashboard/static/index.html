@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Home Lab</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/style.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -40,7 +40,16 @@
           <span class="sys-label">Uptime Mega</span>
           <span class="sys-value" id="uptime">—</span>
         </div>
+        <div class="sys-item">
+          <span class="sys-label">Sensor fogo KY-026</span>
+          <span class="sys-value" id="fireSensorState">—</span>
+        </div>
+        <div class="sys-item">
+          <span class="sys-label">Firmware</span>
+          <span class="sys-value" id="firmwareVer">—</span>
+        </div>
       </div>
+      <p class="fw-warn hidden" id="fwFireWarn">Firmware antigo na Mega — faz upload de <code>real/atual</code> para activar telemetria de fogo.</p>
     </section>
 
     <section class="panel">
@@ -156,6 +165,6 @@
     <p class="footer">PAP · Smart Home Lab · firmware real/atual</p>
   </main>
 
-  <script src="/static/app.js"></script>
+  <script src="/static/app.js?v=3"></script>
 </body>
 </html>
