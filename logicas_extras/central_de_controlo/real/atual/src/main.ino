@@ -5,7 +5,8 @@
   Mega: DHT=2 | NEXT=3 | PREV=4 | Buzzer=6 | MQ=A1 | KY-026 AO=A2 DO=5 | KY-002 S=A3 | OLED 20/21
   Ecrãs: HOME | GRAFICOS | BARRAS | GAS | FOGO | SISMO
 
-  Alarmes (prioridade): fogo > sismo > gás (buzzer pin 6)
+  Alarmes (prioridade visual): fogo > sismo > gás.
+  Buzzer: fogo/gás enquanto alarme activo; sismo = 1 pulso de 6 s desde upload.
   KY-026: AO em A2, DO em pin 5 — calibra baseline AO no arranque
   KY-002: S em A3 — calibra nivel em repouso no arranque
 */
@@ -48,6 +49,7 @@
 #define READ_FIRE_MS 300
 #define READ_QUAKE_MS 100
 #define QUAKE_HOLD_MS 2000
+#define QUAKE_BUZZER_MS 6000
 #define DEBOUNCE_MS 35
 #define BTN_COOLDOWN_MS 180
 #define MQ_WARMUP_MS 30000
@@ -118,6 +120,10 @@ unsigned long btnPrevLastChangeMs = 0;
 unsigned long btnPrevCooldownMs = 0;
 unsigned long lastTelemetryMs = 0;
 
+bool quakeBuzzerUsed = false;
+bool quakeBuzzerPulse = false;
+unsigned long quakeBuzzerUntilMs = 0;
+
 int lastDrawnGasPercent = -1;
 bool lastDrawnGasAlert = false;
 int lastDrawnFirePercent = -1;
@@ -152,6 +158,20 @@ void setBuzzer(bool on) {
 
 bool anySensorAlarm() {
   return fireAlert || quakeAlert || gasAlert;
+}
+
+bool buzzerShouldBeOn(unsigned long now) {
+  if (fireAlert || gasAlert) return true;
+  if (quakeBuzzerPulse && now < quakeBuzzerUntilMs) return true;
+  return false;
+}
+
+void startQuakeBuzzerPulse(unsigned long now) {
+  if (quakeBuzzerUsed) return;
+  quakeBuzzerUsed = true;
+  quakeBuzzerPulse = true;
+  quakeBuzzerUntilMs = now + QUAKE_BUZZER_MS;
+  Serial.println(F("SISMO: buzzer 6s (unico desde upload)"));
 }
 
 bool readFireDo() {
@@ -314,10 +334,12 @@ void emitTelemetryJson() {
   Serial.print(quakeRaw);
   Serial.print(F(",\"qa\":"));
   Serial.print(quakeAlert ? 1 : 0);
+  Serial.print(F(",\"qb\":"));
+  Serial.print((quakeBuzzerPulse && millis() < quakeBuzzerUntilMs) ? 1 : 0);
   Serial.print(F(",\"scr\":"));
   Serial.print((int)currentScreen);
   Serial.print(F(",\"fw\":"));
-  Serial.print(F("3"));
+  Serial.print(F("4"));
   Serial.print(F(",\"ms\":"));
   Serial.print(millis());
   Serial.println(F("}"));
@@ -541,7 +563,13 @@ void drawQuakeScreen() {
   snprintf(line, sizeof(line), "Limite %d%%", QUAKE_LIMIT);
   display.print(line);
   display.setCursor(4, 54);
-  display.print(quakeAlert ? F("SISMO! BUZZER ON") : F("OK"));
+  if (quakeAlert) {
+    if (quakeBuzzerPulse) display.print(F("SISMO! buzzer 6s"));
+    else if (quakeBuzzerUsed) display.print(F("SISMO! (buzzer OK)"));
+    else display.print(F("SISMO!"));
+  } else {
+    display.print(F("OK"));
+  }
   drawScreenDots();
   display.display();
 }
@@ -593,9 +621,16 @@ void prevScreen() {
 
 void updateAlarms() {
   unsigned long now = millis();
-  bool alarm = anySensorAlarm();
 
-  setBuzzer(alarm);
+  if (quakeAlert && !quakeBuzzerUsed) {
+    startQuakeBuzzerPulse(now);
+  }
+
+  if (quakeBuzzerPulse && now >= quakeBuzzerUntilMs) {
+    quakeBuzzerPulse = false;
+  }
+
+  setBuzzer(buzzerShouldBeOn(now));
 
   if (fireAlert) {
     if (now - lastFireBlinkMs >= FIRE_ALARM_BLINK_MS) {
@@ -662,7 +697,7 @@ void setup() {
   delay(2000);
 
   Serial.println(F("===== SMART HOME LAB ====="));
-  Serial.println(F("NEXT 3 | PREV 4 | Buzzer 6 | fogo>sismo>gas"));
+  Serial.println(F("NEXT 3 | PREV 4 | Buzzer 6 | fogo/gas=continuo | sismo=6s 1x"));
   mqReadyAtMs = millis() + MQ_WARMUP_MS;
   drawWarmupScreen();
 

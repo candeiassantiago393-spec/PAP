@@ -44,6 +44,7 @@ latest: dict[str, Any] = {
     "qk": 0,
     "qr": 0,
     "qa": 0,
+    "qb": 0,
     "scr": 0,
     "ms": 0,
     "ts": None,

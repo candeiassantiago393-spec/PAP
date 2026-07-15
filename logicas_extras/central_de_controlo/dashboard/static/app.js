@@ -201,23 +201,25 @@ function updateUI(data) {
   const gasAlarm = !!data.alarm;
   const fireAlarm = hasFireTelemetry(data) ? !!data.fa : false;
   const quakeAlarm = !!data.qa;
+  const quakeBuzzerOn = !!data.qb;
+  const buzzerOn = fireAlarm || gasAlarm || quakeBuzzerOn;
   const anyAlarm = fireAlarm || quakeAlarm || gasAlarm;
   const primary = primaryAlarm(data);
 
   const dot = document.getElementById("statusDot");
   const statusText = document.getElementById("statusText");
-  dot.className = "status-dot" + (connected ? (anyAlarm ? " alarm" : " on") : "");
+  dot.className = "status-dot" + (connected ? (buzzerOn ? " alarm" : anyAlarm ? " on" : " on") : "");
   statusText.textContent = connected
-    ? (anyAlarm ? "ALARME ACTIVO" : "Sistema online")
+    ? (buzzerOn ? "BUZZER ACTIVO" : anyAlarm ? "Alarme (sem buzzer)" : "Sistema online")
     : "Mega desligada";
 
   document.getElementById("oledScreen").textContent = connected
     ? `${SCR_NAMES[data.scr] ?? "?"} — ${SCR_LABELS[data.scr] ?? "—"}`
     : "—";
   document.getElementById("buzzerState").textContent = connected
-    ? (anyAlarm ? "🔊 LIGADO" : "Silencioso")
+    ? (buzzerOn ? "🔊 LIGADO" : quakeAlarm ? "Sismo (pulso 6s usado)" : "Silencioso")
     : "—";
-  document.getElementById("buzzerState").className = "sys-value" + (anyAlarm ? " buzzer-on" : "");
+  document.getElementById("buzzerState").className = "sys-value" + (buzzerOn ? " buzzer-on" : "");
   document.getElementById("serialPort").textContent = connected ? (data.port || "COM?") : "—";
   document.getElementById("uptime").textContent = connected ? fmtUptime(data.ms) : "—";
 
@@ -291,7 +293,7 @@ function updateUI(data) {
   setBadge(document.getElementById("badgeGas"), gasAlarm ? "ALARME" : "OK", gasAlarm ? "alarm" : "ok");
   setBadge(document.getElementById("badgeFire"), fireAlarm ? "ALARME" : "OK", fireAlarm ? "alarm" : "ok");
   setBadge(document.getElementById("badgeQuake"), quakeAlarm ? "ALARME" : "OK", quakeAlarm ? "alarm" : "ok");
-  setBadge(document.getElementById("badgeAlarm"), anyAlarm ? "BUZZER ON" : "OK", anyAlarm ? "alarm" : "ok");
+  setBadge(document.getElementById("badgeAlarm"), buzzerOn ? "BUZZER ON" : anyAlarm ? "SENSOR" : "OK", buzzerOn ? "alarm" : anyAlarm ? "warn" : "ok");
 
   document.getElementById("gasCard").classList.toggle("alarm", gasAlarm);
   document.getElementById("fireCard").classList.toggle("alarm", fireAlarm);

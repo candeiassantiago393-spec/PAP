@@ -30,7 +30,7 @@ pio device monitor -b 9600
 
 Campos: `t`, `h`, `gas`, `gr`, `gb`, `alarm`, `fire`, `fr`, `fbl`, `fd`, `fa`, `qk`, `qr`, `qa`, `scr`, `ms`
 
-Prioridade alarmes buzzer: **fogo > sismo > gás**
+Prioridade alarmes buzzer: **fogo/gás contínuo** · **sismo = 6 s uma única vez** desde cada upload.
 
 ## Histórico
 

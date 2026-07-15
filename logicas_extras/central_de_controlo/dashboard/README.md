@@ -55,7 +55,8 @@ Uma linha JSON por leitura:
 | fdo | 1 = saída digital DO deteta chama |
 | fa | 1 = alarme fogo (prioridade máxima buzzer) |
 | qk / qr / qa | Vibração % / sinal A3 / alarme sismo |
+| qb | 1 = buzzer sismo activo (pulso 6 s, só uma vez por upload) |
 | scr | Ecrã OLED (0–5: HOME…FOGO…SISMO) |
 | fw | Versão firmware telemetria (`3` = com fogo) |
 
-Prioridade buzzer no firmware: **fogo > sismo > gás**.
+Prioridade buzzer no firmware: **fogo e gás = contínuo** · **sismo = 6 s uma única vez** desde cada upload.
