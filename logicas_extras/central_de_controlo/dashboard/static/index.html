@@ -83,6 +83,17 @@
           </div>
           <div class="card-meta" id="metaRaw">—</div>
         </div>
+        <div class="card" id="fireCard">
+          <div class="card-top">
+            <div class="card-label">Fogo KY-026 · A2</div>
+            <span class="badge" id="badgeFire">—</span>
+          </div>
+          <div class="card-value" id="valFire">—</div>
+          <div class="bar-wrap">
+            <div class="bar-track"><div class="bar-fill fire-fill" id="barFire"></div></div>
+          </div>
+          <div class="card-meta" id="metaFire">—</div>
+        </div>
         <div class="card" id="quakeCard">
           <div class="card-top">
             <div class="card-label">Vibração KY-002 · A3</div>
@@ -100,7 +111,7 @@
             <span class="badge" id="badgeAlarm">—</span>
           </div>
           <div class="card-value alarm-text" id="alarmText">—</div>
-          <p class="alarm-hint">Buzzer activo quando gás ≥ 50% ou vibração detetada</p>
+          <p class="alarm-hint">Buzzer activo — prioridade: fogo &gt; sismo &gt; gás (limite 50%)</p>
         </div>
       </div>
     </section>
@@ -114,9 +125,13 @@
         <h3>Humidade ao vivo</h3>
         <div class="chart-box"><canvas id="chartHum"></canvas></div>
       </div>
-      <div class="chart-card span-2">
+      <div class="chart-card">
         <h3>Gás · limite 50%</h3>
         <div class="chart-box"><canvas id="chartGas"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Fogo / chama · limite 50%</h3>
+        <div class="chart-box"><canvas id="chartFire"></canvas></div>
       </div>
       <div class="chart-card span-2">
         <h3>Vibração / sismo · limite 50%</h3>
@@ -131,6 +146,8 @@
         <span>NEXT → D3</span>
         <span>Buzzer → D6</span>
         <span>MQ → A1</span>
+        <span>KY-026 AO → A2</span>
+        <span>KY-026 DO → D5</span>
         <span>KY-002 → A3</span>
         <span>OLED → 20/21</span>
       </div>

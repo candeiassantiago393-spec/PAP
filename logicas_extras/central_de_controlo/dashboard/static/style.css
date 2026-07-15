@@ -255,6 +255,8 @@ main { padding: 20px 24px 32px; max-width: 1200px; margin: 0 auto; }
 .bar-fill.temp-fill { background: linear-gradient(90deg, #3d8bfd, #6aa8ff); }
 .bar-fill.hum-fill { background: linear-gradient(90deg, #3dba7a, #6fd89a); }
 .bar-fill.gas-alarm { background: linear-gradient(90deg, var(--danger), #ff8a94); }
+.bar-fill.fire-fill { background: linear-gradient(90deg, #ff6b4a, #ff9a7a); }
+.bar-fill.fire-alarm { background: linear-gradient(90deg, var(--danger), #ff6b4a); }
 .bar-fill.quake-alarm { background: linear-gradient(90deg, var(--warning), #f0c040); }
 
 .charts {

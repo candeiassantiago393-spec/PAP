@@ -1,11 +1,12 @@
 /*
   Central de Controlo — bancada Mega (real/atual)
-  KY-015 + MQ gás + KY-002 vibração + OLED + NEXT + buzzer
+  KY-015 + MQ gás + KY-026 fogo + KY-002 vibração + OLED + NEXT/PREV + buzzer
 
-  Mega: DHT=2 | NEXT=3 | Buzzer=6 | MQ=A1 | KY-002 S=A3 | OLED 20/21
-  Ecrãs: HOME | GRAFICOS | BARRAS | GAS | SISMO
+  Mega: DHT=2 | NEXT=3 | PREV=4 | Buzzer=6 | MQ=A1 | KY-026 AO=A2 DO=5 | KY-002 S=A3 | OLED 20/21
+  Ecrãs: HOME | GRAFICOS | BARRAS | GAS | FOGO | SISMO
 
-  Alarmes: sismo > gás (buzzer pin 6)
+  Alarmes (prioridade): fogo > sismo > gás (buzzer pin 6)
+  KY-026: AO em A2, DO em pin 5 — calibra baseline AO no arranque
   KY-002: S em A3 — calibra nivel em repouso no arranque
 */
 
@@ -25,19 +26,26 @@
 #define PIN_BTN_PREV 4
 #define PIN_BUZZER 6
 #define PIN_GAS A1
+#define PIN_FIRE_AO A2
+#define PIN_FIRE_DO 5
 #define PIN_QUAKE A3
 #define BUZZER_TONE_HZ 2000
 #define DHTTYPE DHT11
 
 #define GAS_LIMIT 50
+#define FIRE_LIMIT 50
 #define QUAKE_LIMIT 50
 #define GAS_AO_RISE_FULL 300
+#define FIRE_AO_DROP_FULL 350
+#define FIRE_DO_ACTIVE_LOW 1
 #define TEMP_BAR_MIN 0.0f
 #define TEMP_BAR_MAX 50.0f
 #define GAS_ALARM_BLINK_MS 250
+#define FIRE_ALARM_BLINK_MS 150
 #define QUAKE_ALARM_BLINK_MS 250
 #define READ_DHT_MS 2000
 #define READ_GAS_MS 300
+#define READ_FIRE_MS 300
 #define READ_QUAKE_MS 100
 #define QUAKE_HOLD_MS 2000
 #define DEBOUNCE_MS 35
@@ -52,8 +60,9 @@ enum ScreenId {
   SCREEN_GRAPHS = 1,
   SCREEN_BARS_ENV = 2,
   SCREEN_GAS = 3,
-  SCREEN_QUAKE = 4,
-  SCREEN_COUNT = 5
+  SCREEN_FIRE = 4,
+  SCREEN_QUAKE = 5,
+  SCREEN_COUNT = 6
 };
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -68,6 +77,13 @@ int gasRise = 0;
 int gasPercent = 0;
 bool gasAlert = false;
 bool gasBlinkState = false;
+int fireRaw = 0;
+int fireBaseline = 0;
+int fireDrop = 0;
+int firePercent = 0;
+bool fireDoActive = false;
+bool fireAlert = false;
+bool fireBlinkState = false;
 int quakeRaw = 0;
 int quakePercent = 0;
 bool quakeAlert = false;
@@ -76,9 +92,11 @@ uint8_t quakeIdleLevel = HIGH;
 
 unsigned long lastDhtMs = 0;
 unsigned long lastGasMs = 0;
+unsigned long lastFireMs = 0;
 unsigned long lastQuakeMs = 0;
 unsigned long quakeHoldUntilMs = 0;
 unsigned long lastGasBlinkMs = 0;
+unsigned long lastFireBlinkMs = 0;
 unsigned long lastQuakeBlinkMs = 0;
 unsigned long lastOledDrawMs = 0;
 
@@ -102,10 +120,12 @@ unsigned long lastTelemetryMs = 0;
 
 int lastDrawnGasPercent = -1;
 bool lastDrawnGasAlert = false;
+int lastDrawnFirePercent = -1;
+bool lastDrawnFireAlert = false;
 int lastDrawnQuakePercent = -1;
 bool lastDrawnQuakeAlert = false;
 
-const char *screenNames[] = {"HOME", "GRAFICOS", "BARRAS", "GAS", "SISMO"};
+const char *screenNames[] = {"HOME", "GRAFICOS", "BARRAS", "GAS", "FOGO", "SISMO"};
 
 void nextScreen();
 void prevScreen();
@@ -131,7 +151,20 @@ void setBuzzer(bool on) {
 }
 
 bool anySensorAlarm() {
-  return gasAlert || quakeAlert;
+  return fireAlert || quakeAlert || gasAlert;
+}
+
+bool readFireDo() {
+  bool raw = digitalRead(PIN_FIRE_DO);
+#if FIRE_DO_ACTIVE_LOW
+  return raw == LOW;
+#else
+  return raw == HIGH;
+#endif
+}
+
+int aoDropToPercent(int drop) {
+  return constrain(map(drop, 0, FIRE_AO_DROP_FULL, 0, 100), 0, 100);
 }
 
 bool readDebouncedButtonPressed(int pin, bool &lastRaw, bool &stable,
@@ -176,12 +209,34 @@ void calibrateGasBaseline() {
   gasBaseline = (int)(sum / 24);
 }
 
+void calibrateFireBaseline() {
+  long sum = 0;
+  for (int i = 0; i < 24; i++) {
+    sum += analogRead(PIN_FIRE_AO);
+    delay(40);
+  }
+  fireBaseline = (int)(sum / 24);
+}
+
 void updateGas() {
   gasRaw = analogRead(PIN_GAS);
   gasRise = gasRaw - gasBaseline;
   if (gasRise < 0) gasRise = 0;
   gasPercent = constrain(map(gasRise, 0, GAS_AO_RISE_FULL, 0, 100), 0, 100);
   gasAlert = (gasPercent >= GAS_LIMIT);
+}
+
+void updateFire() {
+  fireRaw = analogRead(PIN_FIRE_AO);
+  fireDoActive = readFireDo();
+  fireDrop = fireBaseline - fireRaw;
+  if (fireDrop < 0) fireDrop = 0;
+
+  int pctAo = aoDropToPercent(fireDrop);
+  firePercent = pctAo;
+  if (fireDoActive) firePercent = 100;
+
+  fireAlert = fireDoActive || (firePercent >= FIRE_LIMIT);
 }
 
 void calibrateQuakeIdle() {
@@ -241,6 +296,16 @@ void emitTelemetryJson() {
   Serial.print(gasBaseline);
   Serial.print(F(",\"alarm\":"));
   Serial.print(gasAlert ? 1 : 0);
+  Serial.print(F(",\"fire\":"));
+  Serial.print(firePercent);
+  Serial.print(F(",\"fr\":"));
+  Serial.print(fireRaw);
+  Serial.print(F(",\"fbl\":"));
+  Serial.print(fireBaseline);
+  Serial.print(F(",\"fd\":"));
+  Serial.print(fireDrop);
+  Serial.print(F(",\"fa\":"));
+  Serial.print(fireAlert ? 1 : 0);
   Serial.print(F(",\"qk\":"));
   Serial.print(quakePercent);
   Serial.print(F(",\"qr\":"));
@@ -362,7 +427,10 @@ void drawHomeScreen() {
   display.setTextSize(1);
   display.setCursor(4, 50);
   display.print(F("NEXT/PREV ecras"));
-  if (quakeAlert) {
+  if (fireAlert) {
+    display.setCursor(4, 58);
+    display.print(F("!! FOGO !!"));
+  } else if (quakeAlert) {
     display.setCursor(4, 58);
     display.print(F("!! SISMO !!"));
   } else if (gasAlert) {
@@ -431,6 +499,27 @@ void drawGasScreen() {
   display.display();
 }
 
+void drawFireScreen() {
+  char line[24];
+  display.clearDisplay();
+  drawHeader(fireAlert && fireBlinkState ? "!! FOGO !!" : "FOGO");
+  display.setTextSize(1);
+  display.setCursor(4, 14);
+  display.print(F("Chama A2"));
+  snprintf(line, sizeof(line), "%d%%", firePercent);
+  drawTextRight(14, line);
+  display.drawRect(4, 26, 120, 10, SSD1306_WHITE);
+  int fillW = map(constrain(firePercent, 0, 100), 0, 100, 0, 118);
+  if (fillW > 0) display.fillRect(5, 27, fillW, 8, SSD1306_WHITE);
+  display.drawFastVLine(4 + 1 + (118 * FIRE_LIMIT) / 100, 26, 12, SSD1306_WHITE);
+  display.setCursor(4, 42);
+  display.print(fireDoActive ? F("DO: CHAMA") : F("DO: sem chama"));
+  display.setCursor(4, 54);
+  display.print(fireAlert ? F("FOGO! BUZZER ON") : F("OK"));
+  drawScreenDots();
+  display.display();
+}
+
 void drawQuakeScreen() {
   char line[24];
   display.clearDisplay();
@@ -459,11 +548,14 @@ void renderScreen() {
     case SCREEN_GRAPHS: drawGraphsScreen(); break;
     case SCREEN_BARS_ENV: drawBarsEnvScreen(); break;
     case SCREEN_GAS: drawGasScreen(); break;
+    case SCREEN_FIRE: drawFireScreen(); break;
     case SCREEN_QUAKE: drawQuakeScreen(); break;
     default: drawHomeScreen(); break;
   }
   lastDrawnGasPercent = gasPercent;
   lastDrawnGasAlert = gasAlert;
+  lastDrawnFirePercent = firePercent;
+  lastDrawnFireAlert = fireAlert;
   lastDrawnQuakePercent = quakePercent;
   lastDrawnQuakeAlert = quakeAlert;
   lastOledDrawMs = millis();
@@ -501,6 +593,18 @@ void updateAlarms() {
 
   setBuzzer(alarm);
 
+  if (fireAlert) {
+    if (now - lastFireBlinkMs >= FIRE_ALARM_BLINK_MS) {
+      lastFireBlinkMs = now;
+      fireBlinkState = !fireBlinkState;
+      if (currentScreen == SCREEN_FIRE || currentScreen == SCREEN_HOME) {
+        displayDirty = true;
+      }
+    }
+  } else {
+    fireBlinkState = false;
+  }
+
   if (quakeAlert) {
     if (now - lastQuakeBlinkMs >= QUAKE_ALARM_BLINK_MS) {
       lastQuakeBlinkMs = now;
@@ -525,9 +629,9 @@ void updateAlarms() {
     gasBlinkState = false;
   }
 
-  if (displayDirty && (quakeAlert || gasAlert)) {
+  if (displayDirty && (fireAlert || quakeAlert || gasAlert)) {
     if (currentScreen == SCREEN_HOME || currentScreen == SCREEN_GAS ||
-        currentScreen == SCREEN_QUAKE) {
+        currentScreen == SCREEN_FIRE || currentScreen == SCREEN_QUAKE) {
       renderScreen();
     }
   }
@@ -538,6 +642,7 @@ void setup() {
   pinMode(PIN_BTN_NEXT, INPUT_PULLUP);
   pinMode(PIN_BTN_PREV, INPUT_PULLUP);
   pinMode(PIN_BUZZER, OUTPUT);
+  pinMode(PIN_FIRE_DO, INPUT_PULLUP);
   pinMode(PIN_QUAKE, INPUT);
   setBuzzer(false);
 
@@ -553,7 +658,7 @@ void setup() {
   delay(2000);
 
   Serial.println(F("===== SMART HOME LAB ====="));
-  Serial.println(F("NEXT pin 3 | PREV pin 4 | Buzzer D6 | gas>=50% OU sismo"));
+  Serial.println(F("NEXT 3 | PREV 4 | Buzzer 6 | fogo>sismo>gas"));
   mqReadyAtMs = millis() + MQ_WARMUP_MS;
   drawWarmupScreen();
 
@@ -564,6 +669,10 @@ void finishMqWarmup() {
   calibrateGasBaseline();
   Serial.print(F("Baseline gas A1="));
   Serial.println(gasBaseline);
+
+  calibrateFireBaseline();
+  Serial.print(F("Baseline fogo A2="));
+  Serial.println(fireBaseline);
 
   calibrateQuakeIdle();
   Serial.print(F("KY-002 repouso A3="));
@@ -605,6 +714,19 @@ void loop() {
 
     if (gasAlert != prevAlert || abs(gasPercent - prevPercent) >= 2 ||
         gasPercent != lastDrawnGasPercent) {
+      displayDirty = true;
+    }
+  }
+
+  if (millis() - lastFireMs >= READ_FIRE_MS) {
+    lastFireMs = millis();
+    bool prevAlert = fireAlert;
+    int prevPercent = firePercent;
+    updateFire();
+    emitTelemetryJson();
+
+    if (fireAlert != prevAlert || abs(firePercent - prevPercent) >= 2 ||
+        firePercent != lastDrawnFirePercent) {
       displayDirty = true;
     }
   }

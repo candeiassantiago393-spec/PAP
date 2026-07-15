@@ -1,22 +1,25 @@
 const MAX_POINTS = 120;
 const GAS_LIMIT = 50;
+const FIRE_LIMIT = 50;
 const QUAKE_LIMIT = 50;
-const SCR_NAMES = ["HOME", "GRAFICOS", "BARRAS", "GAS", "SISMO"];
+const SCR_NAMES = ["HOME", "GRAFICOS", "BARRAS", "GAS", "FOGO", "SISMO"];
 const SCR_LABELS = {
   0: "Smart Home Lab",
   1: "Gráficos temp/hum",
   2: "Barras ambiente",
   3: "Gás MQ",
-  4: "Sismo KY-002",
+  4: "Fogo KY-026",
+  5: "Sismo KY-002",
 };
 
 const tempData = [];
 const humData = [];
 const gasData = [];
+const fireData = [];
 const quakeData = [];
 const labels = [];
 
-let chartTemp, chartHum, chartGas, chartQuake;
+let chartTemp, chartHum, chartGas, chartFire, chartQuake;
 
 function fmt(v, suffix = "") {
   if (v === null || v === undefined || Number.isNaN(v)) return "—";
@@ -121,6 +124,12 @@ function initCharts() {
     100,
     "rgba(232,93,106,0.55)"
   ));
+  chartFire = new Chart(document.getElementById("chartFire"), chartOptions(
+    { data: fireData, line: "#ff6b4a", fill: "rgba(255,107,74,0.15)" },
+    "Fogo %",
+    100,
+    "rgba(232,93,106,0.55)"
+  ));
   chartQuake = new Chart(document.getElementById("chartQuake"), chartOptions(
     { data: quakeData, line: "#b07aff", fill: "rgba(176,122,255,0.15)" },
     "Sismo %",
@@ -142,6 +151,7 @@ function refreshCharts() {
   refreshChart(chartTemp, tempData);
   refreshChart(chartHum, humData);
   refreshChart(chartGas, gasData, GAS_LIMIT);
+  refreshChart(chartFire, fireData, FIRE_LIMIT);
   refreshChart(chartQuake, quakeData, QUAKE_LIMIT);
 }
 
@@ -160,8 +170,9 @@ function envStatus(temp, hum) {
 function updateUI(data) {
   const connected = !!data.connected;
   const gasAlarm = !!data.alarm;
+  const fireAlarm = !!data.fa;
   const quakeAlarm = !!data.qa;
-  const anyAlarm = gasAlarm || quakeAlarm;
+  const anyAlarm = fireAlarm || quakeAlarm || gasAlarm;
 
   const dot = document.getElementById("statusDot");
   const statusText = document.getElementById("statusText");
@@ -192,16 +203,21 @@ function updateUI(data) {
     `${fmt(data.h)}<span class="card-unit"> %</span>`;
   document.getElementById("valGas").innerHTML =
     `${data.gas ?? 0}<span class="card-unit"> %</span>`;
+  document.getElementById("valFire").innerHTML =
+    `${data.fire ?? 0}<span class="card-unit"> %</span>`;
   document.getElementById("valQuake").innerHTML =
     `${data.qk ?? 0}<span class="card-unit"> %</span>`;
 
   const gasPct = Number(data.gas) || 0;
+  const firePct = Number(data.fire) || 0;
   const quakePct = Number(data.qk) || 0;
   const humPct = Math.min(Number(data.h) || 0, 100);
   const tempPct = Math.min((Number(data.t) || 0) * 2, 100);
 
   document.getElementById("barGas").style.width = `${Math.min(gasPct, 100)}%`;
   document.getElementById("barGas").classList.toggle("gas-alarm", gasAlarm);
+  document.getElementById("barFire").style.width = `${Math.min(firePct, 100)}%`;
+  document.getElementById("barFire").classList.toggle("fire-alarm", fireAlarm);
   document.getElementById("barQuake").style.width = `${Math.min(quakePct, 100)}%`;
   document.getElementById("barQuake").classList.toggle("quake-alarm", quakeAlarm);
   document.getElementById("barHum").style.width = `${humPct}%`;
@@ -211,29 +227,38 @@ function updateUI(data) {
   setBadge(document.getElementById("badgeTemp"), env.tLabel, env.t);
   setBadge(document.getElementById("badgeHum"), env.hLabel, env.h);
   setBadge(document.getElementById("badgeGas"), gasAlarm ? "ALARME" : "OK", gasAlarm ? "alarm" : "ok");
+  setBadge(document.getElementById("badgeFire"), fireAlarm ? "ALARME" : "OK", fireAlarm ? "alarm" : "ok");
   setBadge(document.getElementById("badgeQuake"), quakeAlarm ? "ALARME" : "OK", quakeAlarm ? "alarm" : "ok");
   setBadge(document.getElementById("badgeAlarm"), anyAlarm ? "BUZZER ON" : "OK", anyAlarm ? "alarm" : "ok");
 
   document.getElementById("gasCard").classList.toggle("alarm", gasAlarm);
+  document.getElementById("fireCard").classList.toggle("alarm", fireAlarm);
   document.getElementById("quakeCard").classList.toggle("quake-alarm", quakeAlarm);
   document.getElementById("alarmCard").classList.toggle("alarm", anyAlarm);
 
   let alarmText = "Sistema OK — todos os sensores normais";
-  if (quakeAlarm && gasAlarm) alarmText = "⚠ SISMO + GÁS — buzzer activo";
+  if (fireAlarm && quakeAlarm && gasAlarm) alarmText = "⚠ FOGO + SISMO + GÁS — buzzer activo";
+  else if (fireAlarm && quakeAlarm) alarmText = "⚠ FOGO + SISMO — buzzer activo";
+  else if (fireAlarm && gasAlarm) alarmText = "⚠ FOGO + GÁS — buzzer activo";
+  else if (quakeAlarm && gasAlarm) alarmText = "⚠ SISMO + GÁS — buzzer activo";
+  else if (fireAlarm) alarmText = "⚠ CHAMA DETETADA — buzzer activo";
   else if (quakeAlarm) alarmText = "⚠ VIBRAÇÃO DETETADA — buzzer activo";
   else if (gasAlarm) alarmText = "⚠ FUGA DE GÁS — buzzer activo";
   document.getElementById("alarmText").textContent = alarmText;
 
   document.getElementById("metaRaw").textContent =
     `raw ${data.gr ?? "—"} · base ${data.gb ?? "—"} · limite ${GAS_LIMIT}%`;
+  document.getElementById("metaFire").textContent =
+    `AO ${data.fr ?? "—"} · base ${data.fbl ?? "—"} · drop ${data.fd ?? "—"} · limite ${FIRE_LIMIT}%`;
   document.getElementById("metaQuake").textContent =
     `sinal ${data.qr ?? "—"} · limite ${QUAKE_LIMIT}% · pin A3`;
 
-  if (connected && (data.t != null || data.h != null || data.gas != null || data.qk != null)) {
+  if (connected && (data.t != null || data.h != null || data.gas != null || data.fire != null || data.qk != null)) {
     pushLabel();
     pushHistory(tempData, data.t);
     pushHistory(humData, data.h);
     pushHistory(gasData, data.gas);
+    pushHistory(fireData, data.fire);
     pushHistory(quakeData, data.qk);
     refreshCharts();
   }
@@ -244,13 +269,14 @@ function exportCsv() {
     alert("Sem dados para exportar. Espera a Mega ligar e enviar leituras.");
     return;
   }
-  const rows = ["hora,temp_c,hum_pct,gas_pct,sismo_pct"];
+  const rows = ["hora,temp_c,hum_pct,gas_pct,fogo_pct,sismo_pct"];
   for (let i = 0; i < labels.length; i++) {
     const t = tempData[i] ?? "";
     const h = humData[i] ?? "";
     const g = gasData[i] ?? "";
+    const f = fireData[i] ?? "";
     const q = quakeData[i] ?? "";
-    rows.push(`${labels[i]},${t},${h},${g},${q}`);
+    rows.push(`${labels[i]},${t},${h},${g},${f},${q}`);
   }
   const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
