@@ -17,7 +17,8 @@
 
 | Pasta | Conteúdo |
 |-------|----------|
-| [relatorios/](relatorios/) | PDFs e DOCX (especificação, dimensionamentos) |
+| [relatorios/Relatorio_Especificacao_PAP_Predio_Inteligente_v4.pdf](relatorios/Relatorio_Especificacao_PAP_Predio_Inteligente_v4.pdf) | **Documento de referência do projeto final** — Relatório Técnico + DET v4.0, cobre elevador + lógicas extra + interfaces auxiliares |
+| [relatorios/](relatorios/) | Restantes PDFs e DOCX (especificações parciais, dimensionamentos) |
 | [ETAPAS/relatorios/](ETAPAS/relatorios/) | Relatório por fase do projeto |
 
 ## Compras

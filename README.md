@@ -19,6 +19,7 @@ Este repositório concentra código, simulações Wokwi, testes, documentação,
 
 | Quero… | Ir para |
 |--------|---------|
+| **Relatório final + especificação (DET v4.0)** | [docs/relatorios/Relatorio_Especificacao_PAP_Predio_Inteligente_v4.pdf](docs/relatorios/Relatorio_Especificacao_PAP_Predio_Inteligente_v4.pdf) |
 | **Mapa completo do repo** | [docs/INDICE_REPOSITORIO.md](docs/INDICE_REPOSITORIO.md) |
 | Contexto e histórico | [docs/CONTEXTO_PROJETO.md](docs/CONTEXTO_PROJETO.md) |
 | Etapas E00–E12 | [docs/ETAPAS/README.md](docs/ETAPAS/README.md) |
